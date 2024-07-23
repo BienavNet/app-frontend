@@ -1,12 +1,10 @@
 import { TouchableOpacity, View, Text, ScrollView } from "react-native";
 import { CustomInput, CustomInputCheckBox } from "../share/inputs/customInput";
-import {yupResolver} from "@hookform/resolvers/yup"
-import {login} from '../../utils/schemas/login&registerSchema'
+import { yupResolver } from "@hookform/resolvers/yup";
+import { login } from "../../utils/schemas/login&registerSchema";
 import { useForm } from "react-hook-form";
 
 function formLogin() {
-
-
   const {
     handleSubmit,
     control,
@@ -14,7 +12,6 @@ function formLogin() {
   } = useForm({
     resolver: yupResolver(login),
   });
-
 
   const onsubmit = (data) => {
     // Add logic here to handle form submission
@@ -96,10 +93,10 @@ function formLogin() {
         {/*checkbox*/}
         <CustomInputCheckBox
           rules={{
-            required: "Debe seleccionar una opción",
+            required: true,
           }}
           control={control}
-          name="selectOption"
+          name="checkebox"
           title="Soy un"
         />
         <View className="w-full">

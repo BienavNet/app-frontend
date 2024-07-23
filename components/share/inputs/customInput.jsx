@@ -98,44 +98,28 @@ export const CustomInputCheckBox = ({ control, name, title, rules = {} }) => {
             <View className="flex-row w-full justify-around">
               <CheckBox
                 error={error}
-                onChange={() => handleCheckboxChange(onChange, "sup")}
+                onChange={() => handleCheckboxChange(onChange, "supervisor")}
                 rfv={value}
-                label="Sup"
-                value="sup"
+                label="Supervisor"
+                value="supervisor"
                 selectedOption={selectedOption}
               />
               <CheckBox
                 error={error}
-                onChange={() => handleCheckboxChange(onChange, "dir")}
+                onChange={() => handleCheckboxChange(onChange, "admin")}
                 rfv={value}
-                label="Dir"
-                value="dir"
+                label="Admin"
+                value="admin"
                 selectedOption={selectedOption}
               />
               <CheckBox
                 error={error}
-                onChange={() => handleCheckboxChange(onChange, "doc")}
+                onChange={() => handleCheckboxChange(onChange, "docente")}
                 rfv={value}
-                label="Doc"
-                value="doc"
+                label="Docente"
+                value="docente"
                 selectedOption={selectedOption}
               />
-              {/* <View className="mb-5 flex-row">
-      <Checkbox
-        value={value === "sup"}
-        onValueChange={() => onChange("sup")}
-        className="bg-black/5 self-center rounded-full"
-      />
-      <Text className="m-2">Sup</Text>
-    </View>
-    <View className="mb-5 flex-row">
-      <Checkbox
-        value={value === "doc"}
-        onValueChange={() => onChange("doc")}
-        className="bg-black/5 self-center rounded-full"
-      />
-      <Text className="m-2">Doc</Text>
-    </View> */}
             </View>
             {error && (
               <Text className="text-red-400 self-stretch pl-3">

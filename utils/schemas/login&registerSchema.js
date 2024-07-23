@@ -9,6 +9,13 @@ export const login = yup.object({
       .min(4)
       .max(100),
     cedula: yup.string().min(10).max(10),
+    supervisor: yup.boolean(),
+    docente: yup.boolean(),
+    admin: yup.boolean(),
+    checkebox: yup
+    .string()
+    .oneOf(['supervisor', 'docente', 'admin'], 'Debe seleccionar una opción válida')
+    .required('Debe seleccionar una opción')
   });
 
 
