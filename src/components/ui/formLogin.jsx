@@ -1,24 +1,27 @@
-import { TouchableOpacity, View, Text, ScrollView } from "react-native";
+import { TouchableOpacity, View, Text, ScrollView , Alert} from "react-native";
 import { CustomInput, CustomInputCheckBox } from "../share/inputs/customInput";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { login } from "../../utils/schemas/login&registerSchema";
+import { loging } from "../../utils/schemas/login&registerSchema";
+import {useAuth} from "../../hooks/useAuth"
 import { useForm } from "react-hook-form";
-
 function formLogin() {
+
+  const { login} = useAuth();
+
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(login),
+    resolver: yupResolver(loging),
   });
 
-  const onsubmit = (data) => {
-    // Add logic here to handle form submission
-
-    Navigation.navigate("Dashboard");
-    {
-      Alert.alert("Data");
+  const onsubmit = async (data) => {
+    try {
+      await login(data.correo, data.constrasena)
+    } catch (error) {
+      Alert.alert("Error", errors.message);
+      
     }
   };
 
@@ -60,7 +63,7 @@ function formLogin() {
               message: "Correo no es válido",
             },
           }}
-          name="email"
+          name="correo"
           placeholder="Example@example.com"
           keyBoardType="email-address"
         />
@@ -85,7 +88,7 @@ function formLogin() {
             },
           }}
           control={control}
-          name="password"
+          name="contrasena"
           placeholder="********"
           secureTextEntry={true}
         />
@@ -104,7 +107,8 @@ function formLogin() {
             onPress={handleSubmit(onsubmit)}
             className="w-full bg-textPrincipal p-3 rounded-2xl mb-3"
           >
-            <Text className="text-white text-center font-bold text-xl">
+            <Text 
+            className="text-white text-center font-bold text-xl">
               Inicia Sesion
             </Text>
           </TouchableOpacity>

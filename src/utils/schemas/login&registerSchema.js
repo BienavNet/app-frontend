@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const login = yup.object({
+export const loging = yup.object({
     password: yup.string().required("Password es requerido").min(4).max(16),
     email: yup
       .string()

@@ -26,3 +26,9 @@ llevando asi las validaciones mas segura utilizando modelos de schemas.
 
 pero para añardilo con toca utilizar performant y esto lo logramos instalando
 > npm i @hookform/resolvers
+
+instalamos jwt-decode para utilizar autentication con JWT
+> npm i jwt-decode [link:](https://www.npmjs.com/package/jwt-decode)
+
+intalamos axios
+> npm i axios
