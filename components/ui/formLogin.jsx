@@ -1,92 +1,120 @@
-import { Link, Stack } from "expo-router";
-import Checkbox from "expo-checkbox";
-import { View, Text, TextInput, Button, Alert, Pressable } from "react-native";
-import { useState } from "react";
+import { TouchableOpacity, View, Text, ScrollView } from "react-native";
+import { CustomInput, CustomInputCheckBox } from "../share/inputs/customInput";
+import {yupResolver} from "@hookform/resolvers/yup"
+import {login} from '../../utils/schemas/login&registerSchema'
+import { useForm } from "react-hook-form";
 
-function formLogin(){
-
-    const [isSelectedDoc, setSelectionDoc] = useState(false)
-    const [isSelectedAdm, setSelectionAdm] = useState(false)
-    const [isSelectedSup, setSelectionSup] = useState(false)
-
-    return (
+function formLogin() {
 
 
-        <View className="w-full h-full bg-backgroundColor">
-            {/* <Stack.Screen options={
-                {
-                    headerShown: true,
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(login),
+  });
 
-                }
-            }/> */}
-            <View className="items-center justify-center my-44">
-                <Text className="text-4xl text-center ">
-                    App Salones UPC Aguachica
-                </Text>
-            </View>
 
-            <View className="m-2 p-3">
-                <TextInput className="border-2 border-gray-400 pl-3 m-2 rounded-lg  bg-white" placeholder="Correo Electrónico"/>
-                <TextInput className="border-2 border-gray-400 pl-3 m-2 mb-3 rounded-lg  bg-white" placeholder="Contraseña" secureTextEntry={true} />
-                <View style={{flexDirection: "row"}} className="p-3">
-                    <View style={{flexDirection: "column"}} className="items-center">
-                        <Checkbox
-                            value={isSelectedAdm}
-                            onValueChange={() => {
-                                setSelectionAdm(true)
-                                setSelectionDoc(false)
-                                setSelectionSup(false)
-                            }}
-                            color={buttonColor}
+  const onsubmit = (data) => {
+    // Add logic here to handle form submission
 
-                        />
-                        <Text> Administrador/Director </Text>
-                    </View>
-                    <View style={{flexDirection: "column"}} className="items-center mx-5">
-                        <Checkbox
-                            value={isSelectedDoc}
-                            onValueChange={() => {
-                                setSelectionAdm(false)
-                                setSelectionDoc(true)
-                                setSelectionSup(false)
-                            }}
-                            color={buttonColor}
+    Navigation.navigate("Dashboard");
+    {
+      Alert.alert("Data");
+    }
+  };
 
-                        />
-                        <Text> Docente </Text>
-                    </View>
-                    <View style={{flexDirection: "column"}} className="items-center">
-                        <Checkbox
-                            value={isSelectedSup}
-                            onValueChange={() => {
-                                setSelectionAdm(false)
-                                setSelectionDoc(false)
-                                setSelectionSup(true)
-                            }}
-                            color={buttonColor}
+  return (
+    <ScrollView className="pb-10">
+      <View className="flex items-left mx-4 space-y-4">
+        <CustomInput
+          label="Cedula"
+          control={control}
+          name="cedula"
+          placeholder="1234567890"
+          rules={{
+            required: false,
+            minLength: {
+              value: 10,
+              message: "Cedula debe ser mínimo 10 character",
+            },
+            maxLength: {
+              value: 10,
+              message: "Cedula debe ser maximo 10 character",
+            },
+          }}
+          keyBoardType="numeric"
+        />
+        {/* {errors.cedula && errors.cedula.message} */}
 
-                        />
-                        <Text> Supervisor </Text>
-                    </View>
-                </View>
-                <Link asChild href='/register'>
-                    <Pressable>
-                        <Text>Registrar</Text>
-                        {/* <Button
-                            title="Iniciar Sesión"
-                            color={buttonColor}
-                            // onPress={() => Alert.alert("Pronto se definira la funcionalidad.")}
-                            className="p-10 rounded-lg"
-                        /> */}
-                    </Pressable>    
-                </Link>
-                
-            </View>
+        <CustomInput
+          label="Correo Electronico"
+          control={control}
+          rules={{
+            required: "Correo Electronico es requerido",
+            minLength: {
+              value: 4,
+              message: "Correo debe ser mínimo 4 character",
+            },
+            pattern: {
+              value:
+                /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/,
+              message: "Correo no es válido",
+            },
+          }}
+          name="email"
+          placeholder="Example@example.com"
+          keyBoardType="email-address"
+        />
+        {/* {errors.email && errors.email.message} */}
 
+        <CustomInput
+          label="password"
+          rules={{
+            required: "Este campo es requerido",
+            minLength: {
+              value: 4,
+              message: "Password debe ser mínimo 4 character",
+            },
+            maxLength: {
+              value: 16,
+              message: "Password debe ser maximo 16 character",
+            },
+            pattern: {
+              value:
+                /^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{4,16}$/,
+              message: "Debe incluir mayúscula, minúscula, número y símbolo",
+            },
+          }}
+          control={control}
+          name="password"
+          placeholder="********"
+          secureTextEntry={true}
+        />
+
+        {/*checkbox*/}
+        <CustomInputCheckBox
+          rules={{
+            required: "Debe seleccionar una opción",
+          }}
+          control={control}
+          name="selectOption"
+          title="Soy un"
+        />
+        <View className="w-full">
+          <TouchableOpacity
+            onPress={handleSubmit(onsubmit)}
+            className="w-full bg-textPrincipal p-3 rounded-2xl mb-3"
+          >
+            <Text className="text-white text-center font-bold text-xl">
+              Inicia Sesion
+            </Text>
+          </TouchableOpacity>
         </View>
-
-    )
+      </View>
+    </ScrollView>
+  );
 }
-
 
 export default formLogin;
