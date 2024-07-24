@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = `${process.env.URL_BACKEND_API}`;
+const baseURL = `${process.env.EXPO_PUBLIC_URLBACKEND_API}`;
 const axiosInstance = axios.create({
   baseURL,
   headers: {

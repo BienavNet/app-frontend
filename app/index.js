@@ -1,7 +1,6 @@
 import FormLogin from "../components/ui/formLogin";
 import { methods as Title } from "../components/share/titulos/textIndexLogin";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaProvider ,  useSafeAreaInsets} from "react-native-safe-area-context";
 import { View } from "react-native";
 
 function index() {

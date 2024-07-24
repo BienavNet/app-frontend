@@ -1,18 +1,11 @@
-import { View, Text } from "react-native";
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
+import { View, Text, StatusBar } from "react-native";
 
-export default function Layout () {
+export default () => {
     return (
-        <View className="flex-1">
-            <Stack screenOptions={{
-                headerStyle: { backgroundColor: "#fff"},
-                headerTintColor: "#000",
-                animation: "fade",
-                navigationBarHidden: false,
-                headerShown: false,
-            }}/>
-            
-        </View>
-        
+     <>
+      <StatusBar style="dark" />
+      <Slot name="main" />
+     </> 
     )
 }

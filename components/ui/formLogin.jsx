@@ -1,13 +1,15 @@
 import { TouchableOpacity, View, Text, ScrollView , Alert} from "react-native";
 import { CustomInput, CustomInputCheckBox } from "../share/inputs/customInput";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { loging } from "../../utils/schemas/login&registerSchema";
-import {useAuth} from "../../hooks/useAuth"
+import { loging } from "../../src/utils/schemas/login&registerSchema";
+import {useAuth} from "../../src/hooks/useAuth"
 import { useForm } from "react-hook-form";
+import { useRouter } from "expo-router";
 function formLogin() {
 
   const { login} = useAuth();
 
+  const router = useRouter();
   const {
     handleSubmit,
     control,
@@ -18,9 +20,10 @@ function formLogin() {
 
   const onsubmit = async (data) => {
     try {
-      await login(data.correo, data.constrasena)
+      await login(data.correo, data.constrasena);
+      router.replace('/home')
     } catch (error) {
-      Alert.alert("Error", errors.message);
+      Alert.alert("Error", errors);
       
     }
   };

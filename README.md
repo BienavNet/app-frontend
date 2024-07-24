@@ -32,3 +32,11 @@ instalamos jwt-decode para utilizar autentication con JWT
 
 intalamos axios
 > npm i axios
+
+usamos el diseño de cajón en Expo Router.
+> npx expo install drawer react-native-gesture-handler 
+
+### lectura de variables de entorno de archivo .env
+Cree un archivo .env en la raíz del directorio de su proyecto y agregue variables específicas del entorno en nuevas líneas en forma de :EXPO_PUBLIC_[NAME]=VALUE
+
+- EXPO_PUBLIC_API_KEY=abc123
