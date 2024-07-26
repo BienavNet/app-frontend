@@ -106,10 +106,10 @@ export const CustomInputCheckBox = ({ control, name, title, rules = {} }) => {
               />
               <CheckBox
                 error={error}
-                onChange={() => handleCheckboxChange(onChange, "admin")}
+                onChange={() => handleCheckboxChange(onChange, "director")}
                 rfv={value}
-                label="Admin"
-                value="admin"
+                label="Director"
+                value="director"
                 selectedOption={selectedOption}
               />
               <CheckBox

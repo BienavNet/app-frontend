@@ -1,20 +1,19 @@
 import * as yup from "yup";
 
 export const loging = yup.object({
-    password: yup.string().required("Password es requerido").min(4).max(16),
-    email: yup
+    contrasena: yup.string().required("Password es requerido").min(4).max(16),
+    correo: yup
       .string()
       .email("Invalid email")
       .required("Correo Electronico es requerido")
       .min(4)
       .max(100),
-    cedula: yup.string().min(10).max(10),
     supervisor: yup.boolean(),
     docente: yup.boolean(),
     admin: yup.boolean(),
-    checkebox: yup
+    rol: yup
     .string()
-    .oneOf(['supervisor', 'docente', 'admin'], 'Debe seleccionar una opción válida')
+    .oneOf(['supervisor', 'docente', 'director'], 'Debe seleccionar una opción válida')
     .required('Debe seleccionar una opción')
   });
 
@@ -37,8 +36,8 @@ export const loging = yup.object({
       })
       .max(30),
     username: yup.string().required("Username es requerido"),
-    password: yup.string().required("Password es requerido").min(4).max(16),
-    email: yup
+    constrasena: yup.string().required("Password es requerido").min(4).max(16),
+    correo: yup
       .string()
       .email("Invalid email")
       .required("Correo Electronico es requerido")

@@ -40,3 +40,24 @@ usamos el diseño de cajón en Expo Router.
 Cree un archivo .env en la raíz del directorio de su proyecto y agregue variables específicas del entorno en nuevas líneas en forma de :EXPO_PUBLIC_[NAME]=VALUE
 
 - EXPO_PUBLIC_API_KEY=abc123
+
+#### AsyncStorage
+Una biblioteca que proporciona una API de almacenamiento de clave-valor asíncrona, sin cifrar, persistente.
+> npx expo install @react-native-async-storage/async-storage
+
+- configuración del emulador android
+para poder conectar una api con express y una frontal con react native, se puede acceder a la maquina host utilizando la dirrecion ip especial 10.0.2.2
+
+para los toast de notificacion personalizados
+utilizamos una libreria de diseño UX, React Native Elements [link:](https://reactnativeelements.com/)
+> npm install @rneui/base @rneui/themed
+
+tambien existen otras alternativas
+> https://reactnativepaper.com/
+> https://docs.nativebase.io/ npm i native-base
+
++
+> npm i react-native-alert-notification
+> npm uninstall react-native-alert-notification
+
++++ > npm i react-native-toast-notifications
