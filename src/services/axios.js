@@ -5,6 +5,7 @@ const axiosInstance = axios.create({
   baseURL,
   headers: {
     "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
   },
 });
 
@@ -22,14 +23,6 @@ axiosInstance.interceptors.response.use(
     }
     return Promise.reject(error);
   }
-  // function (response) {
-  //   console.log("response ->", response);
-  //   return response;
-  // },
-  // function (error) {
-  //   console.log("error", error , "error response", error.message);
-  //   return Promise.reject(error);
-  // }
 );
 
 export default axiosInstance;

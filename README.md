@@ -61,3 +61,20 @@ tambien existen otras alternativas
 > npm uninstall react-native-alert-notification
 
 +++ > npm i react-native-toast-notifications
+
+
+app/
+ ├── _layout.js
+ ├── index.js
+ └── home/
+     ├── _layout.js
+     ├── index.js
+     └── (director)/
+         ├── index.js
+         ├── [director].js
+     └── (teacher)/
+         ├── index.js
+         ├── [teacher].js
+     └── (supervisor)/
+         ├── index.js
+         ├── [supervisor].js

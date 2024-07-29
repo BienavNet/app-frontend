@@ -5,13 +5,52 @@ import { loging } from "../../src/utils/schemas/login&registerSchema";
 import { useAuth } from "../../src/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { useRouter } from "expo-router";
-import { methods as Toast}  from "../share/toast"
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Feather from '@expo/vector-icons/Feather';
+import { useToast } from "react-native-toast-notifications";
+import { useEffect } from "react";
 
-
-function formLogin() {
-  const { login } = useAuth();
+function FormLogin() {
   const router = useRouter();
- 
+  const toast = useToast();
+  const { login, user, isAuthenticated } = useAuth();
+
+  const ToastSuccess = (message) => {
+      toast.show(message, {
+        icon: <Feather name="check-circle" size={30} color="green"/>,
+        style: {
+          backgroundColor: "green",
+          borderColor: "green",
+        },
+        type: "Success",
+        duration: 3000,
+        successColor: "green",
+        textStyle: {
+          fontSize: 16,
+          color: "white",
+        },
+        animationType: "zoom-in",
+      });
+    };
+
+  const ToastError = (error) => {
+        toast.show(error, {
+          icon: <MaterialIcons name="error" size={30} color="#ffffff" />,
+          style: {
+            backgroundColor: "red",
+            borderColor: "red",
+          },
+          type: "Error",
+          duration: 1000,
+          dangerColor: "red",
+          textStyle: {
+            fontSize: 16,
+            color: "white",
+          },
+          animationType: "zoom-in",
+        });
+    };
+
   const {
     handleSubmit,
     control,
@@ -20,20 +59,28 @@ function formLogin() {
     resolver: yupResolver(loging),
   });
 
- 
-
   const onsubmit = async (data) => {
     console.log("Data recibida", JSON.stringify(data));
     const { correo, contrasena, rol } = data;
     try {
       await login(correo, contrasena, rol);
-      Toast.ToastSuccess();
-      return router.replace("/home");
+      console.log("isAutenticated ", isAuthenticated + " user return ", user);
+      if (user) {
+        ToastSuccess("login successfully")
+        console.log("user -->", user);
+       router.push("/home")
+      }
+      
     } catch (error) {
-      Toast.ToastError(error.message);
+   ToastError(error.message);
     }
   };
-
+  
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      router.replace("/home");
+    }
+  }, [isAuthenticated, user]);
   return (
     <>
       <ScrollView className="pb-10">
@@ -57,8 +104,6 @@ function formLogin() {
             placeholder="Example@example.com"
             keyBoardType="email-address"
           />
-          {/* {errors.email && errors.email.message} */}
-
           <CustomInput
             label="password"
             rules={{
@@ -108,4 +153,4 @@ function formLogin() {
   );
 }
 
-export default formLogin;
+export default FormLogin;

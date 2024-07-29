@@ -1,28 +1,31 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
+
 import { useAuth } from "../hooks/useAuth";
-import { useRouter } from 'expo-router';
+import { Slot, usePathname, useRouter } from "expo-router";
+import { View, ActivityIndicator } from "react-native";
 
 export const PublicRoute = (props) => {
-    const {children }= props;
-    const auth = useAuth();
-    const [isVerified, setIsVerified] = useState(false);
-    const router = useRouter();
+  const {children } = props;
+  const auth = useAuth();
+  const router = useRouter();
+  const [isVerified, setIsVerified] = useState(false);
+  const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
 
-    useEffect(()=>{
-        if(auth.isAuthenticated){
-            router.push('/home');
-        } else {
-            setIsVerified(true);
-        }
-    }, [auth.isAuthenticated, router])
-    
-    if(!isVerified){
-        return null
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      if (auth.isAuthenticated) {
+        console.log(pathname, "pathname public route entro a home");
+        router.replace("/home");
+      } else {
+        setIsVerified(true);
+      }
     }
+  }, [auth.isAuthenticated, isMounted, router]);
 
-    return (
-        <>
-            {children}
-        </>
-    )
-}
+  return isVerified ? <>{children}</> : <ActivityIndicator size="large" />;
+};

@@ -52,16 +52,15 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (isMounted.current) return;
-
     const initialize = async () => {
       try {
-        const accessToken = AsyncStorage.getItem("access_token");
-        if (accessToken && validateToken(accessToken)) {
-          setSession(accessToken);
-          const rol = AsyncStorage.getItem("rol");
+        const access_token = await AsyncStorage.getItem("access_token");
+        if (access_token && validateToken(access_token)) {
+          setSession(access_token);
+          // const rol = AsyncStorage.getItem("rol");
           const response = await axiosInstance.get(`/login/sesion`);
-
-          const { data: user } = response;
+          const { user } = response.data;
+          console.log(user, "cunado is mount ");
           dispatch({
             type: "INITIALIZE",
             payload: {
@@ -100,16 +99,8 @@ export const AuthProvider = ({ children }) => {
         contrasena,
         rol,
       });
-      console.log("response ---->", response);
-      const { token } = response.data;
-      console.log("token ---->", token);
-      if (token) {
-        setSession(token);
-        await AsyncStorage.setItem("access_token", token);
-        await AsyncStorage.setItem("rol", rol);
-      } else {
-        throw new Error(response.data.message || "No access token received");
-      }
+      const { access_token } = response.data
+      setSession(access_token);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message;
       throw new Error(errorMessage);
@@ -120,7 +111,8 @@ export const AuthProvider = ({ children }) => {
     try {
       await getTokens(correo, contrasena, rol);
       const response = await axiosInstance.get(`/login/sesion`);
-      const { data: user } = response;
+      const { user } = response.data;
+      console.log("user de login", + user)
       dispatch({
         type: "LOGIN",
         payload: {
