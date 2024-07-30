@@ -4,14 +4,12 @@ import { Tabs } from "expo-router";
 import DraweHome from "./Navigation";
 
 
-function Index() {
+
+export default function Index() {
  
   return (
     <Authenticated>
       <DraweHome/>
-
     </Authenticated>
   );
 }
-
-export default Index;
