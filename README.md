@@ -78,3 +78,27 @@ app/
      └── (supervisor)/
          ├── index.js
          ├── [supervisor].js
+
+Ahora utilizaremos la navegation, para ellos instalamos las siguientes librerias
+ React Navigation[link:](https://reactnavigation.org/)
+ # Installation
+> npm install @react-navigation/native
+
+ # Installing the native stack navigator library
+ > npm install @react-navigation/native-stack
+ 
+ instalamos la libreria drawer de react native
+> npm install @react-navigation/drawer
+
+- [`react-native-reanimated` docs](https://docs.swmansion.com/react-native-reanimated/)
+
+# Step 1: Install the package
+> npx expo install react-native-reanimated
+
+# Step 2: Add Reanimated's babel plugin
+- plugins: [
+      'react-native-reanimated/plugin',
+    ],
+
+# Step 3: Clear Metro bundler cache (recommended)
+> npx expo start -c

@@ -1,5 +1,4 @@
 import { View, Text } from "react-native";
-import { useAuth } from "../../../src/hooks/useAuth";
 
 export const HomeDirector = () => {
   return (
