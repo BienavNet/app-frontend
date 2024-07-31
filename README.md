@@ -102,3 +102,6 @@ Ahora utilizaremos la navegation, para ellos instalamos las siguientes librerias
 
 # Step 3: Clear Metro bundler cache (recommended)
 > npx expo start -c
+
+npm install react-native-tab-view
+npm install react-native-tab-view

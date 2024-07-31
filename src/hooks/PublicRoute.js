@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-
 import { useAuth } from "../hooks/useAuth";
-import { Slot, usePathname, useRouter } from "expo-router";
-import { View, ActivityIndicator } from "react-native";
-
+import { usePathname, useRouter } from "expo-router";
+import Loading from "../../components/share/loading";
 export const PublicRoute = (props) => {
   const {children } = props;
   const auth = useAuth();
@@ -27,5 +25,5 @@ export const PublicRoute = (props) => {
     }
   }, [auth.isAuthenticated, isMounted, router]);
 
-  return isVerified ? <>{children}</> : <ActivityIndicator size="large" />;
+  return isVerified ? <>{children}</> : null;
 };

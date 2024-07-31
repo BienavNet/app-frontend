@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text, ScrollView, Alert } from "react-native";
+import { TouchableOpacity, View, Text, ScrollView } from "react-native";
 import { CustomInput, CustomInputCheckBox } from "../share/inputs/customInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loging } from "../../src/utils/schemas/login&registerSchema";
@@ -76,11 +76,11 @@ function FormLogin() {
     }
   };
   
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      router.replace("/home");
-    }
-  }, [isAuthenticated, user]);
+  // useEffect(() => {
+  //   if (isAuthenticated && user) {
+  //     router.replace("/home");
+  //   }
+  // }, [isAuthenticated, user]);
   return (
     <>
       <ScrollView className="pb-10">

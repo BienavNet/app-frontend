@@ -13,7 +13,7 @@ export default LayoutApp = () => {
           <AuthContext.Consumer>
             {(auth) =>
               !auth.isInitialized ? (
-                <Loading />
+                <Loading color="#0000ff" />
               ) : (
                 <>
                   <Slot />

@@ -1,5 +1,5 @@
 import { Controller } from "react-hook-form";
-import { TextInput, Text, View } from "react-native";
+import { TextInput, Text, View, StyleSheet } from "react-native";
 import Checkbox from "expo-checkbox";
 import { useState } from "react";
 
@@ -132,3 +132,12 @@ export const CustomInputCheckBox = ({ control, name, title, rules = {} }) => {
     />
   );
 };
+
+const styles = StyleSheet.create({
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+});

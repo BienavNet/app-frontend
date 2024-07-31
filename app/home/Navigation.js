@@ -1,14 +1,14 @@
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { View, Text } from "react-native";
+import { createDrawerNavigator, DrawerItemList } from "@react-navigation/drawer";
+import { View, Text , TouchableOpacity, StyleSheet, Alert} from "react-native";
 import { useAuth } from "../../src/hooks/useAuth";
 import { HomeDirector } from "./director/index";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 //icons
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import IndexDocente from "../../components/ui/docentes/indexDocente";
 const IndexHome = () => {
   const { user } = useAuth();
   console.log("user rol", user.rol);
@@ -38,13 +38,7 @@ const IndexHome = () => {
 
   return (
     <>
-      <View>
-      <View>
-        <Text>header</Text>
-      </View>
-      <ComponentToRender/>
-    
-    </View>
+      <ComponentToRender />
     </>
   );
 };
@@ -67,61 +61,66 @@ const Drawer3 = () => {
   );
 };
 
-
 function MyTabsHome() {
   const Tab = createBottomTabNavigator();
   const { user } = useAuth();
-  if (!user) return <Redirect href="/"/>;
+  if (!user) return <Redirect href="/" />;
 
-  let tabs = [{
-    name:"HomeTab",
-    component:IndexHome,
-    options:{
-      headerShown: false,
-      title: "my home",
-      tabBarLabel: "Home",
-      tabBarIcon: ({ color }) => (
-        <FontAwesome6 name="house" size={24} color={color} />
-      ),
-      tabBarBadge: 4,
-    }
-  }];
+  let tabs = [
+    {
+      name: "HomeTab",
+      component: IndexHome,
+      options: {
+        headerShown: false,
+        title: "my home",
+        tabBarLabel: "Home",
+        tabBarIcon: ({ color }) => (
+          <FontAwesome6 name="house" size={24} color={color} />
+        ),
+        tabBarBadge: 4,
+      },
+    },
+  ];
   switch (user.rol) {
-    case 'director':
+    case "director":
       tabs.push(
         {
-          name: 'Docentes',
-          component: Drawer2,
+          name: "Docentes",
+          component: IndexDocente,
           options: {
             headerShown: false,
-            title: 'docentes',
-            tabBarLabel: 'Docentes',
+            title: "docentes",
+            tabBarLabel: "Docentes",
             tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons name="human-male-board" size={24} color={ color } />
+              <MaterialCommunityIcons
+                name="human-male-board"
+                size={24}
+                color={color}
+              />
             ),
           },
         },
         {
-          name: 'Horarios',
+          name: "Horarios",
           component: Drawer3,
           options: {
             headerShown: false,
-            title: 'horario',
-            tabBarLabel: 'Horarios',
+            title: "horario",
+            tabBarLabel: "Horarios",
             tabBarIcon: ({ color }) => (
-              <FontAwesome6 name="calendar-days" size={24} color={ color } />
+              <FontAwesome6 name="calendar-days" size={24} color={color} />
             ),
           },
         },
         {
-          name: 'Salones',
+          name: "Salones",
           component: Drawer3,
           options: {
             headerShown: false,
-            title: 'salones',
-            tabBarLabel: 'Salones',
+            title: "salones",
+            tabBarLabel: "Salones",
             tabBarIcon: ({ color }) => (
-              <FontAwesome6 name="landmark" size={24} color={ color } />
+              <FontAwesome6 name="landmark" size={24} color={color} />
             ),
           },
         }
@@ -142,22 +141,22 @@ function MyTabsHome() {
     //   ];
     //   break;
     default:
-      <Redirect href="/"/>
+      <Redirect href="/" />;
       break;
   }
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: '#3111F3',
-        tabBarInactiveTintColor: '#000000',
-        tabBarLabelStyle: { 
+        tabBarActiveTintColor: "#3111F3",
+        tabBarInactiveTintColor: "#000000",
+        tabBarLabelStyle: {
           fontSize: 12,
-          fontWeight: 'semibold',
-         },
+          fontWeight: "semibold",
+        },
       }}
     >
-        {tabs.map((tab, index) => (
+      {tabs.map((tab, index) => (
         <Tab.Screen
           key={index}
           name={tab.name}
@@ -165,7 +164,7 @@ function MyTabsHome() {
           options={tab.options}
         />
       ))}
- 
+
       {/* <Tab.Screen
         name="Classroom"
         options={{
@@ -197,130 +196,130 @@ function MyTabsHome() {
     </Tab.Navigator>
   );
 }
+
+const CustomDrawerContent = (props) => {
+  const { logout } = useAuth(); // Función para cerrar sesión
+  const handleLogout = () => {
+    Alert.alert(
+    'Confirmación de Cierre de Sesión',
+    '¿Estás seguro de que deseas cerrar sesión?',
+    [
+    {
+    text: 'Cancelar',
+    style: 'cancel',
+    },
+    {
+    text: 'Confirmar',
+    onPress: () => {
+    logout();
+    },
+    },
+    ],
+    { cancelable: true }
+    );
+    };
+  return (
+    <View style={{flex:1, paddingTop:30}}>
+      {/* Renderiza los elementos predeterminados del drawer */}
+    <DrawerItemList {... props} />
+      <View style={{ flex: 1, justifyContent: 'flex-end', padding: 5}}>
+        <TouchableOpacity 
+        style={styles.button}
+          onPress={handleLogout}
+          color="red"
+        >
+          <Text style={styles.text}>Cerrar Sesión</Text>
+        </TouchableOpacity>
+        </View>
+    </View>
+  );
+};
 export default function DraweHome() {
   const Drawer = createDrawerNavigator();
   return (
     <Drawer.Navigator
-    screenOptions={{
-      drawerActiveTintColor:'#3111F3',
-      drawerInactiveTintColor:'#000000',
-      drawerLabelStyle: { fontSize: 16 },
-      headerStyle: { backgroundColor: '#3111F3' },
-      headerTitleStyle: { color: '#fff' },
-    }}
+    drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        drawerActiveTintColor: "#3111F3",
+        drawerInactiveTintColor: "#000000",
+        drawerLabelStyle: { fontSize: 16 },
+        headerStyle: { backgroundColor: "#3111F3" },
+        headerTitleStyle: { color: "#fff" },
+      }}
     >
       <Drawer.Screen
-        options={
-          {
-            drawerIcon: ({ color }) => (
-              <FontAwesome6 name="house" size={24} color={color} />
-            )
-          }
-        }
+        options={{
+          drawerIcon: ({ color }) => (
+            <FontAwesome6 name="house" size={24} color={color} />
+          ),
+        }}
         name="Home"
         component={MyTabsHome}
       />
 
-        <Drawer.Screen
-        options={
-          {
-            drawerIcon: ({ color }) => (
-              <MaterialCommunityIcons
-                name="google-classroom"
-                size={24}
-                color={color}
-              />
-            ),
-          }
-        }
+      <Drawer.Screen
+        options={{
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="google-classroom"
+              size={24}
+              color={color}
+            />
+          ),
+        }}
         name="Clases"
         component={Drawer2}
       />
-        <Drawer.Screen
-        options={
-          {
-            drawerIcon: ({ color }) => (
-              <MaterialIcons name="supervised-user-circle" size={24} color={color} />
-            )
-          }
-        }
+      <Drawer.Screen
+        options={{
+          drawerIcon: ({ color }) => (
+            <MaterialIcons
+              name="supervised-user-circle"
+              size={24}
+              color={color}
+            />
+          ),
+        }}
         name="Supervisor"
         component={Drawer3}
       />
-        <Drawer.Screen
-        options={
-          {
-            drawerIcon: ({ color }) => (
-              <FontAwesome6 name="commenting" size={24} color={ color } />
-            )
-          } 
-        }
+      <Drawer.Screen
+        options={{
+          drawerIcon: ({ color }) => (
+            <FontAwesome6 name="commenting" size={24} color={color} />
+          ),
+        }}
         name="Comentario"
         component={Drawer2}
       />
-        <Drawer.Screen
-        options={
-          {
-            drawerIcon: ({ color }) => (
-              <FontAwesome6 name="list-alt" size={24} color={ color } />
-            )
-          }
-        }
+      <Drawer.Screen
+        options={{
+          drawerIcon: ({ color }) => (
+            <FontAwesome6 name="list-alt" size={24} color={color} />
+          ),
+        }}
         name="Detalle Horario"
         component={Drawer3}
       />
 
-<Drawer.Screen
-        options={
-          {
-            drawerIcon: ({ color }) => (
-              <FontAwesome6 name="arrow-right-to-bracket" size={24} color={ color } />
-            )
-          }
-        }
-        name="Cerrar Sesion"
-        component={Drawer3}
-      />
-
-  {/* <Drawer.Screen
-        options={
-          {
-            drawerIcon: ({ color }) => (
-              <FontAwesome6 name="house" size={25} color={color} />
-            )
-          }
-        }
-        name="Home"
-        component={MyTabsHome}
-      /> */}
-      {/* <Drawer.Screen
-        options={
-          {
-            // drawerIcon: ({ color }) => (
-            //   <MaterialCommunityIcons
-            //     name="google-classroom"
-            //     size={24}
-            //     color={color}
-            //   />
-            // ),
-          }
-        }
-        name="Drawer2"
-        component={Drawer2}
-      />
-
-      <Drawer.Screen
-        options={
-          {
-            // drawerIcon: ({ color }) => (
-            //   <FontAwesome5 name="user-plus" size={24} color={color} />
-            // ),
-          }
-        }
-        name="Drawer3"
-        component={Drawer3}
-      /> */}
-      {/* <Drawer.Screen name="UserDoc" component={Userdoc} /> */}
     </Drawer.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: 'red',
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'white',
+  },
+});

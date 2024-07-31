@@ -1,7 +1,5 @@
-import { Stack } from "expo-router/stack";
 import { AuthProvider, AuthContext } from "../../src/context/JWTAuthContext";
 import Loading from "../../components/share/loading";
-import { useAuth } from "../../src/hooks/useAuth";
 import { Slot } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -9,19 +7,19 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 export default LayoutHome = () => {
   return (
     <SafeAreaProvider>
-    <AuthProvider>
+    {/* <AuthProvider>
       <AuthContext.Consumer>
         {(auth) =>
           !auth.isInitialized ? (
-            <Loading />
-          ) : (
+            <Loading color="#0000ff" />
+          ) : ( */}
             <>
               <Slot />
             </>
-          )
+          {/* )
         }
       </AuthContext.Consumer>
-    </AuthProvider>
+    </AuthProvider> */}
     </SafeAreaProvider>
   );
 };

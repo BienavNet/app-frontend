@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-// import { useLocation, useNavigate } from "react-router-dom";
 import { useRouter, usePathname} from "expo-router";
-import { View, ActivityIndicator } from "react-native";
+import Loading from "../../components/share/loading";
+
 export const Authenticated = (props) => {
   const { children } = props;
   const auth = useAuth();
@@ -10,6 +10,7 @@ export const Authenticated = (props) => {
    const pathname = usePathname();
   const [isVerified, setIsVerified] = useState(false);
  console.log(pathname, "pathname autenticated")
+ 
   useEffect(() => {
       if (!auth.isAuthenticated) {
         console.log(pathname, "pathname autenticated entro a /")
@@ -21,5 +22,5 @@ export const Authenticated = (props) => {
   }, [auth.isAuthenticated, router]);
 
 
-  return isVerified ? <>{children}</> : <ActivityIndicator size="large" />;
+  return isVerified ? <>{children}</> :null;
 };
