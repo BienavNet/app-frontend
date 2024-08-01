@@ -1,15 +1,16 @@
 import { TouchableOpacity, View, Text, ScrollView } from "react-native";
 import { CustomInput, CustomInputCheckBox } from "../share/inputs/customInput";
-import { yupResolver } from "@hookform/resolvers/yup";
+
 import { loging } from "../../src/utils/schemas/login&registerSchema";
 import { useAuth } from "../../src/hooks/useAuth";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
+
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Feather from '@expo/vector-icons/Feather';
 import { useToast } from "react-native-toast-notifications";
-import { useEffect } from "react";
-
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 function FormLogin() {
   const router = useRouter();
   const toast = useToast();
@@ -75,17 +76,16 @@ function FormLogin() {
    ToastError(error.message);
     }
   };
-  
-  // useEffect(() => {
-  //   if (isAuthenticated && user) {
-  //     router.replace("/home");
-  //   }
-  // }, [isAuthenticated, user]);
   return (
     <>
       <ScrollView className="pb-10">
         <View className="flex items-left mx-4 space-y-4">
           <CustomInput
+            icon={  <FontAwesome6
+              name="user-circle"
+              size={24}
+              color="black"
+            />}
             label="Correo Electronico"
             control={control}
             rules={{
@@ -122,6 +122,7 @@ function FormLogin() {
                 message: "Debe incluir mayúscula, minúscula, número y símbolo",
               },
             }}
+            icon={<MaterialIcons name="password" size={24} color="black"/>}
             control={control}
             name="contrasena"
             placeholder="********"
@@ -133,14 +134,14 @@ function FormLogin() {
             rules={{
               required: true,
             }}
-            control={control}
+            control={control}adm
             name="rol"
             title="Soy un"
           />
           <View className="w-full">
             <TouchableOpacity
               onPress={handleSubmit(onsubmit)}
-              className="w-full bg-textPrincipal p-3 rounded-2xl mb-3"
+              className="w-11/12 self-center bg-textPrincipal p-3 rounded-2xl mb-3"
             >
               <Text className="text-white text-center font-bold text-xl">
                 Iniciar Sesion

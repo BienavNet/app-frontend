@@ -103,5 +103,14 @@ Ahora utilizaremos la navegation, para ellos instalamos las siguientes librerias
 # Step 3: Clear Metro bundler cache (recommended)
 > npx expo start -c
 
-npm install react-native-tab-view
-npm install react-native-tab-view
+
+> npm install react-native-tab-view
+A continuación, instale react-native-pager-view si planea admitir iOS y Android.
+Si utiliza Expo, para asegurarse de que obtiene las versiones compatibles de las bibliotecas, ejecute:
+> expo install react-native-pager-view
+Si no está utilizando Expo, ejecute lo siguiente:
+> npm install react-native-pager-view
+
+
+Get started with React Native Material
+> npm install @react-native-material/core

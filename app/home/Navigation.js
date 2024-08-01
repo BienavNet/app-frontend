@@ -1,14 +1,16 @@
 import { createDrawerNavigator, DrawerItemList } from "@react-navigation/drawer";
-import { View, Text , TouchableOpacity, StyleSheet, Alert} from "react-native";
+import { View, Text , TouchableOpacity, StyleSheet, Alert, Keyboard, Platform} from "react-native";
 import { useAuth } from "../../src/hooks/useAuth";
 import { HomeDirector } from "./director/index";
-import { Redirect, router } from "expo-router";
+import { Redirect, router, useFocusEffect } from "expo-router";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 //icons
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import IndexDocente from "../../components/ui/docentes/indexDocente";
+import { useState, useEffect , useCallback} from "react";
+import Loading from "../../components/share/loading";
 const IndexHome = () => {
   const { user } = useAuth();
   console.log("user rol", user.rol);
@@ -61,11 +63,26 @@ const Drawer3 = () => {
   );
 };
 
-function MyTabsHome() {
-  const Tab = createBottomTabNavigator();
-  const { user } = useAuth();
-  if (!user) return <Redirect href="/" />;
 
+function MyTabsHome() {
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const Tab = createBottomTabNavigator();
+  const { user} = useAuth();
+  useFocusEffect(
+    useCallback(() => {
+      const handleKeyboardShow = () => setKeyboardVisible(true);
+      const handleKeyboardHide = () => setKeyboardVisible(false);
+
+      const keyboardDidShowListener = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow', handleKeyboardShow);
+      const keyboardDidHideListener = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide', handleKeyboardHide);
+
+      return () => {
+        keyboardDidHideListener.remove();
+        keyboardDidShowListener.remove();
+      };
+    }, [])
+  );
+  if (!user) return <Redirect href="/" />;
   let tabs = [
     {
       name: "HomeTab",
@@ -81,6 +98,7 @@ function MyTabsHome() {
       },
     },
   ];
+ if(user.rol){
   switch (user.rol) {
     case "director":
       tabs.push(
@@ -110,6 +128,7 @@ function MyTabsHome() {
             tabBarIcon: ({ color }) => (
               <FontAwesome6 name="calendar-days" size={24} color={color} />
             ),
+            tabBarStyle: { display: "none"}
           },
         },
         {
@@ -144,17 +163,22 @@ function MyTabsHome() {
       <Redirect href="/" />;
       break;
   }
+ }
+ else{
+  return <Redirect href="/" />;
+ }
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={{
+      screenOptions={({route}) =>({
+        tabBarStyle: route.name == 'Docentes' && isKeyboardVisible ? { display: 'none'} : { display: 'flex'},
         tabBarActiveTintColor: "#3111F3",
         tabBarInactiveTintColor: "#000000",
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: "semibold",
         },
-      }}
+      })}
     >
       {tabs.map((tab, index) => (
         <Tab.Screen
@@ -164,35 +188,6 @@ function MyTabsHome() {
           options={tab.options}
         />
       ))}
-
-      {/* <Tab.Screen
-        name="Classroom"
-        options={{
-          headerShown: false,
-          title: "mis classroom",
-          tabBarLabel: "Classroom",
-          // tabBarIcon: ({ color }) => (
-          //   <MaterialCommunityIcons
-          //     name="google-classroom"
-          //     size={24}
-          //     color={color}
-          //   />
-          // ),
-        }}
-        component={Drawer2}
-      />
-      <Tab.Screen
-        name="Teacher"
-        options={{
-          headerShown: false,
-          title: "mis teacher",
-          tabBarLabel: "Teacher",
-          // tabBarIcon: ({ color }) => (
-          //   <FontAwesome5 name="user-plus" size={24} color={color} />
-          // ),
-        }}
-        component={Drawer3}
-      /> */}
     </Tab.Navigator>
   );
 }

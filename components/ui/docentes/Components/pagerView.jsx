@@ -39,7 +39,7 @@ export default function TabViewTop() {
     />
   );
   return (
-    <TabView
+     <TabView
       renderTabBar={renderTabBar}
       navigationState={{ index, routes }}
       renderScene={renderScene}

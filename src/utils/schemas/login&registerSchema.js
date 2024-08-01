@@ -1,5 +1,6 @@
 import * as yup from "yup";
 
+//iniciar sesion Schema
 export const loging = yup.object({
     contrasena: yup.string().required("Password es requerido").min(4).max(16),
     correo: yup
@@ -18,6 +19,7 @@ export const loging = yup.object({
   });
 
 
+// registrar doncente Schmea
   export const register = yup.object().shape({
     nombre: yup
       .string()
@@ -35,7 +37,6 @@ export const loging = yup.object({
         message: "debe ser mayo a 3 caracteres",
       })
       .max(30),
-    username: yup.string().required("Username es requerido"),
     constrasena: yup.string().required("Password es requerido").min(4).max(16),
     correo: yup
       .string()
