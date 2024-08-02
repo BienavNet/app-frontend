@@ -24,7 +24,7 @@ function FormLogin() {
         borderColor: "green",
       },
       type: "Success",
-      duration: 3000,
+      duration: 1000,
       successColor: "green",
       textStyle: {
         fontSize: 16,

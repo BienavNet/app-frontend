@@ -212,7 +212,7 @@ export const RegistrarDocente = () => {
           <View className="w-full pt-3">
             <TouchableOpacity
               onPress={handleSubmit(onsubmit)}
-              className="w-full self-center bg-textPrincipal p-3 rounded-2xl"
+              className="w-11/12 self-center bg-textPrincipal p-3 rounded-lg"
             >
               <Text className="text-white text-center font-bold text-xl">
                 Registrar

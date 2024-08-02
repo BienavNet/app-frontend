@@ -2,11 +2,9 @@ import { useState } from "react";
 import { View, useWindowDimensions, Text, StyleSheet } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { RegistrarDocente } from "../(registrarDocente)/formregister";
+import { ListDocente } from "../(listDocente)/listDocente";
 
 const ActualizarDocente = () => (
-  <View style={{ flex: 1, backgroundColor: "#F2F2F0" }}></View>
-);
-const ListDocente = () => (
   <View style={{ flex: 1, backgroundColor: "#F2F2F0" }}></View>
 );
 

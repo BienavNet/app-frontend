@@ -63,9 +63,9 @@ tambien existen otras alternativas
 +++ > npm i react-native-toast-notifications
 
 
-app/
- ├── _layout.js
- ├── index.js
+- app/
+-  ├── _layout.js
+   ├── index.js
  └── home/
      ├── _layout.js
      ├── index.js
@@ -114,3 +114,5 @@ Si no está utilizando Expo, ejecute lo siguiente:
 
 Get started with React Native Material
 > npm install @react-native-material/core
+
+> npm install @rneui/themed @rneui/base
