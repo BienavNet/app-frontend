@@ -13,6 +13,7 @@ export const CustomInput = ({
   rules = {},
   label,
   icon,
+  variant
 }) => {
   return (
     <Controller
@@ -29,6 +30,7 @@ export const CustomInput = ({
               className={`bg-black/5 rounded-xl w-full ${
                 error ? "border-red-400" : "border-slate-400"
               } border`}
+              variant={variant}
               label={label}
               leading={icon}
               value={value}

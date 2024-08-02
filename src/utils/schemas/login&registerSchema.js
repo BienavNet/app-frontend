@@ -37,12 +37,18 @@ export const loging = yup.object({
         message: "debe ser mayo a 3 caracteres",
       })
       .max(30),
-    constrasena: yup.string().required("Password es requerido").min(4).max(16),
+    contrasena: yup.string().required("Password es requerido").min(4).max(16),
     correo: yup
       .string()
       .email("Invalid email")
       .required("Correo Electronico es requerido")
       .min(4)
       .max(100),
-    cedula: yup.string().required("Cedula es requerido").min(10).max(10),
+    cedula: yup
+    .number()
+    .typeError("Cédula debe ser un número")
+    .required("Cedula es requerido")
+    .integer("Cédula debe ser un número entero")
+    .min(1000000000, "Cédula debe tener 10 dígitos")
+    .max(9999999999, "Cédula debe tener 10 dígitos"),
   });

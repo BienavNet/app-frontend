@@ -2,12 +2,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../services/axios";
 
 export const setSession = async (accessToken = null) => {
+  console.log(accessToken, "access token");
   if (accessToken) {
-    await AsyncStorage.setItem("access_token", accessToken);
-    axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    const setitemjtw = await AsyncStorage.setItem("access_token", accessToken);
+    console.log(setitemjtw, "setitemjtw");
+    const valueaxiosBearer = axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+   console.log(valueaxiosBearer, "valueaxiosBearer");
   } else {
-    await AsyncStorage.removeItem("access_token");
+    const redi = await AsyncStorage.removeItem("access_token");
+    console.log(redi, "redi");
     delete axiosInstance.defaults.headers.common["Authorization"];
+    console.log(valueaxiosBearer, "valueaxiosBearer");
   }
 
   // if (refreshToken) {

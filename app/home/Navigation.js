@@ -107,7 +107,6 @@ function MyTabsHome() {
           component: IndexDocente,
           options: {
             headerShown: false,
-            title: "docentes",
             tabBarLabel: "Docentes",
             tabBarIcon: ({ color }) => (
               <MaterialCommunityIcons
@@ -123,12 +122,10 @@ function MyTabsHome() {
           component: Drawer3,
           options: {
             headerShown: false,
-            title: "horario",
             tabBarLabel: "Horarios",
             tabBarIcon: ({ color }) => (
               <FontAwesome6 name="calendar-days" size={24} color={color} />
             ),
-            tabBarStyle: { display: "none"}
           },
         },
         {
@@ -136,7 +133,6 @@ function MyTabsHome() {
           component: Drawer3,
           options: {
             headerShown: false,
-            title: "salones",
             tabBarLabel: "Salones",
             tabBarIcon: ({ color }) => (
               <FontAwesome6 name="landmark" size={24} color={color} />
