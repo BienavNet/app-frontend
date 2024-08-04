@@ -1,6 +1,5 @@
 import axiosInstance from "./axios";
 
-
 export const registerDocente = async (nombre, apellido, cedula, correo, contrasena)  => {
 try {
     const response = await axiosInstance.post('/api/docente/save', {

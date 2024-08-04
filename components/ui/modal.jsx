@@ -27,12 +27,11 @@ export const ModalComponente = ({
         ]}
       >
         <View
-          className="bg-white rounded-t-3xl  p-5"
+          className="bg-white rounded-t-3xl p-5"
           style={[
             {
-              height: "60%",
+              height: "50%",
               width: "100%",
-              borderRadius: 8,
             },
             modalStyle.content,
           ]}

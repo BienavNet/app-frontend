@@ -1,4 +1,4 @@
-import { Text, ScrollView, Alert } from "react-native";
+import { Text, ScrollView, Alert, View } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import {
@@ -10,12 +10,11 @@ import { useCallback, useState } from "react";
 import { capitalizeFirstLetter } from "../../../../src/utils/functiones/functions";
 import { useFocusEffect } from "@react-navigation/native";
 import { ModalComponente } from "../../modal";
+
 export const ListDocente = () => {
   const [docentes, setDocentes] = useState([]);
-  console.log(" docentes", docentes);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedDocente, setSelectedDocente] = useState({});
-  // console.log("selectedDocente", selectedDocente);
+  const [selectedDocente, setSelectedDocente] = useState([]);
 
   const fetchDocentes = useCallback(async () => {
     try {
@@ -25,38 +24,23 @@ export const ListDocente = () => {
       throw new Error("Error fetching docentes:", error);
     }
   }, []);
-
-  // const fetchDocente =async (cedula) => {
-  //   try {
-  //     const res = await getDocenteOne(cedula);
-  //     setSelectedDocente(res);
-  //     setModalVisible(true);
-  //     console.log("res", res);
-  //   } catch (error) {
-  //     throw new Error("Error fetching the a docente:", error);
-  //   }
-  // }
-
   useFocusEffect(
     useCallback(() => {
       fetchDocentes();
     }, [fetchDocentes])
   );
-
   const handleInfoPress = async (cedula) => {
+    setModalVisible(true);
     try {
-          const res = await getDocenteOne(cedula);
-          setSelectedDocente(res);
-          setModalVisible(true);
-          console.log("res", res);
-        } catch (error) {
-          throw new Error("Error fetching the a docente:", error);
-        }
+      const res = await getDocenteOne(cedula);
+      setSelectedDocente(res);
+    } catch (error) {
+      throw new Error("Error fetching the a docente:", error);
+    }
   };
-
   const handleCloseModal = () => {
     setModalVisible(false);
-    setSelectedDocente({});
+    setSelectedDocente([]);
   };
   const handleDeletePress = (docenteId) => {
     Alert.alert(
@@ -78,7 +62,6 @@ export const ListDocente = () => {
               );
               Alert.alert("Docente eliminado con éxito");
             } catch (error) {
-              console.error("Error deleting docente:", error);
               Alert.alert("Error al eliminar el docente");
             }
           },
@@ -90,7 +73,6 @@ export const ListDocente = () => {
     <ScrollView>
       {docentes.length === 0 ? (
         <Text style={{ textAlign: "center", marginTop: 20 }}>
-          {" "}
           Ningun registro
         </Text>
       ) : (
@@ -100,9 +82,9 @@ export const ListDocente = () => {
             leftContent={(reset) => (
               <Button
                 title="Info"
-                onPress={
-                  async () => {
+                onPress={async () => {
                   reset();
+                  console.log("Botón de info presionado");
                   await handleInfoPress(docente.cedula);
                 }}
                 icon={{ name: "info", color: "white" }}
@@ -124,7 +106,8 @@ export const ListDocente = () => {
             <Icon name="account" size={25} color="black" />
             <ListItem.Content>
               <ListItem.Title className="font-extrabold text-lg">
-                {capitalizeFirstLetter(docente.nombre)}
+                {capitalizeFirstLetter(docente.nombre)}{" "}
+                {capitalizeFirstLetter(docente.apellido)}
               </ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
@@ -137,12 +120,18 @@ export const ListDocente = () => {
         modalVisible={modalVisible}
         handleCloseModal={handleCloseModal}
       >
-          {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-          {capitalizeFirstLetter(selectedDocente.nombre)}{" "}
-          {capitalizeFirstLetter(selectedDocente.apellido)}
-        </Text>
-        <Text>Cédula: {selectedDocente.cedula}</Text>
-        <Text>Correo: {selectedDocente.correo}</Text> */}
+        {selectedDocente.length > 0 ? (
+          <>
+            <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+              {capitalizeFirstLetter(selectedDocente[0].nombre)}{" "}
+              {capitalizeFirstLetter(selectedDocente[0].apellido)}
+            </Text>
+            <Text style={{fontSize: 16, fontWeight: "bold" }}>Cédula: <Text className="font-normal">{selectedDocente[0].cedula}</Text></Text>
+            <Text style={{fontSize: 16, fontWeight: "bold" }}>Correo: <Text className="font-normal">{selectedDocente[0].correo}</Text></Text>
+          </>
+        ) : (
+          <Text>No hay datos disponibles</Text>
+        )}
       </ModalComponente>
     </ScrollView>
   );
