@@ -57,7 +57,7 @@ export const CustomInput = ({
 const CheckBox = ({ label, value, rfv, onChange, error, selectedOption }) => {
   const isSelected = selectedOption === value;
   const borderColor =
-    error && !selectedOption ? "red" : isSelected ? "black" : "#DFE3E3";
+    error && !selectedOption ? "red" : isSelected ? "black" : "#929292";
   return (
     <View className="mb-5 flex-row">
       <Checkbox
@@ -70,7 +70,7 @@ const CheckBox = ({ label, value, rfv, onChange, error, selectedOption }) => {
         onValueChange={() => onChange(value)}
         className="bg-black/5 self-center border-2 rounded-full"
       />
-      <Text className="m-2 font-semibold">{label}</Text>
+      <Text className="m-1 font-semibold text-sm">{label}</Text>
     </View>
   );
 };
@@ -129,12 +129,4 @@ export const CustomInputCheckBox = ({ control, name, title, rules = {} }) => {
     />
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
-});
+  
