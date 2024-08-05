@@ -116,3 +116,6 @@ Get started with React Native Material
 > npm install @react-native-material/core
 
 > npm install @rneui/themed @rneui/base
+
+los Stack
+> npm install @react-navigation/stack

@@ -1,4 +1,3 @@
-
 import FormLogin from "../components/ui/formLogin";
 import { methods as Title } from "../components/share/titulos/textIndexLogin";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -8,7 +7,7 @@ import { PublicRoute } from "../src/hooks/PublicRoute";
 export default function Index() {
   const insert = useSafeAreaInsets();
   return (
-    <PublicRoute> 
+    <PublicRoute>
       <View
         className="bg-white flex-1 items-center content-center"
         style={{ paddingTop: insert.top, paddingBottom: insert.bottom }}
@@ -16,7 +15,6 @@ export default function Index() {
         <Title.TitleLogin />
         <FormLogin />
       </View>
-       </PublicRoute>
+    </PublicRoute>
   );
 }
-

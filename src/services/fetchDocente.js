@@ -25,10 +25,8 @@ export const getDocenteAll = async () => {
 }
 
 export const getDocenteOne = async (cedula) => {
-    console.log(cedula, "cedula")
     try {
         const response = await axiosInstance.get(`/api/docente/${cedula}`);
-        console.log(response, "response de data por cedula ")
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)

@@ -1,4 +1,4 @@
-import { Text, ScrollView, Alert, View } from "react-native";
+import { Text, ScrollView, Alert, View, RefreshControl } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import {
@@ -15,15 +15,13 @@ export const ListDocente = () => {
   const [docentes, setDocentes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDocente, setSelectedDocente] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchDocentes = useCallback(async () => {
-    try {
       const res = await getDocenteAll();
       setDocentes(res);
-    } catch (error) {
-      throw new Error("Error fetching docentes:", error);
-    }
   }, []);
+
   useFocusEffect(
     useCallback(() => {
       fetchDocentes();
@@ -69,8 +67,23 @@ export const ListDocente = () => {
       ]
     );
   };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchDocentes();
+    setRefreshing(false);
+  })
+
   return (
-    <ScrollView>
+    <ScrollView refreshControl={
+    <RefreshControl
+    refreshing={refreshing}
+    colors={["#78e08f"]}
+    onRefresh={() =>{
+      onRefresh();
+    }}
+    progressBackgroundColor="#1371C3"
+    />}>
       {docentes.length === 0 ? (
         <Text style={{ textAlign: "center", marginTop: 20 }}>
           Ningun registro
@@ -84,7 +97,6 @@ export const ListDocente = () => {
                 title="Info"
                 onPress={async () => {
                   reset();
-                  console.log("Botón de info presionado");
                   await handleInfoPress(docente.cedula);
                 }}
                 icon={{ name: "info", color: "white" }}
