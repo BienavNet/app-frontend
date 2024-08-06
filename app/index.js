@@ -1,4 +1,4 @@
-import FormLogin from "../components/ui/formLogin";
+import FormLogin from "../components/ui/login/formLogin";
 import { methods as Title } from "../components/share/titulos/textIndexLogin";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View } from "react-native";

@@ -15,7 +15,7 @@ import { useAuth } from "../../src/hooks/useAuth";
 import { HomeDirector } from "./director/index";
 import { Redirect, useFocusEffect } from "expo-router";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import IndexDocente from "../../components/ui/docentes/indexDocente";
+import IndexDocente from "../../components/ui/docentes/ScreenDocente";
 import { useState, useCallback } from "react";
 
 //icons

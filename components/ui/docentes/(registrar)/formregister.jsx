@@ -9,7 +9,7 @@ import {
   getDocenteOne,
   registerDocente,
   updateDocente,
-} from "../../../../src/services/fetchDocente";
+} from "../../../../src/services/fetchData/fetchDocente";
 import { useToast } from "react-native-toast-notifications";
 import { useEffect, useState } from "react";
 export const RegistrarDocente = ({ navigation, route }) => {

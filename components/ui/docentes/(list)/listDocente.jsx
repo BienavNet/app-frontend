@@ -5,11 +5,11 @@ import {
   DeleteDocenteOne,
   getDocenteAll,
   getDocenteOne,
-} from "../../../../src/services/fetchDocente";
+} from "../../../../src/services/fetchData/fetchDocente";
 import { useCallback, useState } from "react";
 import { capitalizeFirstLetter } from "../../../../src/utils/functiones/functions";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { ModalComponente } from "../../modal";
+import { ModalComponente } from "../../customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export const ListDocente = () => {

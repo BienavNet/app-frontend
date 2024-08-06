@@ -1,8 +1,8 @@
 import { TouchableOpacity, View, Text, ScrollView } from "react-native";
-import { CustomInput, CustomInputCheckBox } from "../share/inputs/customInput";
+import { CustomInput, CustomInputCheckBox } from "../../share/inputs/customInput";
 
-import { loging } from "../../src/utils/schemas/login&registerSchema";
-import { useAuth } from "../../src/hooks/useAuth";
+import { loging } from "../../../src/utils/schemas/login&registerSchema";
+import { useAuth } from "../../../src/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";

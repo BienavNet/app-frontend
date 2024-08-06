@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { View, useWindowDimensions, Text, StyleSheet } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import { RegistrarDocente } from "../(registrarDocente)/formregister";
-import { ListDocente } from "../(listDocente)/listDocente";
+import { RegistrarDocente } from "../docentes/(registrarDocente)/formregister";
+import { ListDocente } from "../docentes/(list)/listDocente";
 
 const ActualizarDocente = () => (
   <View style={{ flex: 1, backgroundColor: "#F2F2F0" }}></View>
