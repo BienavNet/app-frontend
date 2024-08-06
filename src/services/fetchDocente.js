@@ -41,3 +41,15 @@ export const DeleteDocenteOne = async (cedula) => {
         throw new Error(error.response.data.message)
     }
 }
+
+export const updateDocente = async (cedula, data) => {
+    console.log('cedula updated', cedula, " data :", data);
+    try {
+        const response = await axiosInstance.patch(`/api/docente/update/${cedula}`, data);
+        console.log('Respuesta del backend:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error en la actualización:', error.response?.data);
+        throw new Error(error.response?.data?.message || 'Error en la actualización')
+    }
+}

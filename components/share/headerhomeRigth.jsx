@@ -20,9 +20,11 @@ const styles = StyleSheet.create({
   },
 
   rol: {
-    fontSize: 16,
+    fontSize: 18,
     color: "black",
     fontWeight: "bold",
+    color:'#ffffff',
+
   },
   rightContainer: {
     flexDirection: "row",

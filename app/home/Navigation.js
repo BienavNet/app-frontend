@@ -25,6 +25,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import HeaderDrawer from "../../components/share/headerhomeRigth";
 import HeaderLeft from "../../components/share/headerhomeLeft";
 import { DrawerActions } from "@react-navigation/native";
+import { capitalizeFirstLetter } from "../../src/utils/functiones/functions";
 
 const IndexHome = () => {
   const { user } = useAuth();
@@ -200,7 +201,8 @@ function MyTabsHome() {
         },
         headerTintColor: "#FFFFFF",
         headerRight: () => {
-          return <HeaderDrawer rol="admin" />;
+          
+          return <HeaderDrawer rol={capitalizeFirstLetter(user.rol)} />;
         },
         headerLeft: () => {
           return (

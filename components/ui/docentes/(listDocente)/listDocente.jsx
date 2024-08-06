@@ -8,18 +8,21 @@ import {
 } from "../../../../src/services/fetchDocente";
 import { useCallback, useState } from "react";
 import { capitalizeFirstLetter } from "../../../../src/utils/functiones/functions";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { ModalComponente } from "../../modal";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export const ListDocente = () => {
+
+  const navigation = useNavigation();
   const [docentes, setDocentes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDocente, setSelectedDocente] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchDocentes = useCallback(async () => {
-      const res = await getDocenteAll();
-      setDocentes(res);
+    const res = await getDocenteAll();
+    setDocentes(res);
   }, []);
 
   useFocusEffect(
@@ -72,18 +75,21 @@ export const ListDocente = () => {
     setRefreshing(true);
     await fetchDocentes();
     setRefreshing(false);
-  })
+  });
 
   return (
-    <ScrollView refreshControl={
-    <RefreshControl
-    refreshing={refreshing}
-    colors={["#78e08f"]}
-    onRefresh={() =>{
-      onRefresh();
-    }}
-    progressBackgroundColor="#1371C3"
-    />}>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          colors={["#78e08f"]}
+          onRefresh={() => {
+            onRefresh();
+          }}
+          progressBackgroundColor="#1371C3"
+        />
+      }
+    >
       {docentes.length === 0 ? (
         <Text style={{ textAlign: "center", marginTop: 20 }}>
           Ningun registro
@@ -117,13 +123,18 @@ export const ListDocente = () => {
           >
             <Icon name="account" size={25} color="black" />
             <ListItem.Content>
-              <ListItem.Title className="font-extrabold text-lg">
-                {capitalizeFirstLetter(docente.nombre)}{" "}
-                {capitalizeFirstLetter(docente.apellido)}
+              <ListItem.Title>
+                <TouchableOpacity className="flex-row" onPress={()=> { navigation.navigate('FormScreen',
+                {
+                  cedula:docente.cedula
+                })}} >
+                  <Text className="font-extrabold text-lg">{capitalizeFirstLetter(docente.nombre)} </Text>
+                  <Text className="font-extrabold text-lg">{capitalizeFirstLetter(docente.apellido)}</Text>
+                </TouchableOpacity>
               </ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
-          </ListItem.Swipeable>
+          </ListItem.Swipeable> 
         ))
       )}
       <ModalComponente
@@ -138,8 +149,14 @@ export const ListDocente = () => {
               {capitalizeFirstLetter(selectedDocente[0].nombre)}{" "}
               {capitalizeFirstLetter(selectedDocente[0].apellido)}
             </Text>
-            <Text style={{fontSize: 16, fontWeight: "bold" }}>Cédula: <Text className="font-normal">{selectedDocente[0].cedula}</Text></Text>
-            <Text style={{fontSize: 16, fontWeight: "bold" }}>Correo: <Text className="font-normal">{selectedDocente[0].correo}</Text></Text>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+              Cédula:{" "}
+              <Text className="font-normal">{selectedDocente[0].cedula}</Text>
+            </Text>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+              Correo:{" "}
+              <Text className="font-normal">{selectedDocente[0].correo}</Text>
+            </Text>
           </>
         ) : (
           <Text>No hay datos disponibles</Text>

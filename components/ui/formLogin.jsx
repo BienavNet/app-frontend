@@ -42,7 +42,7 @@ function FormLogin() {
         borderColor: "red",
       },
       type: "Error",
-      duration: 1000,
+      duration: 500,
       dangerColor: "red",
       textStyle: {
         fontSize: 16,
