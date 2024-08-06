@@ -119,3 +119,6 @@ Get started with React Native Material
 
 los Stack
 > npm install @react-navigation/stack
+
+
+..
