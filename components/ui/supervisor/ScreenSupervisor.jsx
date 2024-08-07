@@ -1,14 +1,14 @@
 import { TouchableOpacity } from "react-native";
-import { ListDocente } from "./(list)/listDocente";
-import { RegistrarDocente } from "./(registrar)/formregister";
+import { ListSupervisor } from "./list";
+import { RegistrarSupervisor } from "./register";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import CustomStack from "../customStack";
 
-export default function DocenteHome() {
+export default function IndexSupervisor() {
   const screens = [
     {
       name: "ListScreen",
-      component: ListDocente,
+      component: ListSupervisor,
       title: "Lista",
       headerRight: (navigation) => (
         <TouchableOpacity
@@ -26,7 +26,7 @@ export default function DocenteHome() {
     },
     {
       name: "FormScreen",
-      component: RegistrarDocente,
+      component: RegistrarSupervisor,
       title: "Registrar Supervisor",
     },
   ];

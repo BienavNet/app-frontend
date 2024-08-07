@@ -17,7 +17,7 @@ import { Redirect, useFocusEffect } from "expo-router";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import IndexDocente from "../../components/ui/docentes/ScreenDocente";
 import { useState, useCallback } from "react";
-
+import IndexSupervisor from "../../components/ui/supervisor/ScreenSupervisor";
 //icons
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -78,9 +78,45 @@ const Drawer3 = () => {
     </>
   );
 };
-
+const CustomDrawerContent = (props) => {
+  const { logout } = useAuth(); // Función para cerrar sesión
+  const handleLogout = () => {
+    Alert.alert(
+      "Confirmación de Cierre de Sesión",
+      "¿Estás seguro de que deseas cerrar sesión?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Confirmar",
+          onPress: () => {
+            logout();
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+  return (
+    <View style={{ flex: 1, paddingTop: 30 }}>
+      <DrawerItemList {...props} />
+      <View style={{ flex: 1, justifyContent: "flex-end", padding: 5 }}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleLogout}
+          color="red"
+        >
+          <Text style={styles.text}>Cerrar Sesión</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 function MyTabsHome() {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  console.log(isKeyboardVisible, "Is keyboard visible");
   const Tab = createBottomTabNavigator();
   const { user } = useAuth();
   useFocusEffect(
@@ -109,9 +145,10 @@ function MyTabsHome() {
       name: "Dashboard",
       component: IndexHome,
       options: {
+        headerShown: false,
         tabBarLabel: "Home",
         tabBarIcon: ({ color }) => (
-          <FontAwesome6 name="house" size={24} color={color} />
+          <FontAwesome6 name="house" size={26} color={color} />
         ),
         tabBarBadge: 4,
       },
@@ -130,21 +167,21 @@ function MyTabsHome() {
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons
                   name="human-male-board"
-                  size={24}
+                  size={26}
                   color={color}
                 />
               ),
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("FormScreen")}
-                >
-                  <Text
-                    style={{ color: "#fff", marginRight: 20, fontSize: 15 }}
-                  >
-                    Nuevo
-                  </Text>
-                </TouchableOpacity>
-              ),
+              // headerRight: () => (
+              //   <TouchableOpacity
+              //     onPress={() => navigation.navigate("FormScreen")}
+              //   >
+              //     <Text
+              //       style={{ color: "#fff", marginRight: 20, fontSize: 15 }}
+              //     >
+              //       Nuevo
+              //     </Text>
+              //   </TouchableOpacity>
+              // ),
             },
           },
           {
@@ -154,7 +191,7 @@ function MyTabsHome() {
               headerShown: false,
               tabBarLabel: "Horarios",
               tabBarIcon: ({ color }) => (
-                <FontAwesome6 name="calendar-days" size={24} color={color} />
+                <FontAwesome6 name="calendar-days" size={26} color={color} />
               ),
             },
           },
@@ -165,7 +202,7 @@ function MyTabsHome() {
               headerShown: false,
               tabBarLabel: "Salones",
               tabBarIcon: ({ color }) => (
-                <FontAwesome6 name="landmark" size={24} color={color} />
+                <FontAwesome6 name="landmark" size={26} color={color} />
               ),
             },
           }
@@ -201,8 +238,10 @@ function MyTabsHome() {
         },
         headerTintColor: "#FFFFFF",
         headerRight: () => {
-          
-          return <HeaderDrawer rol={capitalizeFirstLetter(user.rol)} />;
+          console.log(route);
+          return route.name === "Dashboard" ? (
+            <HeaderDrawer rol={capitalizeFirstLetter(user.rol)} />
+          ) : null;
         },
         headerLeft: () => {
           return (
@@ -221,8 +260,8 @@ function MyTabsHome() {
         tabBarActiveTintColor: "#3111F3",
         tabBarInactiveTintColor: "#000000",
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: "semibold",
+          fontSize: 15,
+          fontWeight: "bold",
         },
       })}
     >
@@ -238,56 +277,34 @@ function MyTabsHome() {
   );
 }
 
-const CustomDrawerContent = (props) => {
-  const { logout } = useAuth(); // Función para cerrar sesión
-  const handleLogout = () => {
-    Alert.alert(
-      "Confirmación de Cierre de Sesión",
-      "¿Estás seguro de que deseas cerrar sesión?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Confirmar",
-          onPress: () => {
-            logout();
-          },
-        },
-      ],
-      { cancelable: true }
-    );
-  };
-  return (
-    <View style={{ flex: 1, paddingTop: 30 }}>
-      {/* Renderiza los elementos predeterminados del drawer */}
-      <DrawerItemList {...props} />
-      <View style={{ flex: 1, justifyContent: "flex-end", padding: 5 }}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleLogout}
-          color="red"
-        >
-          <Text style={styles.text}>Cerrar Sesión</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
 export default function DraweHome() {
   const Drawer = createDrawerNavigator();
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
-      screenOptions={{
-        headerShown: false,
+      screenOptions={({ route, navigation }) => ({
+        headerShown: route.name === "Dashboard" ? false: true,
+        
         drawerActiveTintColor: "#3111F3",
         drawerInactiveTintColor: "#000000",
         drawerLabelStyle: { fontSize: 16 },
         headerStyle: { backgroundColor: "#3111F3" },
         headerTitleStyle: { color: "#fff" },
-      }}
+        headerLeft: () => {
+          return (
+            <HeaderLeft
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+              icon={
+                <FontAwesome6
+                  name="bars-staggered"
+                  size={30}
+                  color="#ffffff"
+                />
+              }
+            />
+          );
+        }
+      })}
     >
       <Drawer.Screen
         options={{
@@ -323,8 +340,9 @@ export default function DraweHome() {
           ),
         }}
         name="Supervisor"
-        component={Drawer3}
+        component={IndexSupervisor}
       />
+
       <Drawer.Screen
         options={{
           drawerIcon: ({ color }) => (

@@ -12,7 +12,7 @@ const CustomStack = ({ initialRouteName, screens }) => {
           options={({ navigation }) => ({
             title: screen.title,
             headerStyle: {
-              backgroundColor: screen.headerStyle?.backgroundColor || "#3111F3",
+              backgroundColor: screen.headerStyle?.backgroundColor || "#1371C3",
             },
             headerTintColor: screen.headerTintColor || "#fff",
             headerTitleStyle: {

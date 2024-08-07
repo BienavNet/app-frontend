@@ -21,7 +21,7 @@ export const loging = yup.object({
     .required("Debe seleccionar una opción"),
 });
 
-// registrar doncente Schema
+// registrar doncente, supervisor (Schema)
 export const register = yup.object().shape({
   nombre: yup.string().lowercase().required("Nombre es requerido").min(3, {
       message: "debe ser mayo a 3 caracteres",
@@ -29,12 +29,12 @@ export const register = yup.object().shape({
   apellido: yup.string().lowercase().required("Apellido es requerido").min(3, {
       message: "debe ser mayo a 3 caracteres",
     }).max(30).matches(/^[A-Za-z]+$/, "Apellido no es válido"),
-  contrasena: yup.string().required("Password es requerido").min(4).max(16),
+  contrasena: yup.string().required("Password es requerido").min(4).max(16).matches(/^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{4,16}$/, "Debe incluir mayúscula, minúscula, número y símbolo"),
   correo: yup.string().email("Invalid email").required("Correo Electronico es requerido").min(4).max(100),
   cedula: yup.number().typeError("Cédula debe ser un número").required("Cedula es requerido").integer("Cédula debe ser un número entero").min(8, "Cédula debe tener 8 dígitos").max(10, "Cédula debe tener 10 dígitos"),
 });
 
-// update doncente Schema
+// update doncente, supervisor (Schema)
 export const update = yup.object().shape({
   nombre: yup.string().lowercase().required("Nombre es requerido")
     .min(3, "Nombre debe ser mínimo 3 caracteres")

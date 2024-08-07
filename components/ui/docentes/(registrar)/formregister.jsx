@@ -99,7 +99,7 @@ export const RegistrarDocente = ({ navigation, route }) => {
     reset,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(editing ? update:register),
+    resolver: yupResolver(editing ? update : register),
   });
 
   return (
@@ -122,21 +122,6 @@ export const RegistrarDocente = ({ navigation, route }) => {
               <View>
                 <CustomInput
                   variant="outlined"
-                  rules={{
-                    required: "cedula es requerido",
-                    minLength: {
-                      value: 8,
-                      message: "Cedula debe ser mínimo 8 character",
-                    },
-                    maxLength: {
-                      value: 10,
-                      message: "Cedula debe ser maximo 10 character",
-                    },
-                    pattern: {
-                      value: /^[0-9]+$/,
-                      message: "Cedula no es válido",
-                    },
-                  }}
                   name="cedula"
                   control={control}
                   placeholder="123456789"
@@ -162,17 +147,6 @@ export const RegistrarDocente = ({ navigation, route }) => {
                         color="black"
                       />
                     }
-                    rules={{
-                      required: "nombre es requerido",
-                      minLength: {
-                        value: 4,
-                        message: "Nombre debe ser mínimo 4 character",
-                      },
-                      pattern: {
-                        value: /^[A-Za-z]+$/,
-                        message: "Nombre no es válido",
-                      },
-                    }}
                     name="nombre"
                   />
                 </View>
@@ -180,17 +154,6 @@ export const RegistrarDocente = ({ navigation, route }) => {
                 <View className="w-1/2 justify-self-end">
                   <CustomInput
                     variant="outlined"
-                    rules={{
-                      required: "apellido es requerido",
-                      minLength: {
-                        value: 4,
-                        message: "Apellido debe ser mínimo 4 character",
-                      },
-                      pattern: {
-                        value: /^[A-Za-z]+$/,
-                        message: "Apellido no es válido",
-                      },
-                    }}
                     name="apellido"
                     control={control}
                     placeholder="example"
@@ -214,44 +177,12 @@ export const RegistrarDocente = ({ navigation, route }) => {
                       color="black"
                     />
                   }
-                  rules={{
-                    required: "Correo Electronico es requerido",
-                    minLength: {
-                      value: 4,
-                      message: "Correo debe ser mínimo 4 character",
-                    },
-                    maxLength: {
-                      value: 100,
-                      message: "Correo debe ser maximo 100 character",
-                    },
-                    pattern: {
-                      value:
-                        /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/,
-                      message: "Correo no es válido",
-                    },
-                  }}
+                 
                 />
               </View>
 
               <View>
                 <CustomInput
-                  rules={{
-                    required: "Este campo es requerido",
-                    minLength: {
-                      value: 4,
-                      message: "Password debe ser mínimo 4 character",
-                    },
-                    maxLength: {
-                      value: 16,
-                      message: "Password debe ser maximo 16 character",
-                    },
-                    pattern: {
-                      value:
-                        /^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{4,16}$/,
-                      message:
-                        "Debe incluir mayúscula, minúscula, número y símbolo",
-                    },
-                  }}
                   variant="outlined"
                   name="contrasena"
                   control={control}
@@ -280,17 +211,7 @@ export const RegistrarDocente = ({ navigation, route }) => {
                         color="black"
                       />
                     }
-                    rules={{
-                      required: "nombre es requerido",
-                      minLength: {
-                        value: 4,
-                        message: "Nombre debe ser mínimo 4 character",
-                      },
-                      pattern: {
-                        value: /^[A-Za-z]+$/,
-                        message: "Nombre no es válido",
-                      },
-                    }}
+                   
                     name="nombre"
                   />
                 </View>
@@ -298,17 +219,7 @@ export const RegistrarDocente = ({ navigation, route }) => {
                 <View className="w-1/2 justify-self-end">
                   <CustomInput
                     variant="outlined"
-                    rules={{
-                      required: "apellido es requerido",
-                      minLength: {
-                        value: 4,
-                        message: "Apellido debe ser mínimo 4 character",
-                      },
-                      pattern: {
-                        value: /^[A-Za-z]+$/,
-                        message: "Apellido no es válido",
-                      },
-                    }}
+                   
                     name="apellido"
                     control={control}
                     placeholder="example"
@@ -332,22 +243,7 @@ export const RegistrarDocente = ({ navigation, route }) => {
                       color="black"
                     />
                   }
-                  rules={{
-                    required: "Correo Electronico es requerido",
-                    minLength: {
-                      value: 4,
-                      message: "Correo debe ser mínimo 4 character",
-                    },
-                    maxLength: {
-                      value: 100,
-                      message: "Correo debe ser maximo 100 character",
-                    },
-                    pattern: {
-                      value:
-                        /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/,
-                      message: "Correo no es válido",
-                    },
-                  }}
+                 
                 />
               </View>
             </>

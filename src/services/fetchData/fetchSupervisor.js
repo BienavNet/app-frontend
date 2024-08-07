@@ -33,7 +33,7 @@ export const getSupervisorOne = async (cedula) => {
     }
 }
 
-export const DeleteSupervisorOne = async (cedula) => {
+export const deleteSupervisorOne = async (cedula) => {
     try {
         const response = await axiosInstance.delete(`/api/supervisor/delete/${cedula}`);
         return response.data;
