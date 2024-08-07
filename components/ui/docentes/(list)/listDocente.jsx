@@ -13,11 +13,11 @@ import { ModalComponente } from "../../customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export const ListDocente = () => {
-
   const navigation = useNavigation();
   const [docentes, setDocentes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedDocente, setSelectedDocente] = useState([]);
+  const [selectedDocente, setSelectedDocente] = useState(null);
+  console.log("selectedDocente", selectedDocente);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchDocentes = useCallback(async () => {
@@ -31,17 +31,26 @@ export const ListDocente = () => {
     }, [fetchDocentes])
   );
   const handleInfoPress = async (cedula) => {
-    setModalVisible(true);
     try {
+      setModalVisible(true);
       const res = await getDocenteOne(cedula);
-      setSelectedDocente(res);
+      const docenteSeleccionado = res.find(
+        (docente) => docente.cedula === cedula
+      );
+
+      if (docenteSeleccionado) {
+        setSelectedDocente(docenteSeleccionado);
+      } else {
+        console.error("Docente no encontrado");
+        setSelectedDocente(null);
+      }
     } catch (error) {
       throw new Error("Error fetching the a docente:", error);
     }
   };
   const handleCloseModal = () => {
     setModalVisible(false);
-    setSelectedDocente([]);
+    setSelectedDocente(null);
   };
   const handleDeletePress = (docenteId) => {
     Alert.alert(
@@ -75,7 +84,7 @@ export const ListDocente = () => {
     setRefreshing(true);
     await fetchDocentes();
     setRefreshing(false);
-  });
+  }, [fetchDocentes]);
 
   return (
     <ScrollView
@@ -124,17 +133,25 @@ export const ListDocente = () => {
             <Icon name="account" size={25} color="black" />
             <ListItem.Content>
               <ListItem.Title>
-                <TouchableOpacity className="flex-row" onPress={()=> { navigation.navigate('FormScreen',
-                {
-                  cedula:docente.cedula
-                })}} >
-                  <Text className="font-extrabold text-lg">{capitalizeFirstLetter(docente.nombre)} </Text>
-                  <Text className="font-extrabold text-lg">{capitalizeFirstLetter(docente.apellido)}</Text>
+                <TouchableOpacity
+                  className="flex-row"
+                  onPress={() => {
+                    navigation.navigate("FormScreen", {
+                      cedula: docente.cedula,
+                    });
+                  }}
+                >
+                  <Text className="font-extrabold text-lg">
+                    {capitalizeFirstLetter(docente.nombre)}{" "}
+                  </Text>
+                  <Text className="font-extrabold text-lg">
+                    {capitalizeFirstLetter(docente.apellido)}
+                  </Text>
                 </TouchableOpacity>
               </ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
-          </ListItem.Swipeable> 
+          </ListItem.Swipeable>
         ))
       )}
       <ModalComponente
@@ -143,7 +160,25 @@ export const ListDocente = () => {
         modalVisible={modalVisible}
         handleCloseModal={handleCloseModal}
       >
-        {selectedDocente.length > 0 ? (
+        {selectedDocente ? (
+          <>
+            <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+              {capitalizeFirstLetter(selectedDocente.nombre)}{" "}
+              {capitalizeFirstLetter(selectedDocente.apellido)}
+            </Text>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+              Cédula:{" "}
+              <Text className="font-normal">{selectedDocente.cedula}</Text>
+            </Text>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+              Correo:{" "}
+              <Text className="font-normal">{selectedDocente.correo}</Text>
+            </Text>
+          </>
+        ) : (
+          <Text>No hay datos disponibles</Text>
+        )}
+        {/* {selectedDocente.length > 0 ? (
           <>
             <Text style={{ fontSize: 22, fontWeight: "bold" }}>
               {capitalizeFirstLetter(selectedDocente[0].nombre)}{" "}
@@ -160,7 +195,7 @@ export const ListDocente = () => {
           </>
         ) : (
           <Text>No hay datos disponibles</Text>
-        )}
+        )} */}
       </ModalComponente>
     </ScrollView>
   );

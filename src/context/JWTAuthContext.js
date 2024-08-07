@@ -57,10 +57,8 @@ export const AuthProvider = ({ children }) => {
         const access_token = await AsyncStorage.getItem("access_token");
         if (access_token && validateToken(access_token)) {
           setSession(access_token);
-          // const rol = AsyncStorage.getItem("rol");
           const response = await axiosInstance.get(`/login/sesion`);
           const { user } = response.data;
-          console.log(user, "cunado is mount ");
           dispatch({
             type: "INITIALIZE",
             payload: {
@@ -112,7 +110,6 @@ export const AuthProvider = ({ children }) => {
       await getTokens(correo, contrasena, rol);
       const response = await axiosInstance.get(`/login/sesion`);
       const { user } = response.data;
-      console.log("user de login", + user)
       dispatch({
         type: "LOGIN",
         payload: {
