@@ -31,7 +31,11 @@ export const register = yup.object().shape({
     }).max(30).matches(/^[A-Za-z]+$/, "Apellido no es válido"),
   contrasena: yup.string().required("Password es requerido").min(4).max(16).matches(/^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{4,16}$/, "Debe incluir mayúscula, minúscula, número y símbolo"),
   correo: yup.string().email("Invalid email").required("Correo Electronico es requerido").min(4).max(100),
-  cedula: yup.number().typeError("Cédula debe ser un número").required("Cedula es requerido").integer("Cédula debe ser un número entero").min(8, "Cédula debe tener 8 dígitos").max(10, "Cédula debe tener 10 dígitos"),
+  cedula: yup.number().required("Cedula es requerido").integer("Cédula debe ser un número entero").typeError(/^\d{8}$|^\d{10}$/, "Cédula debe ser un número").test(
+    'length',
+    'Cédula debe tener 8 o 10 dígitos',
+    value => value && (value.toString().length === 8 || value.toString().length === 10)
+  ),
 });
 
 // update doncente, supervisor (Schema)

@@ -11,15 +11,46 @@ export const RegistrarForm = ({
   title,
   schema,
   onSubmit,
-  initialValues = {},
   fields,
   submitButtonLabel,
-  editMode = false,
+  editMode,
   navigation,
   route,
 }) => {
   const [editing, setEditing] = useState(editMode);
   const toast = useToast();
+
+  
+  const handleFormSubmit = async (data) => {
+    try {
+      await onSubmit(data, editing);
+      reset();
+      navigation.navigate("ListScreen");
+      ToastSuccess(editing ? "Actualizado correctamente" : "Registrado correctamente");
+    } catch (error) {
+      ToastError(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (route.params && route.params.cedula) {
+      setEditing(true);
+      navigation.setOptions({ headerTitle: "Actualizar docente" });
+      (async () => {
+        const response = await getDocenteOne(route.params.cedula);
+        const docente = response.find(doc => doc.cedula === route.params.cedula);
+        if (docente) {
+         reset({
+          nombre: docente.nombre,
+          apellido: docente.apellido,
+          correo: docente.correo,
+        });
+        } else {
+          throw new Error('Docente no encontrado.');
+        }
+      })();
+    }
+  }, [route.params]);
 
   const ToastSuccess = (message) => {
     toast.show(message, {
@@ -61,36 +92,11 @@ export const RegistrarForm = ({
     handleSubmit,
     control,
     reset,
-    formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema),
-    defaultValues: initialValues,
+    resolver: yupResolver(schema)
   });
 
-  useEffect(() => {
-    if (editMode && route.params && route.params.cedula) {
-      (async () => {
-        const response = await getDocenteOne(route.params.cedula);
-        const docente = response.find(doc => doc.cedula === route.params.cedula);
-        if (docente) {
-          reset(docente);
-        } else {
-          throw new Error('Docente no encontrado.');
-        }
-      })();
-    }
-  }, [route.params]);
 
-  const handleFormSubmit = async (data) => {
-    try {
-      await onSubmit(data, editing);
-      reset();
-      navigation.navigate("ListScreen");
-      ToastSuccess(editing ? "Actualizado correctamente" : "Registrado correctamente");
-    } catch (error) {
-      ToastError(error.message);
-    }
-  };
 
   return (
     <>

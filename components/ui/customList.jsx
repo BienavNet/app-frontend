@@ -19,6 +19,7 @@ export const ListItemComponent = ({
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  console.log(selectedItem, 'setSelectedItem')
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchItems = useCallback(async () => {
@@ -33,12 +34,22 @@ export const ListItemComponent = ({
   );
 
   const handleInfoPress = async (cedula) => {
-    setModalVisible(true);
     try {
+      setModalVisible(true);
       const res = await getDataOne(cedula);
-      setSelectedItem(res);
+      console.log(res, "response res de handleInfoPress");
+      const itemselected = res.find(
+        (value) => value.cedula === cedula
+      );
+      console.log(itemselected, "item selected");
+      if (itemselected) {
+        setSelectedItem(itemselected);
+      } else {
+        console.error("Docente no encontrado");
+        setSelectedItem(null);
+      }
     } catch (error) {
-      console.error("Error fetching item:", error);
+      throw new Error("Error fetching item:", error);
     }
   };
 

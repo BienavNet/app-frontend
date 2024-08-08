@@ -27,6 +27,7 @@ export const getSupervisor = async () => {
 export const getSupervisorOne = async (cedula) => {
     try {
         const response = await axiosInstance.get(`/api/supervisor/${cedula}`);
+        console.log(response.data, "response data: getSupervisorOne")
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)

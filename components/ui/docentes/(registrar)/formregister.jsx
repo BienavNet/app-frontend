@@ -97,7 +97,6 @@ export const RegistrarDocente = ({ navigation, route }) => {
     handleSubmit,
     control,
     reset,
-    formState: { errors },
   } = useForm({
     resolver: yupResolver(editing ? update : register),
   });
