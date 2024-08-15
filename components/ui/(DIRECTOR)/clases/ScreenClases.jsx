@@ -1,15 +1,15 @@
 import { TouchableOpacity } from "react-native";
-import { ListDocente } from "./(list)/listDocente";
-import { RegistrarDocente } from "./(registrar)/formregister";
+import {ListClase} from "./list";
+import {RegisterClase} from "./register";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import CustomStack from "../customStack";
+import CustomStack from "../../Components/customStack";
 
-export default function IndexDocente() {
+export const IndexClases = () => {
   const screens = [
     {
       name: "ListScreen",
-      component: ListDocente,
-      title: "Lista",
+      component: ListClase,
+      title: "Listado",
       headerRight: (navigation) => (
         <TouchableOpacity
           onPress={() => navigation.navigate("FormScreen")}
@@ -26,8 +26,8 @@ export default function IndexDocente() {
     },
     {
       name: "FormScreen",
-      component: RegistrarDocente,
-      title: "Registrar Docente",
+      component: RegisterClase,
+      title: "Registrar Clase",
     },
   ];
   return <CustomStack initialRouteName="ListScreen" screens={screens} />;

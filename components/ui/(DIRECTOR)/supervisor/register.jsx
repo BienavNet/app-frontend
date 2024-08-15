@@ -1,10 +1,10 @@
-import { CustomInput } from "../../share/inputs/customInput";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { CustomInput } from "../../../share/inputs/customInput";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   register,
   update,
-} from "../../../src/utils/schemas/login&registerSchema";
+} from "../../../../src/utils/schemas/login&registerSchema";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useForm } from "react-hook-form";
@@ -12,7 +12,7 @@ import {
   getSupervisorOne,
   registerSupervisor,
   updateSupervisor,
-} from "../../../src/services/fetchData/fetchSupervisor";
+} from "../../../../src/services/fetchData/fetchSupervisor";
 import { useToast } from "react-native-toast-notifications";
 import { useEffect, useState } from "react";
 export const RegistrarSupervisor = ({ navigation, route }) => {
@@ -41,48 +41,48 @@ export const RegistrarSupervisor = ({ navigation, route }) => {
     }
   }, [route.params]);
 
-  const toast = useToast();
-  const ToastSuccess = (message) => {
-    toast.show(message, {
-      icon: <Feather name="check-circle" size={30} color="green" />,
-      style: {
-        backgroundColor: "green",
-        borderColor: "green",
-      },
-      type: "Success",
-      duration: 3000,
-      successColor: "green",
-      textStyle: {
-        fontSize: 16,
-        color: "white",
-      },
-      animationType: "zoom-in",
-    });
-  };
+  // const toast = useToast();
+  // const ToastSuccess = (message) => {
+  //   toast.show(message, {
+  //     icon: <Feather name="check-circle" size={30} color="green" />,
+  //     style: {
+  //       backgroundColor: "green",
+  //       borderColor: "green",
+  //     },
+  //     type: "Success",
+  //     duration: 3000,
+  //     successColor: "green",
+  //     textStyle: {
+  //       fontSize: 16,
+  //       color: "white",
+  //     },
+  //     animationType: "zoom-in",
+  //   });
+  // };
 
-  const ToastError = (error) => {
-    toast.show(error, {
-      icon: <MaterialIcons name="error" size={30} color="#ffffff" />,
-      style: {
-        backgroundColor: "red",
-        borderColor: "red",
-      },
-      type: "Error",
-      duration: 1000,
-      dangerColor: "red",
-      textStyle: {
-        fontSize: 16,
-        color: "white",
-      },
-      animationType: "zoom-in",
-    });
-  };
+  // const ToastError = (error) => {
+  //   toast.show(error, {
+  //     icon: <MaterialIcons name="error" size={30} color="#ffffff" />,
+  //     style: {
+  //       backgroundColor: "red",
+  //       borderColor: "red",
+  //     },
+  //     type: "Error",
+  //     duration: 1000,
+  //     dangerColor: "red",
+  //     textStyle: {
+  //       fontSize: 16,
+  //       color: "white",
+  //     },
+  //     animationType: "zoom-in",
+  //   });
+  // };
   const onsubmit = async (data) => {
     const { nombre, apellido, correo, cedula, contrasena } = data;
     try {
       if (!editing) {
         await registerSupervisor(nombre, apellido, cedula, correo, contrasena);
-        ToastSuccess("register successfully");
+      Alert.alert('Register successfully')
       } else {
         console.log("entro a else de editign", route.params.cedula, data);
         await updateSupervisor(route.params.cedula, data);
@@ -97,7 +97,7 @@ export const RegistrarSupervisor = ({ navigation, route }) => {
           ? error.message
           : JSON.stringify(error);
       console.log("Errormessage:", errorMessage);
-      ToastError(error.message);
+      Alert.alert("Error message:", error.message)
     }
   };
 

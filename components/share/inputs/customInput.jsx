@@ -29,7 +29,7 @@ export const CustomInput = ({
             <TextInput
             inputContainerStyle={{
               borderBottomColor: error ? "red" : null, // Borde inferior rojo si hay error
-              borderBottomWidth:error ? 2 : null,
+              borderBottomWidth: error ? 2 : null,
             }}
              color={`${error ? 'red' : '#1371C3'}`}
              className={`bg-black/5 rounded-xl w-full ${

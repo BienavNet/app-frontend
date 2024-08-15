@@ -120,5 +120,8 @@ Get started with React Native Material
 los Stack
 > npm install @react-navigation/stack
 
+#### DateTimePicker
+npx expo install @react-native-community/datetimepicker
 
-..
+picker
+npx expo install @react-native-picker/picker

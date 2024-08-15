@@ -15,9 +15,9 @@ import { useAuth } from "../../src/hooks/useAuth";
 import { HomeDirector } from "./director/index";
 import { Redirect, useFocusEffect } from "expo-router";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import IndexDocente from "../../components/ui/docentes/ScreenDocente";
+import IndexDocente from "../../components/ui/(DIRECTOR)/docentes/ScreenDocente";
 import { useState, useCallback } from "react";
-import IndexSupervisor from "../../components/ui/supervisor/ScreenSupervisor";
+import IndexSupervisor from "../../components/ui/(DIRECTOR)/supervisor/ScreenSupervisor";
 //icons
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -26,7 +26,10 @@ import HeaderDrawer from "../../components/share/headerhomeRigth";
 import HeaderLeft from "../../components/share/headerhomeLeft";
 import { DrawerActions } from "@react-navigation/native";
 import { capitalizeFirstLetter } from "../../src/utils/functiones/functions";
-
+// import { IndexClases } from "../../components/ui/(DIRECTOR)/clases/ScreenClases";
+import { IndexHorario } from "../../components/ui/(DIRECTOR)/horarios/ScreenHorarios";
+import { IndexDetailHorarios } from "../../components/ui/(DIRECTOR)/detalleHorario/ScreenDetailsHorario";
+import { IndexComentario } from "../../components/ui/(DIRECTOR)/comentario/ScreenComentario";
 const IndexHome = () => {
   const { user } = useAuth();
   console.log("user rol", user.rol);
@@ -60,15 +63,7 @@ const IndexHome = () => {
     </>
   );
 };
-const Drawer2 = () => {
-  return (
-    <>
-      <View>
-        <Text>Drawer 2</Text>
-      </View>
-    </>
-  );
-};
+
 const Drawer3 = () => {
   return (
     <>
@@ -116,14 +111,13 @@ const CustomDrawerContent = (props) => {
 };
 function MyTabsHome() {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  console.log(isKeyboardVisible, "Is keyboard visible");
   const Tab = createBottomTabNavigator();
   const { user } = useAuth();
+
   useFocusEffect(
     useCallback(() => {
       const handleKeyboardShow = () => setKeyboardVisible(true);
       const handleKeyboardHide = () => setKeyboardVisible(false);
-
       const keyboardDidShowListener = Keyboard.addListener(
         Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
         handleKeyboardShow
@@ -132,13 +126,13 @@ function MyTabsHome() {
         Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide",
         handleKeyboardHide
       );
-
       return () => {
         keyboardDidHideListener.remove();
         keyboardDidShowListener.remove();
       };
     }, [])
   );
+
   if (!user) return <Redirect href="/" />;
   let tabs = [
     {
@@ -186,7 +180,7 @@ function MyTabsHome() {
           },
           {
             name: "Horarios",
-            component: Drawer3,
+            component: IndexHorario,
             options: {
               headerShown: false,
               tabBarLabel: "Horarios",
@@ -237,22 +231,22 @@ function MyTabsHome() {
           backgroundColor: "#3111F3", // Color de fondo del header
         },
         headerTintColor: "#FFFFFF",
-        headerRight: () => {
-          console.log(route);
-          return route.name === "Dashboard" ? (
-            <HeaderDrawer rol={capitalizeFirstLetter(user.rol)} />
-          ) : null;
-        },
-        headerLeft: () => {
-          return (
-            <HeaderLeft
-              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              icon={
-                <FontAwesome6 name="bars-staggered" size={30} color="#ffffff" />
-              }
-            />
-          );
-        },
+        // headerRight: () => {
+        //   console.log(route);
+        //   return route.name === "Dashboard" ? (
+        //     <HeaderDrawer rol={capitalizeFirstLetter(user.rol)} />
+        //   ) : null;
+        // },
+        // headerLeft: () => {
+        //   return (
+        //     <HeaderLeft
+        //       onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+        //       icon={
+        //         <FontAwesome6 name="bars-staggered" size={30} color="#ffffff" />
+        //       }
+        //     />
+        //   );
+        // },
         tabBarStyle:
           route.name == "Docentes" && isKeyboardVisible
             ? { display: "none" }
@@ -278,32 +272,33 @@ function MyTabsHome() {
 }
 
 export default function DraweHome() {
+  const { user } = useAuth();
   const Drawer = createDrawerNavigator();
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={({ route, navigation }) => ({
-        headerShown: route.name === "Dashboard" ? false: true,
-        
+        headerShown: route.name === "Dashboard" ? false : true,
         drawerActiveTintColor: "#3111F3",
         drawerInactiveTintColor: "#000000",
         drawerLabelStyle: { fontSize: 16 },
         headerStyle: { backgroundColor: "#3111F3" },
         headerTitleStyle: { color: "#fff" },
+         headerRight: () => {
+          return route.name === "Dashboard" ? (
+            <HeaderDrawer rol={capitalizeFirstLetter(user.rol)} />
+          ) : null;
+        },
         headerLeft: () => {
           return (
             <HeaderLeft
               onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
               icon={
-                <FontAwesome6
-                  name="bars-staggered"
-                  size={30}
-                  color="#ffffff"
-                />
+                <FontAwesome6 name="bars-staggered" size={30} color="#ffffff" />
               }
             />
           );
-        }
+        },
       })}
     >
       <Drawer.Screen
@@ -316,7 +311,7 @@ export default function DraweHome() {
         component={MyTabsHome}
       />
 
-      <Drawer.Screen
+      {/* <Drawer.Screen
         options={{
           drawerIcon: ({ color }) => (
             <MaterialCommunityIcons
@@ -327,8 +322,8 @@ export default function DraweHome() {
           ),
         }}
         name="Clases"
-        component={Drawer2}
-      />
+        component={IndexClases}
+      /> */}
       <Drawer.Screen
         options={{
           drawerIcon: ({ color }) => (
@@ -350,7 +345,7 @@ export default function DraweHome() {
           ),
         }}
         name="Comentario"
-        component={Drawer2}
+        component={IndexComentario}
       />
       <Drawer.Screen
         options={{
@@ -359,7 +354,7 @@ export default function DraweHome() {
           ),
         }}
         name="Detalle Horario"
-        component={Drawer3}
+        component={IndexDetailHorarios}
       />
     </Drawer.Navigator>
   );

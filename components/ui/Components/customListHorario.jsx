@@ -2,15 +2,22 @@ import { Text, ScrollView, Alert, View, RefreshControl } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useCallback, useState } from "react";
-import { capitalizeFirstLetter } from "../../src/utils/functiones/functions";
+import {
+  capitalizeFirstLetter,
+  truncateText,
+} from "../../../src/utils/functiones/functions";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
-export const ListItemComponent = ({
+import Ionicons from "@expo/vector-icons/Ionicons";
+import Loading from "../../share/loading";
+import { getDetailHorarioByHorarioID } from "../../../src/services/fetchData/fetchDetailHorario";
+import { DeleteClasesOne, getClassesByHorarioID } from "../../../src/services/fetchData/fetchClases";
+export const ListItemComponentHorario = ({
   getDataAll,
   getDataOne,
   deleteData,
+  deleteDataAsociated,  
   navigateToFormScreen,
   itemIcon = "account",
   modalTitle = "Info",
@@ -19,12 +26,19 @@ export const ListItemComponent = ({
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  console.log(selectedItem, 'setSelectedItem')
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchItems = useCallback(async () => {
-    const res = await getDataAll();
+    setLoading(true);
+    try {
+      const res = await getDataAll();
     setItems(res);
+    } catch (error) {
+      throw new Error("Error fetching items:", error);
+    } finally {
+      setLoading(false);
+    }
   }, [getDataAll]);
 
   useFocusEffect(
@@ -33,19 +47,17 @@ export const ListItemComponent = ({
     }, [fetchItems])
   );
 
-  const handleInfoPress = async (cedula) => {
+  const handleInfoPress = async (id) => {
     try {
       setModalVisible(true);
-      const res = await getDataOne(cedula);
+      const res = await getDataOne(id);
       console.log(res, "response res de handleInfoPress");
-      const itemselected = res.find(
-        (value) => value.cedula === cedula
-      );
+      const itemselected = res.find((value) => value.id === id);
       console.log(itemselected, "item selected");
       if (itemselected) {
         setSelectedItem(itemselected);
       } else {
-        console.error("Docente no encontrado");
+       throw new Error("Horario no encontrado");
         setSelectedItem(null);
       }
     } catch (error) {
@@ -72,8 +84,18 @@ export const ListItemComponent = ({
           style: "destructive",
           onPress: async () => {
             try {
+              const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
+              console.log("detailhorarioD -> ", detailhorarioD)
+              for (const detail_horario of detailhorarioD){
+                await deleteDataAsociated(detail_horario.id)
+              }
+          
+              const claseD = await getClassesByHorarioID(itemId)
+              for (const clases of claseD){
+                await DeleteClasesOne(clases.id)
+              }
               await deleteData(itemId);
-              setItems(items.filter((item) => item.cedula !== itemId));
+              setItems(items.filter((item) => item.id !== itemId));
               Alert.alert(`${modalTitle} eliminado con éxito`);
             } catch (error) {
               Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
@@ -101,20 +123,22 @@ export const ListItemComponent = ({
         />
       }
     >
-      {items.length === 0 ? (
+      {loading ? (
+      <Loading/>
+      ) : items.length === 0 ? (
         <Text style={{ textAlign: "center", marginTop: 20 }}>
           Ningún registro
         </Text>
       ) : (
         items.map((item, index) => (
           <ListItem.Swipeable
-            key={item.id || index}
+            key={`${item.id}-${index}`}
             leftContent={(reset) => (
               <Button
                 title="Info"
                 onPress={async () => {
                   reset();
-                  await handleInfoPress(item.cedula);
+                  await handleInfoPress(item.id);
                 }}
                 icon={{ name: "info", color: "white" }}
                 buttonStyle={{ minHeight: "100%" }}
@@ -125,31 +149,35 @@ export const ListItemComponent = ({
                 title="Delete"
                 onPress={() => {
                   reset();
-                  handleDeletePress(item.cedula);
+                  handleDeletePress(item.id);
                 }}
                 icon={{ name: "delete", color: "white" }}
                 buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
               />
             )}
           >
-            <Icon name={itemIcon} size={25} color="black" />
+            <Ionicons name="calendar" size={25} color="black" />
             <ListItem.Content>
               <ListItem.Title>
                 <TouchableOpacity
                   className="flex-row"
                   onPress={() =>
                     navigateToFormScreen
-                      ? navigateToFormScreen(navigation, item.cedula)
+                      ? navigateToFormScreen(navigation, item.id)
                       : navigation.navigate("FormScreen", {
-                          cedula: item.cedula,
+                          id: item.id,
                         })
                   }
                 >
                   <Text className="font-extrabold text-lg">
                     {capitalizeFirstLetter(item.nombre)}{" "}
+                    {capitalizeFirstLetter(item.apellido)}
+                    {" - "}
                   </Text>
                   <Text className="font-extrabold text-lg">
-                    {capitalizeFirstLetter(item.apellido)}
+                    {item.asignatura
+                      ? truncateText(item.asignatura)
+                      : "Asignatura no disponible"}
                   </Text>
                 </TouchableOpacity>
               </ListItem.Title>
@@ -167,16 +195,8 @@ export const ListItemComponent = ({
         {selectedItem ? (
           <>
             <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-              {capitalizeFirstLetter(selectedItem.nombre)}{" "}
-              {capitalizeFirstLetter(selectedItem.apellido)}
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              Cédula:{" "}
-              <Text className="font-normal">{selectedItem.cedula}</Text>
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              Correo:{" "}
-              <Text className="font-normal">{selectedItem.correo}</Text>
+              {capitalizeFirstLetter(selectedItem.docente)}{" "}
+              {capitalizeFirstLetter(selectedItem.asignatura)}
             </Text>
           </>
         ) : (

@@ -3,7 +3,7 @@ import {
   getDocenteAll,
   getDocenteOne,
 } from "../../../../src/services/fetchData/fetchDocente";
-import { ListItemComponent } from "../../customList";
+import { ListItemComponent } from "../../Components/customList";
 
 export const ListDocente = () => {
   return (

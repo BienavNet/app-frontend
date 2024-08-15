@@ -24,7 +24,7 @@ function FormLogin() {
         borderColor: "green",
       },
       type: "Success",
-      duration: 1000,
+      duration: 300,
       successColor: "green",
       textStyle: {
         fontSize: 16,
@@ -56,7 +56,6 @@ function FormLogin() {
     handleSubmit,
     control,
     reset,
-    formState: { errors },
   } = useForm({
     resolver: yupResolver(loging),
   });
@@ -66,6 +65,7 @@ function FormLogin() {
     try {
       await login(correo, contrasena, rol);
       ToastSuccess("login successfully");
+      console.log('user logged in', user)
       if (user) router.push("/home");
       reset();
     } catch (error) {

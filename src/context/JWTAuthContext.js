@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }) => {
     const initialize = async () => {
       try {
         const access_token = await AsyncStorage.getItem("access_token");
+        console.log('Access token: ' + access_token)
         if (access_token && validateToken(access_token)) {
           setSession(access_token);
           const response = await axiosInstance.get(`/login/sesion`);

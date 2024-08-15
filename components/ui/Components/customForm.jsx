@@ -1,4 +1,4 @@
-import { CustomInput } from "../share/inputs/customInput";
+import { CustomInput } from "../../share/inputs/customInput";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { yupResolver } from "@hookform/resolvers/yup";
 // import FontAwesome6 from "@expo/vector-icons/FontAwesome6";

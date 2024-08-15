@@ -1,9 +1,9 @@
-import { ListItemComponent } from "../customList";
+import { ListItemComponent } from "../../Components/customList";
 import {
   getSupervisor,
   getSupervisorOne,
   deleteSupervisorOne,
-} from "../../../src/services/fetchData/fetchSupervisor";
+} from "../../../../src/services/fetchData/fetchSupervisor";
 
 export const ListSupervisor = () => {
   return (

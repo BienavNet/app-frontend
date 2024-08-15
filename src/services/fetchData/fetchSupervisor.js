@@ -2,7 +2,7 @@ import axiosInstance from "../axios";
 
 export const registerSupervisor = async (nombre, apellido, cedula, correo, contrasena)  => {
 try {
-    const response = await axiosInstance.post('/api/supervisor/save', {
+    const response = await axiosInstance.post('/supervisor/save', {
         nombre,
         apellido,
         cedula,
@@ -17,7 +17,8 @@ try {
 
 export const getSupervisor = async () => {
     try {
-        const response = await axiosInstance.get('/api/supervisor/');
+        const response = await axiosInstance.get('/supervisor/');
+        console.log("response data de supervisor", response.data)
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)
@@ -26,7 +27,7 @@ export const getSupervisor = async () => {
 
 export const getSupervisorOne = async (cedula) => {
     try {
-        const response = await axiosInstance.get(`/api/supervisor/${cedula}`);
+        const response = await axiosInstance.get(`/supervisor/${cedula}`);
         console.log(response.data, "response data: getSupervisorOne")
         return response.data;
     } catch (error) {
@@ -45,7 +46,7 @@ export const deleteSupervisorOne = async (cedula) => {
 
 export const updateSupervisor = async (cedula, data) => {
     try {
-        const response = await axiosInstance.patch(`/api/supervisor/update/${cedula}`, data);
+        const response = await axiosInstance.patch(`/supervisor/update/${cedula}`, data);
         return response.data;
     } catch (error) {
         console.error('Error en la actualización:', error.response?.data);

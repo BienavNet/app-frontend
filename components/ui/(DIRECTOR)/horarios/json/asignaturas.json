@@ -1,0 +1,289 @@
+[
+{
+    "id": "1",
+    "asignatura":"LENGUA EXTRANJERA I (GRAMATICA)"
+},
+{
+    "id": "2",
+    "asignatura":"EXPRESION GRAFICA"
+},
+{
+    "id": "3",
+    "asignatura":"FUNDAMENTOS DE PROGRAMACION"
+},
+{
+    "id": "4",
+    "asignatura":"INTRODUCCION A LA INGENIERIA DE SISTEMAS"
+},
+{
+    "id": "5",
+    "asignatura":"CALCULO I"
+},
+{
+    "id": "6",
+    "asignatura":"COMUNICACIÓN ORAL Y ESCRITA I"
+},
+{
+    "id": "7",
+    "asignatura":"CATEDRA UPECISTA"
+},
+{
+    "id": "8",
+    "asignatura":"LOGICA MATEMATICA"
+},
+{
+    "id": "9",
+    "asignatura":"ALGEBRA LINEAL"
+},
+{
+    "id": "10",
+    "asignatura":"ACTIVIDAD CULTURAL Y DEPORTIVA I"
+}
+,
+{
+    "id": "11",
+    "asignatura":"FISICA I"
+},
+{
+    "id": "12",
+    "asignatura":"CALCULO II"
+},
+{
+    "id": "13",
+    "asignatura":"DESARROLLO HUMANO"
+},
+{
+    "id": "16",
+    "asignatura":"PROGRAMACION I"
+},
+{
+    "id": "17",
+    "asignatura":"COMUNICACION ORAL Y ESCRITA II"
+},
+{
+    "id": "18",
+    "asignatura":"PROGRAMACION II"
+},
+{
+    "id": "19",
+    "asignatura":"FISICA II"
+},
+{
+    "id": "20",
+    "asignatura":"DISEÑO GRAFICO"
+}
+,
+{
+    "id": "21",
+    "asignatura":"LENGUA EXTRANJERA II (LECTURA)"
+},
+{
+    "id": "22",
+    "asignatura":"PENSAMIENTO SISTEMICO"
+},
+{
+    "id": "23",
+    "asignatura":"ELECTIVA COMPLEMENTARIA"
+},
+{
+    "id": "24",
+    "asignatura":"SEMILLERO DE INVESTIGACION"
+},
+{
+    "id": "25",
+    "asignatura":"ACTIVIDAD CULTURAL Y DEPORTIVA II"
+}
+,
+{
+    "id": "26",
+    "asignatura":"FISICA III"
+},
+{
+    "id": "27",
+    "asignatura":"CALCULO IV"
+},
+{
+    "id": "28",
+    "asignatura":"ESTRUCTURA DE DATOS"
+},
+{
+    "id": "29",
+    "asignatura":"PROGRAMACION III"
+},
+{
+    "id": "30",
+    "asignatura":"ESTADISTICA"
+}
+,
+{
+    "id": "31",
+    "asignatura":"CATEDRA DE LA PAZ"
+},
+{
+    "id": "32",
+    "asignatura":"FUNDAMENTOS DE ADMINISTRACIO"
+},
+{
+    "id": "33",
+    "asignatura":"LENGUA EXTRANJERA IV (CONVERSACION)"
+},
+{
+    "id": "34",
+    "asignatura":"PROGRAMACION IV"
+},
+{
+    "id": "35",
+    "asignatura":"CIRCUITOS"
+}
+,
+{
+    "id": "36",
+    "asignatura":"BASE DE DATOS"
+},
+{
+    "id": "37",
+    "asignatura":"COMERCIO INTERNACIONAL"
+},
+{
+    "id": "38",
+    "asignatura":"FUNDAMENTOS CONTABLES"
+},
+{
+    "id": "39",
+    "asignatura":"ANALISIS NUMERICO"
+},
+{
+    "id": "40",
+    "asignatura":"ESPIRITU EMPRESARIAL"
+},
+{
+    "id": "41",
+    "asignatura":"METODOLOGIA DE INVESTIGACION"
+}
+,
+{
+    "id": "42",
+    "asignatura":"INVESTIGACION DE OPERACIONES I"
+},
+{
+    "id": "43",
+    "asignatura":"ARQUITECTURA DEL COMPUTADOR"
+},
+{
+    "id": "44",
+    "asignatura":"DERECHO CONSTITUCIONAL"
+},
+{
+    "id": "45",
+    "asignatura":"INGENIERIA DEL SOFTWARE  I"
+},
+{
+    "id": "46",
+    "asignatura":"REDES Y TELECOMUNICACIONES I"
+}
+,
+{
+    "id": "47",
+    "asignatura":"INTELIGENCIA DE NEGOCIOS"
+},
+{
+    "id": "48",
+    "asignatura":"REDES Y TELECOMUNICACIONES II"
+},
+{
+    "id": "49",
+    "asignatura":"SISTEMAS OPERATIVOS"
+},
+{
+    "id": "50",
+    "asignatura":"INGENIERIA DEL SOFTWARE II"
+},
+{
+    "id": "51",
+    "asignatura":"INVESTIGACION DE OPERACION II"
+}
+,
+{
+    "id": "52",
+    "asignatura":"FUNDAMENTOS DE ECONOMIA"
+},
+{
+    "id": "53",
+    "asignatura":"SEGURIDAD Y PRIVACIDAD DE LA INFORMACION"
+},
+{
+    "id": "54",
+    "asignatura":"SISTEMAS BASADOS EN CONOCIMIENTO"
+},
+{
+    "id": "55",
+    "asignatura":"TECHNICAL ENGLISH I"
+},
+{
+    "id": "56",
+    "asignatura":"SEMINARIO INVESTIGACION"
+},
+{
+    "id": "57",
+    "asignatura":"RESPONSABILIDAD PROFESIONAL"
+},
+{
+    "id": "58",
+    "asignatura":"MODELAMIENTO Y SIMULACION"
+}
+,
+{
+    "id": "59",
+    "asignatura":"SERVIDORES"
+},
+{
+    "id": "60",
+    "asignatura":"DERECHO INFORMATICO"
+},
+{
+    "id": "61",
+    "asignatura":"PROFUNDIZACION A1 GESTION GERENCIA SISTEMAS"
+},
+{
+    "id": "62",
+    "asignatura":"TECHNICAL ENGLISH II"
+},
+{
+    "id": "63",
+    "asignatura":"PROYECTO DE GRADO I"
+}
+,
+{
+    "id": "64",
+    "asignatura":"PROFUNDIZACION B1 MOVILES I"
+},
+{
+    "id": "65",
+    "asignatura":"MATEMATICA FINANCIERA"
+},
+{
+    "id": "66",
+    "asignatura":"ELECTIVA DEL PROGRAMA I"
+},
+{
+    "id": "67",
+    "asignatura":"DESARROLLO DE SOFTWARE EDUCATIVO"
+},
+{
+    "id": "68",
+    "asignatura":"PROYECTO DE GRADO II"
+}
+,
+{
+    "id": "69",
+    "asignatura":"PROFUNDIZACION B2 MOVILES II"
+},
+{
+    "id": "70",
+    "asignatura":"PROFUNDIZACION A2 AUDITORIA SISTEMAS"
+},
+{
+    "id": "71",
+    "asignatura":"ELECTIVA DEL PROGRAMA II"
+}
+]
