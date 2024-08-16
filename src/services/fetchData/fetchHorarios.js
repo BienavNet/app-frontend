@@ -10,9 +10,10 @@ try {
 }
 }
 export const getHorarioOne = async (id) => {
+    console.log('id que entra para traer', id)
     try {
-        const response = await axiosInstance.patch(`/horarios/${id}`);
-        console.log(response.data, "return de los data de horario por one");
+        const response = await axiosInstance.get(`/horarios/detail/${id}`);
+        console.log(response.data, "return de los data de horario por one ");
         return response.data;
     } catch (error) {
         console.error('Error en la actualización:', error.response?.data);
@@ -23,7 +24,6 @@ export const getHorarioOne = async (id) => {
 export const getHorarioAll = async () => {
     try {
         const response = await axiosInstance.get('/horarios/');
-        console.log("response get horario", response.data);
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)
@@ -31,10 +31,8 @@ export const getHorarioAll = async () => {
 }
 
 export const DeleteHorarioOne = async (id) => {
-    console.log("id delete horario one", id)
     try {
         const response = await axiosInstance.delete(`/horarios/delete/${id}`);
-        console.log(response, "response deleted successfully")
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)

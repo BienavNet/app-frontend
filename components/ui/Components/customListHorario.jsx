@@ -1,9 +1,17 @@
-import { Text, ScrollView, Alert, View, RefreshControl } from "react-native";
-import { ListItem, Button } from "@rneui/themed";
+import {
+  Text,
+  ScrollView,
+  Alert,
+  View,
+  RefreshControl,
+  StyleSheet,
+} from "react-native";
+import { ListItem, Button, Divider } from "@rneui/themed";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useCallback, useState } from "react";
 import {
   capitalizeFirstLetter,
+  formatHourHHMMAMPM,
   truncateText,
 } from "../../../src/utils/functiones/functions";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -12,12 +20,15 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Loading from "../../share/loading";
 import { getDetailHorarioByHorarioID } from "../../../src/services/fetchData/fetchDetailHorario";
-import { DeleteClasesOne, getClassesByHorarioID } from "../../../src/services/fetchData/fetchClases";
+import {
+  DeleteClasesOne,
+  getClassesByHorarioID,
+} from "../../../src/services/fetchData/fetchClases";
 export const ListItemComponentHorario = ({
   getDataAll,
   getDataOne,
   deleteData,
-  deleteDataAsociated,  
+  deleteDataAsociated,
   navigateToFormScreen,
   itemIcon = "account",
   modalTitle = "Info",
@@ -33,7 +44,7 @@ export const ListItemComponentHorario = ({
     setLoading(true);
     try {
       const res = await getDataAll();
-    setItems(res);
+      setItems(res);
     } catch (error) {
       throw new Error("Error fetching items:", error);
     } finally {
@@ -48,6 +59,7 @@ export const ListItemComponentHorario = ({
   );
 
   const handleInfoPress = async (id) => {
+    console.log("id", id);
     try {
       setModalVisible(true);
       const res = await getDataOne(id);
@@ -57,10 +69,12 @@ export const ListItemComponentHorario = ({
       if (itemselected) {
         setSelectedItem(itemselected);
       } else {
-       throw new Error("Horario no encontrado");
         setSelectedItem(null);
+        setModalVisible(false);
+        throw new Error("Horario no encontrado");
       }
     } catch (error) {
+      setModalVisible(false);
       throw new Error("Error fetching item:", error);
     }
   };
@@ -85,14 +99,14 @@ export const ListItemComponentHorario = ({
           onPress: async () => {
             try {
               const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
-              console.log("detailhorarioD -> ", detailhorarioD)
-              for (const detail_horario of detailhorarioD){
-                await deleteDataAsociated(detail_horario.id)
+              console.log("detailhorarioD -> ", detailhorarioD);
+              for (const detail_horario of detailhorarioD) {
+                await deleteDataAsociated(detail_horario.id);
               }
-          
-              const claseD = await getClassesByHorarioID(itemId)
-              for (const clases of claseD){
-                await DeleteClasesOne(clases.id)
+
+              const claseD = await getClassesByHorarioID(itemId);
+              for (const clases of claseD) {
+                await DeleteClasesOne(clases.id);
               }
               await deleteData(itemId);
               setItems(items.filter((item) => item.id !== itemId));
@@ -124,7 +138,7 @@ export const ListItemComponentHorario = ({
       }
     >
       {loading ? (
-      <Loading/>
+        <Loading />
       ) : items.length === 0 ? (
         <Text style={{ textAlign: "center", marginTop: 20 }}>
           Ningún registro
@@ -188,17 +202,46 @@ export const ListItemComponentHorario = ({
       )}
       <ModalComponente
         transparent={true}
+        modalStyle={{ height: "90%" }}
         animationType={"slider"}
         modalVisible={modalVisible}
         handleCloseModal={handleCloseModal}
       >
         {selectedItem ? (
-          <>
-            <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-              {capitalizeFirstLetter(selectedItem.docente)}{" "}
-              {capitalizeFirstLetter(selectedItem.asignatura)}
-            </Text>
-          </>
+          <View className="h-full shadow-2xl bg-slate-100 rounded-2xl p-4">
+            <View>
+              <View>
+                <Text style={[styles.Title1]}>Asignatura Asignada</Text>
+                <Text style={[styles.asignatura]}>
+                  {capitalizeFirstLetter(selectedItem.asignatura)}
+                </Text>
+              </View>
+              <View>
+                <Text style={[styles.Title1]}>Docente</Text>
+                <Text style={[styles.text]}>
+                  {capitalizeFirstLetter(selectedItem.nombre)}{" "}
+                  {capitalizeFirstLetter(selectedItem.apellido)}
+                </Text>
+              </View>
+              <View>
+                <Text style={[styles.Title1]}>Días asignados</Text>
+                <Text style={[styles.text]}>{selectedItem.dia}</Text>
+              </View>
+              <View>
+                <Text style={[styles.Title1]}>Horas concedidas</Text>
+                <View style={styles.vertical}>
+                  <Text style={[styles.text]}>
+                    {formatHourHHMMAMPM(selectedItem.hora_inicio)}
+                  </Text>
+                  <Divider subHeader="jpra" orientation="vertical" width={5} />
+                  <Text style={[styles.text]}>
+                    {formatHourHHMMAMPM(selectedItem.hora_fin)}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <Divider />
+          </View>
         ) : (
           <Text>No hay datos disponibles</Text>
         )}
@@ -206,3 +249,34 @@ export const ListItemComponentHorario = ({
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  Title1: {
+    fontSize: 18,
+    fontWeight: "bold",
+    backgroundColor: "#1371C3",
+    color: "white",
+    textAlign: "center",
+    paddingVertical: 5,
+    marginBottom: 10,
+  },
+  vertical: {
+    marginBottom: 10,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
+  text: {
+    textAlign: "center",
+    padding: 5,
+    fontSize: 16,
+    fontWeight: "medium",
+    marginBottom: 5,
+  },
+  asignatura: {
+    fontSize: 16,
+    fontWeight: "medium",
+    padding: 5,
+    marginBottom: 5,
+  },
+});

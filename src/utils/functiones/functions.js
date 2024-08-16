@@ -1,3 +1,15 @@
+export const formatHourHHMMAMPM= (timeString) => {
+  const [hours, minutes] = timeString.split(':');
+  const date = new Date();
+  date.setHours(hours, minutes);
+
+  const formattedHours = date.getHours() % 12 || 12;
+  const formattedMinutes = date.getMinutes().toString().padStart(2, '0');
+  const period = date.getHours() < 12 ? 'AM' : 'PM';
+
+  return `${formattedHours}:${formattedMinutes} ${period}`;
+};
+
 export const generateClassDates = (dia, startDate, endDate) => {
   const daysOfWeek = {
     "Lunes": 1,
@@ -23,9 +35,6 @@ export const generateClassDates = (dia, startDate, endDate) => {
   }
   return classesToRegister;
 };
-
-
-
 
 export const capitalizeFirstLetter = (name) => {
   return name.charAt(0).toUpperCase() + name.slice(1);
