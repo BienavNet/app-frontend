@@ -6,12 +6,10 @@ import {
   RefreshControl,
   StyleSheet,
 } from "react-native";
-import { ListItem, Button, Divider } from "@rneui/themed";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { useCallback, useState } from "react";
+import { ListItem, Button } from "@rneui/themed";
+import { useCallback, useEffect, useState } from "react";
 import {
   capitalizeFirstLetter,
-  formatHourHHMMAMPM,
   truncateText,
 } from "../../../src/utils/functiones/functions";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -24,6 +22,10 @@ import {
   DeleteClasesOne,
   getClassesByHorarioID,
 } from "../../../src/services/fetchData/fetchClases";
+import SimpleDatePicker from "./customSimpleDatePicker";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { ScreenViewMore } from "../(DIRECTOR)/horarios/component/ScreenViewMore";
+
 export const ListItemComponentHorario = ({
   getDataAll,
   getDataOne,
@@ -37,9 +39,10 @@ export const ListItemComponentHorario = ({
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  console.log("setSelectedItem ------------", selectedItem);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const [viewmoreModalVisible, setViewMoreModalVisible] = useState(false);
   const fetchItems = useCallback(async () => {
     setLoading(true);
     try {
@@ -51,7 +54,7 @@ export const ListItemComponentHorario = ({
       setLoading(false);
     }
   }, [getDataAll]);
-
+  const [value, setValue] = useState(new Date());
   useFocusEffect(
     useCallback(() => {
       fetchItems();
@@ -126,6 +129,25 @@ export const ListItemComponentHorario = ({
     setRefreshing(false);
   }, [fetchItems]);
 
+  const handleOpenSecondModal = () => {
+    setViewMoreModalVisible(true);
+  };
+
+  const handleCloseSecondModal = () => {
+    setViewMoreModalVisible(false);
+  };
+  const handleDateChange = (date) => {
+    setValue(date);
+  };
+  useEffect(() => {
+    if (modalVisible) {
+      setLoading(true);
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 1000); 
+      return () => clearTimeout(timer); 
+    }
+  }, [modalVisible]);
   return (
     <ScrollView
       refreshControl={
@@ -202,14 +224,16 @@ export const ListItemComponentHorario = ({
       )}
       <ModalComponente
         transparent={true}
-        modalStyle={{ height: "90%" }}
+        modalStyle={{ height: "99%" }}
         animationType={"slider"}
         modalVisible={modalVisible}
         handleCloseModal={handleCloseModal}
       >
-        {selectedItem ? (
-          <View className="h-full shadow-2xl bg-slate-100 rounded-2xl p-4">
-            <View>
+        {loading ? (
+          <Loading />
+        ) : selectedItem ? (
+          <>
+            <View className="bg-white shadow-2xl rounded-lg p-3 w-full">
               <View>
                 <Text style={[styles.Title1]}>Asignatura Asignada</Text>
                 <Text style={[styles.asignatura]}>
@@ -219,32 +243,58 @@ export const ListItemComponentHorario = ({
               <View>
                 <Text style={[styles.Title1]}>Docente</Text>
                 <Text style={[styles.text]}>
-                  {capitalizeFirstLetter(selectedItem.nombre)}{" "}
-                  {capitalizeFirstLetter(selectedItem.apellido)}
+                  {capitalizeFirstLetter(selectedItem?.nombre)}{" "}
+                  {capitalizeFirstLetter(selectedItem?.apellido)}
                 </Text>
               </View>
-              <View>
-                <Text style={[styles.Title1]}>Días asignados</Text>
-                <Text style={[styles.text]}>{selectedItem.dia}</Text>
-              </View>
-              <View>
-                <Text style={[styles.Title1]}>Horas concedidas</Text>
-                <View style={styles.vertical}>
-                  <Text style={[styles.text]}>
-                    {formatHourHHMMAMPM(selectedItem.hora_inicio)}
-                  </Text>
-                  <Divider subHeader="jpra" orientation="vertical" width={5} />
-                  <Text style={[styles.text]}>
-                    {formatHourHHMMAMPM(selectedItem.hora_fin)}
-                  </Text>
-                </View>
-              </View>
             </View>
-            <Divider />
-          </View>
+            <>
+              <View style={[styles.viewmore]}>
+                <Text style={styles.subtitle}>{value.toDateString()}</Text>
+
+                <Button
+                  onPress={handleOpenSecondModal}
+                  color="#1371C3"
+                  buttonStyle={{ width: 100 }}
+                  radius={"sm"}
+                  type="clear"
+                >
+                  Ver mas
+                  <MaterialIcons name="expand-more" size={24} color="#1371C3" />
+                </Button>
+              </View>
+
+              <SimpleDatePicker
+                onDateChange={handleDateChange}
+                // selectedDate={value}
+                selectedDate={selectedItem?.horarios
+                  .map((horario) => new Date(horario.fecha))
+                  .filter((horario) => {
+                    const currentMonth = new Date().getMonth();
+                    return horario.getMonth() === currentMonth;
+                  })}
+                viewSelectDate={selectedItem?.horarios.find(
+                  (horario) =>
+                    new Date(horario.fecha).toDateString() ===
+                    value.toDateString()
+                )}
+              />
+            </>
+          </>
         ) : (
-          <Text>No hay datos disponibles</Text>
+          <Text style={{ textAlign: "center", marginTop: 20 }}>
+            Ningún registro
+          </Text>
         )}
+      </ModalComponente>
+      <ModalComponente
+        transparent={true}
+        modalStyle={{ height: "95%" }}
+        animationType={"slider"}
+        modalVisible={viewmoreModalVisible}
+        handleCloseModal={handleCloseSecondModal}
+      >
+        <ScreenViewMore />
       </ModalComponente>
     </ScrollView>
   );
@@ -258,7 +308,7 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     paddingVertical: 5,
-    marginBottom: 10,
+    marginBottom: 6,
   },
   vertical: {
     marginBottom: 10,
@@ -279,4 +329,63 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 5,
   },
+  viewmore: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  subtitle: {
+    paddingVertical: 12,
+    fontSize: 17,
+    fontWeight: "600",
+    color: "#999999",
+  },
 });
+
+{
+  /* <View>
+            <Text style={[styles.Title1]}>Días asignados</Text>
+            <Text style={[styles.text]}>{selectedItem.dia}</Text>
+          </View> */
+}
+{
+  /* {selectedItem.horarios.map((horario, index) => (
+          <View key={index} style={{ marginBottom: 15 }}>
+            <Text style={[styles.Title1]}>Día Asignado</Text>
+            <Text style={[styles.text]}>{horario.dia}</Text>
+
+            <Text style={[styles.Title1]}>Horas Concedidas</Text>
+            <View style={styles.vertical}>
+              <Text style={[styles.text]}>
+                {formatHourHHMMAMPM(horario.hora_inicio)}
+              </Text>
+              <Divider orientation="vertical" width={5} />
+              <Text style={[styles.text]}>
+                {formatHourHHMMAMPM(horario.hora_fin)}
+              </Text>
+            </View>
+
+            <Text style={[styles.Title1]}>Categoría</Text>
+            <Text style={[styles.text]}>{horario.categoria}</Text>
+
+            <Text style={[styles.Title1]}>Número de Salón</Text>
+            <Text style={[styles.text]}>{horario.numero_salon}</Text>
+          </View>
+        ))} */
+}
+{
+  /* <View>
+            <Text style={[styles.Title1]}>Horas concedidas</Text>
+            <View style={styles.vertical}>
+              <Text style={[styles.text]}>
+                {formatHourHHMMAMPM(selectedItem.hora_inicio)}
+              </Text>
+              <Divider orientation="vertical" width={5} />
+              <Text style={[styles.text]}>
+                {formatHourHHMMAMPM(selectedItem.hora_fin)}
+              </Text>
+            </View>
+          </View> */
+}

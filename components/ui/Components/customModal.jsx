@@ -6,20 +6,19 @@ export const ModalComponente = ({
   transparent,
   animationType,
   children,
-  modalStyle = {}, canCloseModal
+  modalStyle = {},
+  canCloseModal = true,
 }) => {
   return (
     <Modal
       animationType={animationType} // fade none slider
       transparent={transparent} // true o false
       visible={modalVisible}
-      
       onRequestClose={() => {
         if (canCloseModal) {
           handleCloseModal();
         }
       }}
-
     >
       <View
         style={[
@@ -33,23 +32,25 @@ export const ModalComponente = ({
         ]}
       >
         <View
-          className="bg-white rounded-t-3xl p-5"
+          className="bg-slate-200 rounded-t-3xl p-5"
           style={[
             {
-              height:modalStyle.height,
+              height: modalStyle.height,
               width: "100%",
             },
             modalStyle.content,
           ]}
         >
-          <View className="flex-row">
+          <>
+            <View style={{ flexDirection: "row-reverse", marginBottom: 12 }}>
+              {canCloseModal && (
+                <TouchableOpacity onPress={handleCloseModal}>
+                  <MaterialIcons name="cancel" size={30} color="red" />
+                </TouchableOpacity>
+              )}
+            </View>
             <View className="w-[100%]">{children}</View>
-            {canCloseModal && (
-              <TouchableOpacity onPress={handleCloseModal}>
-                <MaterialIcons name="cancel" size={35} color="red" />
-              </TouchableOpacity>
-            )}
-          </View>
+          </>
         </View>
       </View>
     </Modal>

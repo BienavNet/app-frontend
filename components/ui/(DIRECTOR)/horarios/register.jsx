@@ -29,7 +29,6 @@ export const RegisterHorario = ({ navigation, route }) => {
   } = useForm({
     resolver: yupResolver(horarioRegisterSchema),
   });
-  const [canCloseModal, setCanCloseModal] = useState(false);
   //docente  setSupervisores
   const [docente, setDocente] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -224,18 +223,19 @@ export const RegisterHorario = ({ navigation, route }) => {
       <View>
 
         <ModalComponente
+      
           modalStyle={{ height: "80%" }}
           animationType="slider"
           modalVisible={showModal}
           transparent={false}
           handleCloseModal={handleCloseModal}
-          canCloseModal={canCloseModal}
+          canCloseModal={true}
         >
           <RegisterDetailHorario
-             handleCloseModal={() => {
-              setCanCloseModal(true); // Allow modal to close automatically
-              handleCloseModal(); // Close the modal
-            }}
+            //  handleCloseModal={() => {
+            //   setCanCloseModal(true); // Allow modal to close automatically
+            //   handleCloseModal(); // Close the modal
+            // }}
             idhorario={horarioId}
             editing={editing}
             navigation={navigation}

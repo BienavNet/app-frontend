@@ -13,7 +13,7 @@ export const getHorarioOne = async (id) => {
     console.log('id que entra para traer', id)
     try {
         const response = await axiosInstance.get(`/horarios/detail/${id}`);
-        console.log(response.data, "return de los data de horario por one ");
+        console.log(JSON.stringify(response.data, null, 2), "return de los data de horario por one ");
         return response.data;
     } catch (error) {
         console.error('Error en la actualización:', error.response?.data);

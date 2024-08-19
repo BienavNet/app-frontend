@@ -3,7 +3,7 @@ import axiosInstance from "../axios";
 export const getSalon = async () => {
     try {
         const response = await axiosInstance.get(`/salon/`);
-        console.log('response', response.data)
+        console.log('response all', response.data)
         return response.data;
     } catch (error) {
         // console.log('error', error.response.data.message)
@@ -11,8 +11,11 @@ export const getSalon = async () => {
     }
 }
 export const getSalonOne = async (id) => {
+    console.log("id del salon on", id)
     try {
         const response = await axiosInstance.get(`/salon/${id}`);
+        console.log('response id', response.data)
+        return response.data;
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)

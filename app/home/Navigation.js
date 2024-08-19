@@ -30,6 +30,7 @@ import { capitalizeFirstLetter } from "../../src/utils/functiones/functions";
 import { IndexHorario } from "../../components/ui/(DIRECTOR)/horarios/ScreenHorarios";
 import { IndexDetailHorarios } from "../../components/ui/(DIRECTOR)/detalleHorario/ScreenDetailsHorario";
 import { IndexComentario } from "../../components/ui/(DIRECTOR)/comentario/ScreenComentario";
+import { IndexSalones } from "../../components/ui/(DIRECTOR)/salones/ScreenSalones";
 const IndexHome = () => {
   const { user } = useAuth();
   console.log("user rol", user.rol);
@@ -191,7 +192,7 @@ function MyTabsHome() {
           },
           {
             name: "Salones",
-            component: Drawer3,
+            component: IndexSalones,
             options: {
               headerShown: false,
               tabBarLabel: "Salones",
