@@ -7,22 +7,8 @@ import Loading from "../../components/share/loading";
 //home redirected
 export default LayoutHome = () => {
   return (
-    <SafeAreaProvider>
-      <ToastProvider>
-        <AuthProvider>
-          <AuthContext.Consumer>
-            {(auth) =>
-              !auth.isInitialized ? (
-                <Loading color="#0000ff" />
-              ) : (
-                <>
-                  <Slot />
-                </>
-              )
-            }
-          </AuthContext.Consumer>
-        </AuthProvider>
-      </ToastProvider>
-    </SafeAreaProvider>
+    <>
+      <Slot />
+    </>
   );
 };

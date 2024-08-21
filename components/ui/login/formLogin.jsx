@@ -1,5 +1,8 @@
 import { TouchableOpacity, View, Text, ScrollView } from "react-native";
-import { CustomInput, CustomInputCheckBox } from "../../share/inputs/customInput";
+import {
+  CustomInput,
+  CustomInputCheckBox,
+} from "../../share/inputs/customInput";
 
 import { loging } from "../../../src/utils/schemas/login&registerSchema";
 import { useAuth } from "../../../src/hooks/useAuth";
@@ -14,7 +17,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 function FormLogin() {
   const router = useRouter();
   const toast = useToast();
-  const { login, user} = useAuth();
+  const { login, user } = useAuth();
 
   const ToastSuccess = (message) => {
     toast.show(message, {
@@ -52,11 +55,7 @@ function FormLogin() {
     });
   };
 
-  const {
-    handleSubmit,
-    control,
-    reset,
-  } = useForm({
+  const { handleSubmit, control, reset } = useForm({
     resolver: yupResolver(loging),
   });
 
@@ -65,7 +64,7 @@ function FormLogin() {
     try {
       await login(correo, contrasena, rol);
       ToastSuccess("login successfully");
-      console.log('user logged in', user)
+      console.log("user logged in", user);
       if (user) router.push("/home");
       reset();
     } catch (error) {
@@ -81,44 +80,12 @@ function FormLogin() {
             icon={<FontAwesome6 name="user-circle" size={24} color="black" />}
             label="Correo Electronico"
             control={control}
-            rules={{
-              required: "Correo Electronico es requerido",
-              minLength: {
-                value: 4,
-                message: "Correo debe ser mínimo 4 character",
-              },
-              maxLength: {
-                value: 100,
-                message: "Correo debe ser maximo 100 character",
-              },
-              pattern: {
-                value:
-                  /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/,
-                message: "Correo no es válido",
-              },
-            }}
             name="correo"
             placeholder="Example@example.com"
             keyBoardType="email-address"
           />
           <CustomInput
             label="password"
-            rules={{
-              required: "Este campo es requerido",
-              minLength: {
-                value: 4,
-                message: "Password debe ser mínimo 4 character",
-              },
-              maxLength: {
-                value: 16,
-                message: "Password debe ser maximo 16 character",
-              },
-              pattern: {
-                value:
-                  /^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{4,16}$/,
-                message: "Debe incluir mayúscula, minúscula, número y símbolo",
-              },
-            }}
             icon={<MaterialIcons name="password" size={24} color="black" />}
             control={control}
             name="contrasena"
@@ -128,9 +95,6 @@ function FormLogin() {
 
           {/*checkbox*/}
           <CustomInputCheckBox
-            rules={{
-              required: true,
-            }}
             control={control}
             adm
             name="rol"

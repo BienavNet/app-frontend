@@ -18,6 +18,8 @@ import { RegisterDetailHorario } from "../detalleHorario/register";
 import { CustomFlatList } from "../../../share/inputs/customFlatList";
 import { getSupervisorOne } from "../../../../src/services/fetchData/fetchSupervisor";
 import Loading from "../../../share/loading";
+import { HeaderTitle } from "../../../share/titulos/headerTitle";
+import { SubmitButton } from "../../../share/button/submitButton";
 
 export const RegisterHorario = ({ navigation, route }) => {
   const toast = useToast();
@@ -170,11 +172,11 @@ export const RegisterHorario = ({ navigation, route }) => {
 
   return (
     <>
-      <View className="py-2" style={{ backgroundColor: "#F2F2F0" }}>
-        <Text className="text-lg text-center font-bold">
-          {editing ? "Actualizar Horario" : "Registrar Horario"}
-        </Text>
-      </View>
+    <HeaderTitle
+    editing={editing}
+    updateText="Actualizar Horario"
+    registerText="Registrar Horario"
+    />
       <ScrollView className="pt-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex items-left mx-4 h-full">
           {!editing ? (
@@ -204,19 +206,11 @@ export const RegisterHorario = ({ navigation, route }) => {
           ) : (
             <></>
           )}
+<SubmitButton
+ onPress={handleSubmit(onsubmit)}
+ editing={editing}
+/>
 
-          <View className="w-full pt-3">
-            <TouchableOpacity
-              onPress={handleSubmit(onsubmit)}
-              className={`w-11/12 self-center p-3 rounded-lg ${
-                !editing ? "bg-lime-600" : "bg-amber-600"
-              }`}
-            >
-              <Text className="text-white text-center font-bold text-xl">
-                {!editing ? "Registrar" : "Actualizar"}
-              </Text>
-            </TouchableOpacity>
-          </View>
           {loading && <Loading />}
         </View>
       </ScrollView>

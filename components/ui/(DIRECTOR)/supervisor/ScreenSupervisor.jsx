@@ -4,7 +4,7 @@ import { RegistrarSupervisor } from "./register";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import CustomStack from "../../Components/customStack";
 
-export default function IndexSupervisor() {
+export const IndexSupervisor =() =>{
   const screens = [
     {
       name: "ListScreen",

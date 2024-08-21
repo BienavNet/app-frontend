@@ -1,28 +1,49 @@
 import { Alert } from "react-native";
+import { Snackbar } from "@react-native-material/core";
 
-export const handleDeletePress = (docenteId) => {
+export const DeleteConfirmation = ({ nameDelete, onPress }) => {
+  () => {
     Alert.alert(
-      "Eliminar Docente",
-      "¿Estás seguro de que deseas eliminar este docente?",
+      `Eliminar ${nameDelete}`,
+      `¿Estás seguro de que deseas eliminar este  ${nameDelete}?`,
       [
         {
           text: "Cancelar",
-          style: "cancel"
+          style: "cancel",
         },
         {
           text: "Eliminar",
           style: "destructive",
           onPress: async () => {
             try {
-              await deleteDocenteById(docenteId);
-              setDocentes(docentes.filter(docente => docente.id !== docenteId));
-              Alert.alert("Docente eliminado con éxito");
+              await onPress();
+              <Snackbar
+                message={`${nameDelete}, Eliminado con exito.`}
+                style={{
+                  position: "absolute",
+                  start: 16,
+                  end: 16,
+                  bottom: 16,
+                  backgroundColor: "green",
+                }}
+              />;
+            
             } catch (error) {
-              console.error("Error deleting docente:", error);
-              Alert.alert("Error al eliminar el docente");
+              <Snackbar
+                message={`Error al eliminar ${nameDelete}.` + error}
+                style={{
+                  position: "absolute",
+                  start: 16,
+                  end: 16,
+                  bottom: 16,
+                  backgroundColor: "red",
+                }}
+              />;
             }
-          }
-        }
+          },
+        },
       ]
     );
   };
+  return null;
+};

@@ -3,11 +3,11 @@ import {
     getComentarioAll,
     getComentarioOne,
   } from "../../../../src/services/fetchData/fetchComentario";
-  import { ListItemComponent } from "../../Components/customList";
+  import {ListItemComentario  } from "../../Components/customListComentario";
   
   export const ListComentario = () => {
     return (
-      <ListItemComponent
+      <ListItemComentario
         getDataAll={getComentarioAll}
         getDataOne={getComentarioOne}
         deleteData={DeleteComentarioOne}

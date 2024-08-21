@@ -13,8 +13,9 @@ import {
   registerSupervisor,
   updateSupervisor,
 } from "../../../../src/services/fetchData/fetchSupervisor";
-import { useToast } from "react-native-toast-notifications";
 import { useEffect, useState } from "react";
+import { HeaderTitle } from "../../../share/titulos/headerTitle";
+import { SubmitButton } from "../../../share/button/submitButton";
 export const RegistrarSupervisor = ({ navigation, route }) => {
   const [editing, setEditing] = useState(false);
 
@@ -24,7 +25,7 @@ export const RegistrarSupervisor = ({ navigation, route }) => {
       navigation.setOptions({ headerTitle: "Actualizar Supervisor" });
       (async () => {
         const response = await getSupervisorOne(route.params.cedula);
-        console.log(response, "Supervisor response")
+        console.log(response, "Supervisor response");
         const value = response.find(
           (doc) => doc.cedula === route.params.cedula
         );
@@ -82,7 +83,7 @@ export const RegistrarSupervisor = ({ navigation, route }) => {
     try {
       if (!editing) {
         await registerSupervisor(nombre, apellido, cedula, correo, contrasena);
-      Alert.alert('Register successfully')
+        Alert.alert("Register successfully");
       } else {
         console.log("entro a else de editign", route.params.cedula, data);
         await updateSupervisor(route.params.cedula, data);
@@ -97,7 +98,7 @@ export const RegistrarSupervisor = ({ navigation, route }) => {
           ? error.message
           : JSON.stringify(error);
       console.log("Errormessage:", errorMessage);
-      Alert.alert("Error message:", error.message)
+      Alert.alert("Error message:", error.message);
     }
   };
 
@@ -107,17 +108,11 @@ export const RegistrarSupervisor = ({ navigation, route }) => {
 
   return (
     <>
-      <View className="py-2" style={{ backgroundColor: "#F2F2F0" }}>
-        {!editing ? (
-          <Text className="text-lg text-center font-bold">
-            Registrar Supervisor
-          </Text>
-        ) : (
-          <Text className="text-lg text-center font-bold">
-            Actualizar Supervisor
-          </Text>
-        )}
-      </View>
+      <HeaderTitle
+        editing={editing}
+        registerText="Registrar Supervisor"
+        updateText="Actualizar Supervisor"
+      />
       <ScrollView className="pt-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex items-left mx-4 space-y-3 h-full">
           {!editing ? (
@@ -248,18 +243,7 @@ export const RegistrarSupervisor = ({ navigation, route }) => {
             </>
           )}
 
-          <View className="w-full pt-3">
-            <TouchableOpacity
-              onPress={handleSubmit(onsubmit)}
-              className={`w-11/12 self-center p-3 rounded-lg ${
-                !editing ? "bg-lime-600" : "bg-amber-600"
-              }`}
-            >
-              <Text className="text-white text-center font-bold text-xl">
-                {!editing ? "Registrar" : "Actualizar"}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <SubmitButton onPress={handleSubmit(onsubmit)} editing={editing} />
         </View>
       </ScrollView>
     </>

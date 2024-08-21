@@ -31,7 +31,7 @@ export const deleteComentarioDocente = async (cedula) => {
 //director
 export const getComentarioOne = async (id) => {
     try {
-        const response = await axiosInstance.patch(`/comentarios/${id}`);
+        const response = await axiosInstance.get(`/comentarios/${id}`);
         return response.data;
     } catch (error) {
         console.error('Error en la actualización:', error.response?.data);
@@ -40,7 +40,7 @@ export const getComentarioOne = async (id) => {
 }
 export const getComentarioSalonOne = async (salon) => {
     try {
-        const response = await axiosInstance.patch(`/comentarios/salon/${salon}`);
+        const response = await axiosInstance.get(`/comentarios/salon/${salon}`);
         return response.data;
     } catch (error) {
         console.error('Error en la actualización:', error.response?.data);

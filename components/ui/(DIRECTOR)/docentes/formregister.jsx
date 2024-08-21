@@ -1,7 +1,10 @@
 import { CustomInput } from "../../../share/inputs/customInput";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { register, update } from "../../../../src/utils/schemas/login&registerSchema";
+import {
+  register,
+  update,
+} from "../../../../src/utils/schemas/login&registerSchema";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useForm } from "react-hook-form";
@@ -12,26 +15,30 @@ import {
 } from "../../../../src/services/fetchData/fetchDocente";
 import { useToast } from "react-native-toast-notifications";
 import { useEffect, useState } from "react";
+import { SubmitButton } from "../../../share/button/submitButton";
+import { HeaderTitle } from "../../../share/titulos/headerTitle";
+
 export const RegistrarDocente = ({ navigation, route }) => {
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-   
     if (route.params && route.params.cedula) {
       setEditing(true);
       navigation.setOptions({ headerTitle: "Actualizar docente" });
       (async () => {
         const response = await getDocenteOne(route.params.cedula);
-        const docente = response.find(doc => doc.cedula === route.params.cedula);
+        const docente = response.find(
+          (doc) => doc.cedula === route.params.cedula
+        );
         if (docente) {
-        reset({
-          nombre: docente.nombre,
-          apellido: docente.apellido,
-          correo: docente.correo,
-        });
-      } else {  
-        throw new Error('Docente no encontrado.')
-      }
+          reset({
+            nombre: docente.nombre,
+            apellido: docente.apellido,
+            correo: docente.correo,
+          });
+        } else {
+          throw new Error("Docente no encontrado.");
+        }
       })();
     }
   }, [route.params]);
@@ -73,7 +80,7 @@ export const RegistrarDocente = ({ navigation, route }) => {
     });
   };
   const onsubmit = async (data) => {
-    const { nombre, apellido, correo, cedula, contrasena} = data;
+    const { nombre, apellido, correo, cedula, contrasena } = data;
     try {
       if (!editing) {
         await registerDocente(nombre, apellido, cedula, correo, contrasena);
@@ -85,35 +92,28 @@ export const RegistrarDocente = ({ navigation, route }) => {
       reset();
       navigation.navigate("ListScreen");
     } catch (error) {
-      console.log("Error object:", error); 
-      console.log("Error message:", error.message); 
-      const errorMessage = typeof error.message === 'string' ? error.message : JSON.stringify(error);
+      console.log("Error object:", error);
+      console.log("Error message:", error.message);
+      const errorMessage =
+        typeof error.message === "string"
+          ? error.message
+          : JSON.stringify(error);
       console.log("Errormessage:", errorMessage);
       ToastError(error.message);
     }
   };
 
-  const {
-    handleSubmit,
-    control,
-    reset,
-  } = useForm({
+  const { handleSubmit, control, reset } = useForm({
     resolver: yupResolver(editing ? update : register),
   });
 
   return (
     <>
-      <View className="py-2" style={{ backgroundColor: "#F2F2F0" }}>
-        {!editing ? (
-          <Text className="text-lg text-center font-bold">
-            Registrar docente
-          </Text>
-        ) : (
-          <Text className="text-lg text-center font-bold">
-            Actualizar docente
-          </Text>
-        )}
-      </View>
+    <HeaderTitle
+    editing={editing}
+    registerText="Registrar docente"
+    updateText="Actualizar docente"
+    />
       <ScrollView className="pt-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex items-left mx-4 space-y-3 h-full">
           {!editing ? (
@@ -176,7 +176,6 @@ export const RegistrarDocente = ({ navigation, route }) => {
                       color="black"
                     />
                   }
-                 
                 />
               </View>
 
@@ -210,7 +209,6 @@ export const RegistrarDocente = ({ navigation, route }) => {
                         color="black"
                       />
                     }
-                   
                     name="nombre"
                   />
                 </View>
@@ -218,7 +216,6 @@ export const RegistrarDocente = ({ navigation, route }) => {
                 <View className="w-1/2 justify-self-end">
                   <CustomInput
                     variant="outlined"
-                   
                     name="apellido"
                     control={control}
                     placeholder="example"
@@ -242,24 +239,15 @@ export const RegistrarDocente = ({ navigation, route }) => {
                       color="black"
                     />
                   }
-                 
                 />
               </View>
             </>
           )}
 
-          <View className="w-full pt-3">
-            <TouchableOpacity
-              onPress={handleSubmit(onsubmit)}
-              className={`w-11/12 self-center p-3 rounded-lg ${
-                !editing ? "bg-lime-600" : "bg-amber-600"
-              }`}
-            >
-              <Text className="text-white text-center font-bold text-xl">
-                {!editing ? "Registrar" : "Actualizar"}
-              </Text>
-            </TouchableOpacity>
-          </View>
+<SubmitButton
+ onPress={handleSubmit(onsubmit)}
+ editing={editing}
+/>
         </View>
       </ScrollView>
     </>

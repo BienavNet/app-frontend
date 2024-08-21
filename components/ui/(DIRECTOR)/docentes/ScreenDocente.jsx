@@ -4,7 +4,7 @@ import { RegistrarDocente } from "./formregister";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import CustomStack from "../../Components/customStack";
 
-export default function IndexDocente() {
+export const IndexDocente =() =>{
   const screens = [
     {
       name: "ListScreen",

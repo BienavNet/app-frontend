@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Alert } from "react-native";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { detailHorarioRegister } from "../../../../../src/utils/schemas/horarioSchema";
@@ -17,10 +17,9 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { getSalon } from "../../../../../src/services/fetchData/fetchSalon";
 import { getSupervisor } from "../../../../../src/services/fetchData/fetchSupervisor";
-import { useFocusEffect } from "@react-navigation/native";
 import { generateClassDates } from "../../../../../src/utils/functiones/functions";
 import Loading from "../../../../share/loading";
-
+import { SubmitButton } from "../../../../share/button/submitButton";
 export const FormRegisterDetailHorario = ({
   navigation,
   idhorario,
@@ -269,7 +268,6 @@ export const FormRegisterDetailHorario = ({
                 }}
               />
             </View>
-
             <View className="w-1/2 items-center">
               <CustomTimePicker
                 name="hora_fin"
@@ -285,16 +283,10 @@ export const FormRegisterDetailHorario = ({
               />
             </View>
           </View>
-          <View className="w-full py-3">
-            <TouchableOpacity
-              onPress={handleSubmit(onsubmit)}
-              className="w-11/12 self-center p-3 rounded-lg bg-lime-600"
-            >
-              <Text className="text-white text-center font-bold text-xl">
-                Registrar
-              </Text>
-            </TouchableOpacity>
-          </View>
+
+<SubmitButton
+onPress={handleSubmit(onsubmit)}
+/>
         </View>
       )}
     </>
