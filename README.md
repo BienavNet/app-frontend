@@ -129,5 +129,7 @@ npx expo install @react-native-picker/picker
 momentjs (valida y manipula fechas y horas en javascript)
 > npm install moment --save
 
-swiper
-https://github.com/leecade/react-native-swiper  > npm i react-native-swiper --save
+swiper [link:](https://github.com/leecade/react-native-swiper)
+> npm i react-native-swiper --save
+
+> npm i react-native-chart-kit

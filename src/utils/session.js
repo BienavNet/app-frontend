@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosInstance from "../services/axios";
 
 export const setSession = async (accessToken = null) => {
-  console.log(accessToken, "access token");
   if (accessToken) {
     await AsyncStorage.setItem("access_token", accessToken);
     axiosInstance.defaults.headers.common[

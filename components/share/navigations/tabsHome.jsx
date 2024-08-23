@@ -35,10 +35,6 @@ export const TabsHome = ({ tabsConfig }) => {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route, navigation }) => ({
-        headerStyle: {
-          backgroundColor: "#3111F3",
-        },
-        headerTintColor: "#FFFFFF",
         tabBarStyle:
           route.name == "Docentes" && isKeyboardVisible
             ? { display: "none" }

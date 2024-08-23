@@ -8,8 +8,6 @@ export default function Dropdown({
   value,
   error,
 }) {
-  console.log("Data:", data);
-  console.log("Value:", value);
   return (
     <View style={{ marginVertical: 10}}>
         <ScrollView className="">
@@ -32,7 +30,7 @@ export default function Dropdown({
               {data.map((item) => (
                 <Picker.Item
                   style={{
-                    fontSize: 16
+                    fontSize: 18
                   }}
                   key={item.id}
                   value={item.id}

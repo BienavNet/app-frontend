@@ -2,7 +2,7 @@ import { View, ScrollView } from "react-native";
 import { FormRegisterDetailHorario } from "./components/formRegisterDetailHorario";
 import { HeaderTitle } from "../../../share/titulos/headerTitle";
 
-export const RegisterDetailHorario = ({ navigation, route , idhorario, editing}) => {
+export const RegisterDetailHorario = ({ navigation, route , idhorario, editing, handleCloseModal}) => {
 
   return (
     <>
@@ -16,6 +16,7 @@ export const RegisterDetailHorario = ({ navigation, route , idhorario, editing})
           {console.log("editing ??????? ", editing)}
           {!editing ? (
            <FormRegisterDetailHorario
+           handleCloseModal={handleCloseModal}
            navigation={navigation}
            idhorario={idhorario}
            editing={editing}

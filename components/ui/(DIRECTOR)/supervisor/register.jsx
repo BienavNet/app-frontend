@@ -41,43 +41,6 @@ export const RegistrarSupervisor = ({ navigation, route }) => {
       })();
     }
   }, [route.params]);
-
-  // const toast = useToast();
-  // const ToastSuccess = (message) => {
-  //   toast.show(message, {
-  //     icon: <Feather name="check-circle" size={30} color="green" />,
-  //     style: {
-  //       backgroundColor: "green",
-  //       borderColor: "green",
-  //     },
-  //     type: "Success",
-  //     duration: 3000,
-  //     successColor: "green",
-  //     textStyle: {
-  //       fontSize: 16,
-  //       color: "white",
-  //     },
-  //     animationType: "zoom-in",
-  //   });
-  // };
-
-  // const ToastError = (error) => {
-  //   toast.show(error, {
-  //     icon: <MaterialIcons name="error" size={30} color="#ffffff" />,
-  //     style: {
-  //       backgroundColor: "red",
-  //       borderColor: "red",
-  //     },
-  //     type: "Error",
-  //     duration: 1000,
-  //     dangerColor: "red",
-  //     textStyle: {
-  //       fontSize: 16,
-  //       color: "white",
-  //     },
-  //     animationType: "zoom-in",
-  //   });
-  // };
   const onsubmit = async (data) => {
     const { nombre, apellido, correo, cedula, contrasena } = data;
     try {

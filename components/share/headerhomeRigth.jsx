@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 
 export default function HeaderRigth({rol}) {
+  console.log("entrando rol a right", rol)
   return (
     <View style={styles.headerContainer}>
       <View style={styles.rightContainer}>
@@ -27,6 +28,7 @@ const styles = StyleSheet.create({
 
   },
   rightContainer: {
+    marginLeft:25,
     flexDirection: "row",
     alignItems: "center",
   },

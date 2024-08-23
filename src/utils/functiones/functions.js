@@ -36,6 +36,7 @@ export const generateClassDates = (dia, startDate, endDate) => {
   return classesToRegister;
 };
 
+// devuelve la primera letra de un string en mayuscula
 export const capitalizeFirstLetter = (name) => {
   return name.charAt(0).toUpperCase() + name.slice(1);
 };
@@ -57,4 +58,14 @@ export const truncateText = (text) => {
     return text.substring(0, 7) + "...";
   }
   return text;
+};
+
+
+// esta función toma una hora en formato HH:MM:SS (24 horas) y la convierte a HH:MM AM/PM (12 horas).
+export const formatTimeTo12Hour = (time24) => {
+  const [hour, minute] = time24.split(":");
+  const hourInt = parseInt(hour, 10);
+  const ampm = hourInt >= 12 ? "PM" : "AM";
+  const hour12 = hourInt % 12 || 12;
+  return `${hour12}:${minute} ${ampm}`;
 };

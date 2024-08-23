@@ -1,7 +1,7 @@
 import { DrawerHome } from "../../../components/share/navigations/DrawerNavigation";
 import { IndexSupervisor } from "../../../components/ui/(DIRECTOR)/supervisor/ScreenSupervisor";
 import { IndexComentario } from "../../../components/ui/(DIRECTOR)/comentario/ScreenComentario";
-import { IndexDetailHorarios } from "../../../components/ui/(DIRECTOR)/detalleHorario/ScreenDetailsHorario";
+
 import { TabsHome } from "../../../components/share/navigations/tabsHome";
 import { IndexDocente } from "../../../components/ui/(DIRECTOR)/docentes/ScreenDocente";
 import { IndexHorario } from "../../../components/ui/(DIRECTOR)/horarios/ScreenHorarios";
@@ -102,15 +102,15 @@ export const HomeDirector = () => {
         ),
       },
     },
-    {
-      name: "Detalle Horario",
-      component: IndexDetailHorarios,
-      options: {
-        drawerIcon: ({ color }) => (
-          <FontAwesome6 name="list-alt" size={SIZE} color={color} />
-        ),
-      },
-    },
+    // {
+    //   name: "Detalle Horario",
+    //   component: IndexDetailHorarios,
+    //   options: {
+    //     drawerIcon: ({ color }) => (
+    //       <FontAwesome6 name="list-alt" size={SIZE} color={color} />
+    //     ),
+    //   },
+    // },
   ];
   return (
     <Authenticated>

@@ -8,6 +8,7 @@ export const CustomFlatList = ({
   errors,
   placeholder,
   data,
+  verticalOffset
 }) => {
   return (
     <Controller
@@ -16,15 +17,13 @@ export const CustomFlatList = ({
       render={({ field: { onChange, value } }) => (
         <>
           <DropdownModal
+          verticalOffset={verticalOffset}
             error={errors}
             value={value}
-            transparent={false}
+            transparent={true}
             data={data}
             placeholder={placeholder}
             onChange={onChange}
-            // onChange={(item) => {
-            //   onChange(item.label);
-            // }}
           />
           {errors && (
             <Text style={{ color: "red", fontSize: 16, paddingTop:14, paddingLeft:4 }}>{errors.message}</Text>

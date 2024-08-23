@@ -32,7 +32,7 @@ export const ModalComponente = ({
         ]}
       >
         <View
-          className="bg-slate-200 rounded-t-3xl p-5"
+          className="bg-white rounded-t-3xl p-5"
           style={[
             {
               height: modalStyle.height,

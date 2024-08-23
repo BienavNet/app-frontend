@@ -6,11 +6,12 @@ import HeaderLeft from "../headerhomeLeft";
 import HeaderRigth from "../headerhomeRigth";
 import { DrawerActions } from "@react-navigation/native";
 import { Redirect } from "expo-router";
+import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
 
 export const DrawerHome = ({ drawerScreens }) => {
   const { user } = useAuth();
-  console.log("user drawehome is: ", user);
   const Drawer = createDrawerNavigator();
+  
   if (!user) {
     return <Redirect href="/" />;
   }
@@ -26,9 +27,10 @@ export const DrawerHome = ({ drawerScreens }) => {
         headerStyle: { backgroundColor: "#3111F3" },
         headerTitleStyle: { color: "#fff" },
         headerRight: () => {
-          return route.name === "Dashboard" ? (
-            <HeaderRigth rol={capitalizeFirstLetter(user.rol)} />
-          ) : null;
+          console.log(route.name ,"router.name");
+          return route.name === "Home" ? (
+                <HeaderRigth rol={capitalizeFirstLetter(user.rol)} />
+              ) : null;
         },
         headerLeft: () => {
           return (

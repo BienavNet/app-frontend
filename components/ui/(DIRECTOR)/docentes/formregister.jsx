@@ -109,11 +109,11 @@ export const RegistrarDocente = ({ navigation, route }) => {
 
   return (
     <>
-    <HeaderTitle
-    editing={editing}
-    registerText="Registrar docente"
-    updateText="Actualizar docente"
-    />
+      <HeaderTitle
+        editing={editing}
+        registerText="Registrar docente"
+        updateText="Actualizar docente"
+      />
       <ScrollView className="pt-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex items-left mx-4 space-y-3 h-full">
           {!editing ? (
@@ -244,10 +244,7 @@ export const RegistrarDocente = ({ navigation, route }) => {
             </>
           )}
 
-<SubmitButton
- onPress={handleSubmit(onsubmit)}
- editing={editing}
-/>
+          <SubmitButton onPress={handleSubmit(onsubmit)} editing={editing} />
         </View>
       </ScrollView>
     </>

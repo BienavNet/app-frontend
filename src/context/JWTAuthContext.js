@@ -77,7 +77,6 @@ export const AuthProvider = ({ children }) => {
           });
         }
       } catch (error) {
-        console.log(error);
         dispatch({
           type: "INITIALIZE",
           payload: {

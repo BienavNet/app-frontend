@@ -6,6 +6,7 @@ import { CustomTimePicker } from "../../../../share/inputs/customDateTimePicker"
 import { diasArray } from "../../../../../src/utils/schemas/horarioSchema";
 import { CustomFlatList } from "../../../../share/inputs/customFlatList";
 import { CustomPiker } from "../../../../share/inputs/customPicker";
+import { Snackbar } from "@react-native-material/core";
 import {
   registerDetailHorario,
   updateDetailHorario,
@@ -24,9 +25,8 @@ export const FormRegisterDetailHorario = ({
   navigation,
   idhorario,
   editing,
-  handleCloseModal
+  handleCloseModal,
 }) => {
-  
   const {
     handleSubmit,
     control,
@@ -43,12 +43,12 @@ export const FormRegisterDetailHorario = ({
   const [horafin, setHoraFin] = useState(new Date());
   const [salones, setSalones] = useState([]);
   const [supervisors, setSupervisors] = useState([]);
- console.log("supervisors state", supervisors);
+  console.log("supervisors state", supervisors);
 
-  const getSupervisors =useCallback(async () => {
+  const getSupervisors = useCallback(async () => {
     try {
       const res = await getSupervisor();
-      console.log("response the supervisors", res)
+      console.log("response the supervisors", res);
       setSupervisors(res);
     } catch (error) {
       console.error("Error fetching supervisors:", error.message);
@@ -72,25 +72,23 @@ export const FormRegisterDetailHorario = ({
       return {};
     }
     const counts = {};
-    supervisors.forEach((s) => {counts[s.supervisor_id] = 0});
-    console.log('supervisors foreach', counts)
-   try {
-    const classes = await getClasesAll();
-    console.log("Classes received:", classes);
-
-    if (classes.length === 0) {
-      return counts;
-    }
-    classes.forEach((classItem) => {
-      if (counts[classItem.supervisor_id] !== undefined) {
-        counts[classItem.supervisor_id] += 1;
-      }
+    supervisors.forEach((s) => {
+      counts[s.supervisor_id] = 0;
     });
-
-    return counts;
-   } catch (error) {
-    throw new Error("Error fetching classes:", error.message);
-   }
+    try {
+      const classes = await getClasesAll();
+      if (classes.length === 0) {
+        return counts;
+      }
+      classes.forEach((classItem) => {
+        if (counts[classItem.supervisor_id] !== undefined) {
+          counts[classItem.supervisor_id] += 1;
+        }
+      });
+      return counts;
+    } catch (error) {
+      throw new Error("Error fetching classes:", error.message);
+    }
   };
   const getRandomSupervisor = (supervisors) => {
     if (supervisors.length === 0) return null;
@@ -120,9 +118,10 @@ export const FormRegisterDetailHorario = ({
       }
     });
 
-    return selectedSupervisor ? selectedSupervisor.supervisor_id : getRandomSupervisor(supervisors);
+    return selectedSupervisor
+      ? selectedSupervisor.supervisor_id
+      : getRandomSupervisor(supervisors);
   };
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -130,59 +129,55 @@ export const FormRegisterDetailHorario = ({
         await fetchSalones();
         await getSupervisors();
       } catch (error) {
-        console.error("Error fetching data:", error);
+        throw new Error("Error fetching data:", error);
       }
     };
-  
+
     fetchData();
   }, [fetchSalones, getSupervisors]);
-  
+
   useEffect(() => {
     if (supervisors.length > 0) {
       const countClasses = async () => {
         try {
           await countClassesForSupervisors();
         } catch (error) {
-          console.error("Error counting classes:", error);
+          throw new Error("Error counting classes:", error);
         }
       };
-  
+
       countClasses();
     }
   }, [supervisors]);
   const onsubmit = async (data) => {
     const { salon, dia, hora_inicio, hora_fin } = data;
-    console.log("salon", salon);
-
     try {
       if (!editing) {
-        let horario = idhorario
+        let horario = idhorario;
         await registerDetailHorario(horario, dia, hora_inicio, hora_fin);
 
         const startDate = new Date(); // Fecha de inicio
         const endDate = new Date(startDate); // Fecha de final
         endDate.setMonth(endDate.getMonth() + 6);
-
         const classCounts = await countClassesForSupervisors();
-        console.log(classCounts, "<---- classCount")
+
         if (!classCounts) throw new Error("Error counting classes");
         const ESTADO = "pendiente";
         const classesToRegister = await Promise.all(
-          generateClassDates(dia,startDate,endDate).map(async (clase) => {
-            const supervisorID = await assignSupervisors();  
+          generateClassDates(dia, startDate, endDate).map(async (clase) => {
+            const supervisorID = await assignSupervisors();
             if (!supervisorID) {
               throw new Error("No se pudo asignar un supervisor");
             }
             return {
-              horario:idhorario,
+              horario: idhorario,
               salon,
               supervisor: supervisorID,
               estado: ESTADO,
               ...clase,
             };
           })
-        ) 
-        console.log("classesToRegister", classesToRegister);
+        );
         setLoading(true);
         try {
           await Promise.all(
@@ -196,15 +191,14 @@ export const FormRegisterDetailHorario = ({
               )
             )
           );
-          reset();
           setLoading(true);
-          Alert.alert("Éxito", "Registro exitoso", [
-            { text: "OK", onPress: () => 
-            {  handleCloseModal(); 
-              navigation.navigate("ListScreen") }},
-          ]);
-         
+          reset();
+          handleCloseModal();
+          Alert.alert("Registrado exitosamente ✔️✔️");
+          navigation.navigate("ListScreen");
         } catch (error) {
+          Alert.alert("Error..... ❌❌");
+          reset();
           throw new Error("Error: " + error.message);
         }
       } else {
@@ -212,6 +206,7 @@ export const FormRegisterDetailHorario = ({
         console.log("update successfully");
       }
     } catch (error) {
+      reset();
       throw new Error("Error: " + error.message);
     } finally {
       setLoading(false); // Finaliza el estado de carga
@@ -236,8 +231,9 @@ export const FormRegisterDetailHorario = ({
               }))}
             />
           </View>
-          <View className="self-center w-[85%] pb-1 pt-2">
+          <View className="self-center w-[85%] pb-1 pt-5">
             <CustomFlatList
+              verticalOffset={324}
               name="salon"
               errors={errors.salon}
               control={control}
@@ -250,7 +246,7 @@ export const FormRegisterDetailHorario = ({
             />
           </View>
 
-          <View className="flex-row justify-items-stretch pt-8 pb-5">
+          <View className="flex-row justify-items-stretch pt-8 pb-7">
             <View className="w-1/2 items-center">
               <CustomTimePicker
                 name="hora_inicio"
@@ -284,9 +280,7 @@ export const FormRegisterDetailHorario = ({
             </View>
           </View>
 
-<SubmitButton
-onPress={handleSubmit(onsubmit)}
-/>
+          <SubmitButton onPress={handleSubmit(onsubmit)} />
         </View>
       )}
     </>

@@ -26,7 +26,7 @@ export const ListItemSalones = ({
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  console.log(selectedItem, "setSelectedItem");
+  console.log(selectedItem, "<------setSelectedItem");
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchItems = useCallback(async () => {
