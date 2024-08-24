@@ -20,13 +20,14 @@ export const RegistrarForm = ({
   const [editing, setEditing] = useState(editMode);
   const toast = useToast();
 
-  
   const handleFormSubmit = async (data) => {
     try {
       await onSubmit(data, editing);
       reset();
       navigation.navigate("ListScreen");
-      ToastSuccess(editing ? "Actualizado correctamente" : "Registrado correctamente");
+      ToastSuccess(
+        editing ? "Actualizado correctamente" : "Registrado correctamente"
+      );
     } catch (error) {
       ToastError(error.message);
     }
@@ -38,15 +39,17 @@ export const RegistrarForm = ({
       navigation.setOptions({ headerTitle: "Actualizar docente" });
       (async () => {
         const response = await getDocenteOne(route.params.cedula);
-        const docente = response.find(doc => doc.cedula === route.params.cedula);
+        const docente = response.find(
+          (doc) => doc.cedula === route.params.cedula
+        );
         if (docente) {
-         reset({
-          nombre: docente.nombre,
-          apellido: docente.apellido,
-          correo: docente.correo,
-        });
+          reset({
+            nombre: docente.nombre,
+            apellido: docente.apellido,
+            correo: docente.correo,
+          });
         } else {
-          throw new Error('Docente no encontrado.');
+          throw new Error("Docente no encontrado.");
         }
       })();
     }
@@ -88,22 +91,14 @@ export const RegistrarForm = ({
     });
   };
 
-  const {
-    handleSubmit,
-    control,
-    reset,
-  } = useForm({
-    resolver: yupResolver(schema)
+  const { handleSubmit, control, reset } = useForm({
+    resolver: yupResolver(schema),
   });
-
-
 
   return (
     <>
       <View className="py-2" style={{ backgroundColor: "#F2F2F0" }}>
-        <Text className="text-lg text-center font-bold">
-          {title}
-        </Text>
+        <Text className="text-lg text-center font-bold">{title}</Text>
       </View>
       <ScrollView className="pt-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex items-left mx-4 space-y-3 h-full">
@@ -125,7 +120,9 @@ export const RegistrarForm = ({
           <View className="w-full pt-3">
             <TouchableOpacity
               onPress={handleSubmit(handleFormSubmit)}
-              className={`w-11/12 self-center p-3 rounded-lg ${editing ? "bg-amber-600" : "bg-lime-600"}`}
+              className={`w-11/12 self-center p-3 rounded-lg ${
+                editing ? "bg-amber-600" : "bg-lime-600"
+              }`}
             >
               <Text className="text-white text-center font-bold text-xl">
                 {submitButtonLabel}

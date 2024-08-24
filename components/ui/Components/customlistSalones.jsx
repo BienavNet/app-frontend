@@ -1,10 +1,4 @@
-import {
-  Text,
-  ScrollView,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Text, ScrollView, StyleSheet, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ListItem, Button, Divider } from "@rneui/themed";
 import { useCallback, useState } from "react";
@@ -15,6 +9,11 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Loading from "../../share/loading";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { refreshControl } from "../../../src/utils/functiones/refresh";
+import { NotRegistration } from "../../share/noRegistration";
+import { InfoSalones } from "../(DIRECTOR)/salones/components/InfoSalones";
+import { ViewSalones } from "../(DIRECTOR)/salones/components/viewSalones";
+
 export const ListItemSalones = ({
   getDataAll,
   getDataOne,
@@ -77,22 +76,11 @@ export const ListItemSalones = ({
   }, [fetchItems]);
 
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          colors={["#78e08f"]}
-          onRefresh={onRefresh}
-          progressBackgroundColor="#1371C3"
-        />
-      }
-    >
+    <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
       {loading ? (
         <Loading />
       ) : items.length === 0 ? (
-        <Text style={{ textAlign: "center", marginTop: 20 }}>
-          Ningún registro
-        </Text>
+        <NotRegistration />
       ) : (
         items.map((item, index) => (
           <ListItem.Swipeable
@@ -126,13 +114,7 @@ export const ListItemSalones = ({
                         })
                   }
                 >
-                  <Text className="font-extrabold text-lg">
-                    {capitalizeFirstLetter(item.nombre)}
-                    {" - "}
-                  </Text>
-                  <Text className="font-extrabold text-lg">
-                    {item.numero_salon}
-                  </Text>
+                  <ViewSalones item={item} />
                 </TouchableOpacity>
               </ListItem.Title>
             </ListItem.Content>
@@ -141,39 +123,16 @@ export const ListItemSalones = ({
         ))
       )}
       <ModalComponente
-        modalStyle={{height:"60%"}}
+        modalStyle={{ height: "60%" }}
         transparent={true}
         animationType={"slider"}
         modalVisible={modalVisible}
         handleCloseModal={handleCloseModal}
       >
         {selectedItem ? (
-          <View className="bg-white shadow-2xl rounded-lg p-3 w-full">
-            <Text style={[styles.Title1]}>Nombre Salon</Text>
-            <Text style={[styles.text]}>{selectedItem.nombre}</Text>
-            <Text style={[styles.Title1]}> # Salon</Text>
-            <Text style={[styles.text]}>{selectedItem.numero_salon}</Text>
-            <Text style={[styles.Title1]}>Conectividad digital</Text>
-            <View style={styles.vertical}>
-              {selectedItem.INTernet === "si" ? (
-                <MaterialIcons name="wifi" size={24} color="black" />
-              ) : (
-                <MaterialIcons name="wifi-off" size={24} color="black" />
-              )}
-              <Text style={[styles.text]}>{selectedItem.INTernet}</Text>
-              <Divider orientation="vertical" width={5} />
-              {selectedItem.tv === "si" ? (
-                <Ionicons name="tv-sharp" size={24} color="black" />
-              ) : (
-                <MaterialIcons name="tv-off" size={24} color="black" />
-              )}
-              <Text style={[styles.text]}>{selectedItem.tv}</Text>
-            </View>
-            <Text style={[styles.Title1]}>Categoría</Text>
-            <Text style={[styles.text]}>{selectedItem.categoria}</Text>
-          </View>
+          <InfoSalones selectedItem={selectedItem} />
         ) : (
-          <Text>No hay datos disponibles</Text>
+          <NotRegistration />
         )}
       </ModalComponente>
     </ScrollView>

@@ -1,28 +1,15 @@
-import {
-  Text,
-  ScrollView,
-  Alert,
-  View,
-  RefreshControl,
-  StyleSheet,
-} from "react-native";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Text, ScrollView, View, StyleSheet } from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useEffect, useState } from "react";
-import {
-  capitalizeFirstLetter,
-} from "../../../src/utils/functiones/functions";
+import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import Loading from "../../share/loading";
-import { getDetailHorarioByHorarioID } from "../../../src/services/fetchData/fetchDetailHorario";
-import {
-  DeleteClasesOne,
-  getClassesByHorarioID,
-} from "../../../src/services/fetchData/fetchClases";
 import { NotRegistration } from "../../share/noRegistration";
+import { refreshControl } from "../../../src/utils/functiones/refresh";
+import { DeleteConfirmation } from "../../share/deletePress";
 export const ListItemComentario = ({
   getDataAll,
   getDataOne,
@@ -87,41 +74,28 @@ export const ListItemComentario = ({
     setSelectedItem(null);
   };
 
-  // const handleDeletePress = (itemId) => {
-  //   Alert.alert(
-  //     `Eliminar ${modalTitle}`,
-  //     `¿Estás seguro de que deseas eliminar este ${modalTitle.toLowerCase()}?`,
-  //     [
-  //       {
-  //         text: "Cancelar",
-  //         style: "cancel",
-  //       },
-  //       {
-  //         text: "Eliminar",
-  //         style: "destructive",
-  //         onPress: async () => {
-  //           try {
-  //             const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
-  //             console.log("detailhorarioD -> ", detailhorarioD);
-  //             for (const detail_horario of detailhorarioD) {
-  //               await deleteDataAsociated(detail_horario.id);
-  //             }
-
-  //             const claseD = await getClassesByHorarioID(itemId);
-  //             for (const clases of claseD) {
-  //               await DeleteClasesOne(clases.id);
-  //             }
-  //             await deleteData(itemId);
-  //             setItems(items.filter((item) => item.id !== itemId));
-  //             Alert.alert(`${modalTitle} eliminado con éxito`);
-  //           } catch (error) {
-  //             Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
-  //           }
-  //         },
-  //       },
-  //     ]
-  //   );
-  // };
+  const handleDeletePress = (itemId) => {
+    DeleteConfirmation({
+      nameDelete: modalTitle,
+      onPress: async () => {
+        try {
+          const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
+          for (const detail_horario of detailhorarioD) {
+            await deleteDataAsociated(detail_horario.id);
+          }
+          const claseD = await getClassesByHorarioID(itemId);
+          for (const clases of claseD) {
+            await DeleteClasesOne(clases.id);
+          }
+          await deleteData(itemId);
+          setItems(items.filter((item) => item.id !== itemId));
+          Alert.alert(`${modalTitle} eliminado con éxito`);
+        } catch (error) {
+          Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
+        }
+      },
+    });
+  };
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -129,34 +103,21 @@ export const ListItemComentario = ({
     setRefreshing(false);
   }, [fetchItems]);
 
-  // const handleDateChange = (date) => {
-  //   setValue(date);
-  // };
-
   useEffect(() => {
     if (modalVisible) {
       setLoading(true);
       const timer = setTimeout(() => {
         setLoading(false);
-      }, 1000); 
-      return () => clearTimeout(timer); 
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, [modalVisible]);
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          colors={["#78e08f"]}
-          onRefresh={onRefresh}
-          progressBackgroundColor="#1371C3"
-        />
-      }
-    >
+    <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
       {loading ? (
         <Loading />
       ) : items.length === 0 ? (
-        <NotRegistration/>
+        <NotRegistration />
       ) : (
         items.map((item, index) => (
           <ListItem.Swipeable
@@ -185,10 +146,10 @@ export const ListItemComentario = ({
             )}
           >
             <FontAwesome
-            name={viewedComments[item.id] ? "commenting-o" : "commenting"}
-            size={25}
-            color="black"
-          />
+              name={viewedComments[item.id] ? "commenting-o" : "commenting"}
+              size={25}
+              color="black"
+            />
             <ListItem.Content>
               <ListItem.Title>
                 <TouchableOpacity
@@ -202,8 +163,10 @@ export const ListItemComentario = ({
                   }
                 >
                   <Text className="font-extrabold text-lg">
-                    {capitalizeFirstLetter(item.nombre)}{" - "}
-                    {item.numero_salon}{" - "} {item.salon_nombre}
+                    {capitalizeFirstLetter(item.nombre)}
+                    {" - "}
+                    {item.numero_salon}
+                    {" - "} {item.salon_nombre}
                   </Text>
                 </TouchableOpacity>
               </ListItem.Title>
@@ -234,7 +197,8 @@ export const ListItemComentario = ({
               <View>
                 <Text style={[styles.Title1]}>Salon</Text>
                 <Text style={[styles.text]}>
-                  {selectedItem?.numero_salon}{" - "}
+                  {selectedItem?.numero_salon}
+                  {" - "}
                   {capitalizeFirstLetter(selectedItem?.salon_nombre)}
                 </Text>
               </View>
@@ -245,10 +209,9 @@ export const ListItemComentario = ({
                 </Text>
               </View>
             </View>
-           
           </>
         ) : (
-         <NotRegistration/>
+          <NotRegistration />
         )}
       </ModalComponente>
     </ScrollView>

@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
 import { Snackbar } from "@react-native-material/core";
 
-export const DeleteConfirmation = ({ nameDelete, onPress }) => {
+export const InfoView = ({ nameDelete, onPress }) => {
   () => {
     Alert.alert(
       `Eliminar ${nameDelete}`,
@@ -27,7 +27,6 @@ export const DeleteConfirmation = ({ nameDelete, onPress }) => {
                   backgroundColor: "green",
                 }}
               />;
-            
             } catch (error) {
               <Snackbar
                 message={`Error al eliminar ${nameDelete}.` + error}

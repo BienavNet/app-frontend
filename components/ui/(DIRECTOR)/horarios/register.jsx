@@ -1,15 +1,12 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { View,  ScrollView, Alert } from "react-native";
 import { yupResolver } from "@hookform/resolvers/yup";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useForm } from "react-hook-form";
-import { Snackbar } from "@react-native-material/core";
 import {
   getHorarioOne,
   registerHorario,
   updateHorario,
 } from "../../../../src/services/fetchData/fetchHorarios";
 import { getDocenteAll } from "../../../../src/services/fetchData/fetchDocente";
-import { useToast } from "react-native-toast-notifications";
 import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { horarioRegisterSchema } from "../../../../src/utils/schemas/horarioSchema";
@@ -23,7 +20,6 @@ import { HeaderTitle } from "../../../share/titulos/headerTitle";
 import { SubmitButton } from "../../../share/button/submitButton";
 
 export const RegisterHorario = ({ navigation, route }) => {
-  const toast = useToast();
   const {
     handleSubmit,
     control,

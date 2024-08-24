@@ -1,10 +1,10 @@
 import { TouchableOpacity } from "react-native";
 import { ListDocente } from "./listDocente";
-import { RegistrarDocente } from "./formregister";
+import { RegistrarDocente } from "./register";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import CustomStack from "../../Components/customStack";
 
-export const IndexDocente =() =>{
+export const IndexDocente = () => {
   const screens = [
     {
       name: "ListScreen",
@@ -31,4 +31,4 @@ export const IndexDocente =() =>{
     },
   ];
   return <CustomStack initialRouteName="ListScreen" screens={screens} />;
-}
+};

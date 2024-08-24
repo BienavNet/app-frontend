@@ -6,7 +6,12 @@ import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import { refreshControl } from "../../../src/utils/functiones/refresh";
+import { NotRegistration } from "../../share/noRegistration";
+import { DeleteConfirmation } from "../../share/deletePress";
+import { InfoDocente } from "../(DIRECTOR)/docentes/components/inforDocente";
+import { ViewDocente } from "../(DIRECTOR)/docentes/components/viewDocente";
+import CustomTouchableOpacity from "./customTouchableOpacity";
 export const ListItemComponent = ({
   getDataAll,
   getDataOne,
@@ -19,7 +24,7 @@ export const ListItemComponent = ({
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  console.log(selectedItem, 'setSelectedItem')
+  console.log(selectedItem, "setSelectedItem");
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchItems = useCallback(async () => {
@@ -38,9 +43,7 @@ export const ListItemComponent = ({
       setModalVisible(true);
       const res = await getDataOne(cedula);
       console.log(res, "response res de handleInfoPress");
-      const itemselected = res.find(
-        (value) => value.cedula === cedula
-      );
+      const itemselected = res.find((value) => value.cedula === cedula);
       console.log(itemselected, "item selected");
       if (itemselected) {
         setSelectedItem(itemselected);
@@ -59,29 +62,13 @@ export const ListItemComponent = ({
   };
 
   const handleDeletePress = (itemId) => {
-    Alert.alert(
-      `Eliminar ${modalTitle}`,
-      `¿Estás seguro de que deseas eliminar este ${modalTitle.toLowerCase()}?`,
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await deleteData(itemId);
-              setItems(items.filter((item) => item.cedula !== itemId));
-              Alert.alert(`${modalTitle} eliminado con éxito`);
-            } catch (error) {
-              Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
-            }
-          },
-        },
-      ]
-    );
+    DeleteConfirmation({
+      nameDelete: modalTitle,
+      onPress: async () => {
+        await deleteData(itemId);
+        setItems(items.filter((item) => item.cedula !== itemId));
+      },
+    });
   };
 
   const onRefresh = useCallback(async () => {
@@ -91,20 +78,9 @@ export const ListItemComponent = ({
   }, [fetchItems]);
 
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          colors={["#78e08f"]}
-          onRefresh={onRefresh}
-          progressBackgroundColor="#1371C3"
-        />
-      }
-    >
+    <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
       {items.length === 0 ? (
-        <Text style={{ textAlign: "center", marginTop: 20 }}>
-          Ningún registro
-        </Text>
+        <NotRegistration />
       ) : (
         items.map((item, index) => (
           <ListItem.Swipeable
@@ -125,7 +101,7 @@ export const ListItemComponent = ({
                 title="Delete"
                 onPress={() => {
                   reset();
-                  handleDeletePress(item.cedula);
+                  handleDeletePress(item.cedula); // aca debe ir DeleteConfirmation
                 }}
                 icon={{ name: "delete", color: "white" }}
                 buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
@@ -135,23 +111,14 @@ export const ListItemComponent = ({
             <Icon name={itemIcon} size={25} color="black" />
             <ListItem.Content>
               <ListItem.Title>
-                <TouchableOpacity
-                  className="flex-row"
-                  onPress={() =>
-                    navigateToFormScreen
-                      ? navigateToFormScreen(navigation, item.cedula)
-                      : navigation.navigate("FormScreen", {
-                          cedula: item.cedula,
-                        })
-                  }
+                <CustomTouchableOpacity
+                  navigateToFormScreen={navigateToFormScreen}
+                  screenName="FormScreen"
+                  paramKey="cedula"
+                  paramValue={item.cedula}
                 >
-                  <Text className="font-extrabold text-lg">
-                    {capitalizeFirstLetter(item.nombre)}{" "}
-                  </Text>
-                  <Text className="font-extrabold text-lg">
-                    {capitalizeFirstLetter(item.apellido)}
-                  </Text>
-                </TouchableOpacity>
+                  <ViewDocente item={item} />
+                </CustomTouchableOpacity>
               </ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
@@ -165,22 +132,9 @@ export const ListItemComponent = ({
         handleCloseModal={handleCloseModal}
       >
         {selectedItem ? (
-          <>
-            <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-              {capitalizeFirstLetter(selectedItem.nombre)}{" "}
-              {capitalizeFirstLetter(selectedItem.apellido)}
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              Cédula:{" "}
-              <Text className="font-normal">{selectedItem.cedula}</Text>
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              Correo:{" "}
-              <Text className="font-normal">{selectedItem.correo}</Text>
-            </Text>
-          </>
+          <InfoDocente selectedItem={selectedItem} />
         ) : (
-          <Text>No hay datos disponibles</Text>
+          <NotRegistration />
         )}
       </ModalComponente>
     </ScrollView>

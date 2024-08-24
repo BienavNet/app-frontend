@@ -1,17 +1,7 @@
-import {
-  Text,
-  ScrollView,
-  Alert,
-  View,
-  RefreshControl,
-  StyleSheet,
-} from "react-native";
+import { ScrollView, Alert,  StyleSheet } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useEffect, useState } from "react";
-import {
-  capitalizeFirstLetter,
-  truncateText,
-} from "../../../src/utils/functiones/functions";
+
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -23,8 +13,13 @@ import {
   getClassesByHorarioID,
 } from "../../../src/services/fetchData/fetchClases";
 import SimpleDatePicker from "./customSimpleDatePicker";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { ScreenViewMore } from "../(DIRECTOR)/horarios/component/ScreenViewMore";
+import { refreshControl } from "../../../src/utils/functiones/refresh";
+import { NotRegistration } from "../../share/noRegistration";
+import { ViewHorario } from "../(DIRECTOR)/horarios/component/viewHorario";
+import { DeleteConfirmation } from "../../share/deletePress";
+import { SearchView } from "../(DIRECTOR)/horarios/component/searchMore&viewValue";
+import { InfoHorario } from "../(DIRECTOR)/horarios/component/infoHorario";
 
 export const ListItemComponentHorario = ({
   getDataAll,
@@ -88,41 +83,27 @@ export const ListItemComponentHorario = ({
   };
 
   const handleDeletePress = (itemId) => {
-    Alert.alert(
-      `Eliminar ${modalTitle}`,
-      `¿Estás seguro de que deseas eliminar este ${modalTitle.toLowerCase()}?`,
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
-              console.log("detailhorarioD -> ", detailhorarioD);
-              for (const detail_horario of detailhorarioD) {
-                await deleteDataAsociated(detail_horario.id);
-              }
-
-              const claseD = await getClassesByHorarioID(itemId);
-              for (const clases of claseD) {
-                await DeleteClasesOne(clases.id);
-              }
-              await deleteData(itemId);
-              setItems(items.filter((item) => item.id !== itemId));
-              Alert.alert(`${modalTitle} eliminado con éxito`);
-            } catch (error) {
-              Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
-            }
-          },
-        },
-      ]
-    );
+    DeleteConfirmation({
+      nameDelete: modalTitle,
+      onPress: async () => {
+        try {
+          const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
+          for (const detail_horario of detailhorarioD) {
+            await deleteDataAsociated(detail_horario.id);
+          }
+          const claseD = await getClassesByHorarioID(itemId);
+          for (const clases of claseD) {
+            await DeleteClasesOne(clases.id);
+          }
+          await deleteData(itemId);
+          setItems(items.filter((item) => item.id !== itemId));
+          Alert.alert(`${modalTitle} eliminado con éxito`);
+        } catch (error) {
+          Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
+        }
+      },
+    });
   };
-
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await fetchItems();
@@ -144,27 +125,16 @@ export const ListItemComponentHorario = ({
       setLoading(true);
       const timer = setTimeout(() => {
         setLoading(false);
-      }, 1000); 
-      return () => clearTimeout(timer); 
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, [modalVisible]);
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          colors={["#78e08f"]}
-          onRefresh={onRefresh}
-          progressBackgroundColor="#1371C3"
-        />
-      }
-    >
+    <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
       {loading ? (
         <Loading />
       ) : items.length === 0 ? (
-        <Text style={{ textAlign: "center", marginTop: 20 }}>
-          Ningún registro
-        </Text>
+        <NotRegistration />
       ) : (
         items.map((item, index) => (
           <ListItem.Swipeable
@@ -205,16 +175,7 @@ export const ListItemComponentHorario = ({
                         })
                   }
                 >
-                  <Text className="font-extrabold text-lg">
-                    {capitalizeFirstLetter(item.nombre)}{" "}
-                    {capitalizeFirstLetter(item.apellido)}
-                    {" - "}
-                  </Text>
-                  <Text className="font-extrabold text-lg">
-                    {item.asignatura
-                      ? truncateText(item.asignatura)
-                      : "Asignatura no disponible"}
-                  </Text>
+                  <ViewHorario item={item} />
                 </TouchableOpacity>
               </ListItem.Title>
             </ListItem.Content>
@@ -233,58 +194,43 @@ export const ListItemComponentHorario = ({
           <Loading />
         ) : selectedItem ? (
           <>
-            <View className="bg-white shadow-2xl rounded-lg p-3 w-full">
-              <View>
-                <Text style={[styles.Title1]}>Asignatura Asignada</Text>
-                <Text style={[styles.asignatura]}>
-                  {capitalizeFirstLetter(selectedItem.asignatura)}
-                </Text>
-              </View>
-              <View>
-                <Text style={[styles.Title1]}>Docente</Text>
-                <Text style={[styles.text]}>
-                  {capitalizeFirstLetter(selectedItem?.nombre)}{" "}
-                  {capitalizeFirstLetter(selectedItem?.apellido)}
-                </Text>
-              </View>
-            </View>
-            <>
-              <View style={[styles.viewmore]}>
-                <Text style={styles.subtitle}>{value.toDateString()}</Text>
+            <InfoHorario selectedItem={selectedItem} />
+            <SearchView
+              value={value}
+              handleOpenSecondModal={handleOpenSecondModal}
+            />
+            {/* <View style={[styles.viewmore]}>
+              <Text style={styles.subtitle}>{value.toDateString()}</Text>
 
-                <Button
-                  onPress={handleOpenSecondModal}
-                  color="#1371C3"
-                  buttonStyle={{ width: 100 }}
-                  radius={"sm"}
-                  type="clear"
-                >
-                  Ver mas
-                  <MaterialIcons name="expand-more" size={24} color="#1371C3" />
-                </Button>
-              </View>
+              <Button
+                onPress={handleOpenSecondModal}
+                color="#1371C3"
+                buttonStyle={{ width: 100 }}
+                radius={"sm"}
+                type="clear"
+              >
+                Ver mas
+                <MaterialIcons name="expand-more" size={24} color="#1371C3" />
+              </Button>
+            </View> */}
 
-              <SimpleDatePicker
-                onDateChange={handleDateChange}
-                // selectedDate={value}
-                selectedDate={selectedItem?.horarios
-                  .map((horario) => new Date(horario.fecha))
-                  .filter((horario) => {
-                    const currentMonth = new Date().getMonth();
-                    return horario.getMonth() === currentMonth;
-                  })}
-                viewSelectDate={selectedItem?.horarios.find(
-                  (horario) =>
-                    new Date(horario.fecha).toDateString() ===
-                    value.toDateString()
-                )}
-              />
-            </>
+            <SimpleDatePicker
+              onDateChange={handleDateChange}
+              selectedDate={selectedItem?.horarios
+                .map((horario) => new Date(horario.fecha))
+                .filter((horario) => {
+                  const currentMonth = new Date().getMonth();
+                  return horario.getMonth() === currentMonth;
+                })}
+              viewSelectDate={selectedItem?.horarios.find(
+                (horario) =>
+                  new Date(horario.fecha).toDateString() ===
+                  value.toDateString()
+              )}
+            />
           </>
         ) : (
-          <Text style={{ textAlign: "center", marginTop: 20 }}>
-            Ningún registro
-          </Text>
+          <NotRegistration />
         )}
       </ModalComponente>
       <ModalComponente
@@ -329,19 +275,19 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 5,
   },
-  viewmore: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 12,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  subtitle: {
-    paddingVertical: 12,
-    fontSize: 17,
-    fontWeight: "600",
-    color: "#999999",
-  },
+  // viewmore: {
+  //   flexDirection: "row",
+  //   justifyContent: "space-between",
+  //   marginTop: 12,
+  //   paddingHorizontal: 20,
+  //   paddingVertical: 12,
+  // },
+  // subtitle: {
+  //   paddingVertical: 12,
+  //   fontSize: 17,
+  //   fontWeight: "600",
+  //   color: "#999999",
+  // },
 });
 
 {

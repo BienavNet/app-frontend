@@ -13,7 +13,7 @@ export const CustomInput = ({
   rules = {},
   label,
   icon,
-  variant
+  variant,
 }) => {
   return (
     <Controller
@@ -25,15 +25,16 @@ export const CustomInput = ({
         fieldState: { error },
       }) => (
         <>
-         <View className="p-2">
+          <View className="p-2">
             <TextInput
-            inputContainerStyle={{
-              borderBottomColor: error ? "red" : null, // Borde inferior rojo si hay error
-              borderBottomWidth: error ? 2 : null,
-            }}
-             color={`${error ? 'red' : '#1371C3'}`}
-             className={`bg-black/5 rounded-xl w-full ${
-              error ? "border-red-500" : "border-slate-400"} border`}
+              inputContainerStyle={{
+                borderBottomColor: error ? "red" : null, // Borde inferior rojo si hay error
+                borderBottomWidth: error ? 2 : null,
+              }}
+              color={`${error ? "red" : "#1371C3"}`}
+              className={`bg-black/5 rounded-xl w-full ${
+                error ? "border-red-500" : "border-slate-400"
+              } border`}
               variant={variant}
               label={label}
               leading={icon}
@@ -49,41 +50,13 @@ export const CustomInput = ({
           </View>
           {error && (
             <Text style={styles.errorText}>
-            {typeof error.message === 'string'
-        ? error.message
-        : error.message && typeof error.message === 'object' 
-        ? (error.message.message || "Error") 
-        : "Error inesperado"}
+              {typeof error.message === "string"
+                ? error.message
+                : error.message && typeof error.message === "object"
+                ? error.message.message || "Error"
+                : "Error inesperado"}
             </Text>
-
           )}
-          {/* <View className="p-3">
-            <TextInput
-            style={[
-              styles.textInput,
-              error && { borderColor: 'red' }, 
-            ]}
-              className={`bg-black/5 rounded-xl w-full ${
-                error ? "border-red-400" : "border-slate-400"
-              } border`}
-              variant={variant}
-              label={label}
-              leading={icon}
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder={placeholder}
-              placeholderTextColor={"#3111F3"}
-              keyboardType={keyBoardType}
-              autoComplete="off"
-              secureTextEntry={secureTextEntry}
-            />
-          </View>
-          {error && (
-            <Text  style={styles.errorText} className="text-red-400 self-stretch pl-3">
-              {error.message || "Error"}
-            </Text>
-          )} */}
         </>
       )}
     />
@@ -167,10 +140,9 @@ export const CustomInputCheckBox = ({ control, name, title, rules = {} }) => {
 };
 
 const styles = StyleSheet.create({
-
   errorText: {
-    color: 'red',
-    alignSelf: 'stretch',
+    color: "red",
+    alignSelf: "stretch",
     paddingLeft: 16,
   },
 });

@@ -1,11 +1,4 @@
-import {
-  Text,
-  ScrollView,
-  Alert,
-  View,
-  RefreshControl,
-  StyleSheet,
-} from "react-native";
+import { Text, ScrollView, View, StyleSheet } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useEffect, useState } from "react";
@@ -24,6 +17,7 @@ import {
   getClassesByHorarioID,
 } from "../../../src/services/fetchData/fetchClases";
 import { NotRegistration } from "../../share/noRegistration";
+import { refreshControl } from "../../../src/utils/functiones/refresh";
 
 export const ListItemReport = ({
   getDataAll,
@@ -95,10 +89,6 @@ export const ListItemReport = ({
     setRefreshing(false);
   }, [fetchItems]);
 
-  // const handleDateChange = (date) => {
-  //   setValue(date);
-  // };
-
   useEffect(() => {
     if (modalVisible) {
       setLoading(true);
@@ -109,16 +99,7 @@ export const ListItemReport = ({
     }
   }, [modalVisible]);
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          colors={["#78e08f"]}
-          onRefresh={onRefresh}
-          progressBackgroundColor="#1371C3"
-        />
-      }
-    >
+    <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
       {loading ? (
         <Loading />
       ) : items.length === 0 ? (
@@ -126,17 +107,18 @@ export const ListItemReport = ({
       ) : (
         items.map((item, index) => (
           <ListItem.Swipeable
-            containerStyle={{ 
+            containerStyle={{
               borderRadius: 4,
               elevation: 5,
-              backgroundColor:viewedComments[item.id] ? "#b6b2b2":"white",
+              backgroundColor: viewedComments[item.id] ? "#b6b2b2" : "white",
               paddingHorizontal: 25,
-              width: '100%',
+              width: "100%",
               marginVertical: 10,
-              shadowColor: '#171717',
-              shadowOffset: {width: -2, height: 4},
+              shadowColor: "#171717",
+              shadowOffset: { width: -2, height: 4 },
               shadowOpacity: 0.2,
-              shadowRadius: 3,}}
+              shadowRadius: 3,
+            }}
             key={`${item.id}-${index}`}
             leftContent={(reset) => (
               <Button
@@ -146,16 +128,17 @@ export const ListItemReport = ({
                   await handleInfoPress(item.id);
                 }}
                 icon={{ name: "info", color: "white" }}
-                buttonStyle={{  
+                buttonStyle={{
                   borderRadius: 4,
                   paddingHorizontal: 25,
-                  width: '100%',  
-                  minHeight:102, 
+                  width: "100%",
+                  minHeight: 102,
                   marginVertical: 10,
-                  shadowColor: '#171717',
-                  shadowOffset: {width: -2, height: 4},
+                  shadowColor: "#171717",
+                  shadowOffset: { width: -2, height: 4 },
                   shadowOpacity: 0.2,
-                  shadowRadius: 3,}}
+                  shadowRadius: 3,
+                }}
               />
             )}
             rightContent={(reset) => (
@@ -166,18 +149,18 @@ export const ListItemReport = ({
                   handleDeletePress(item.id);
                 }}
                 icon={{ name: "delete", color: "white" }}
-                buttonStyle={{ 
+                buttonStyle={{
                   borderRadius: 4,
-                  minHeight:102, 
+                  minHeight: 102,
                   backgroundColor: "red",
                   paddingHorizontal: 25,
-                  width: '100%',
+                  width: "100%",
                   marginVertical: 10,
-                  shadowColor: '#171717',
-                  shadowOffset: {width: -2, height: 4},
+                  shadowColor: "#171717",
+                  shadowOffset: { width: -2, height: 4 },
                   shadowOpacity: 0.2,
                   shadowRadius: 3,
-                 }}
+                }}
               />
             )}
           >
@@ -198,30 +181,44 @@ export const ListItemReport = ({
                         })
                   }
                 >
-                  <View >
-                  <View style={{
-                      flexDirection:"row"
-                    }}>
-                   <Text className="font-extrabold text-base">
-                      {capitalizeFirstLetter(item.nombre)} {capitalizeFirstLetter(item.apellido)}
-                      {" - "}
-                    </Text>
-                    <Text className="text-base">
-                      {truncateText(item.asignatura)}
-                    </Text>
+                  <View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                      }}
+                    >
+                      <Text className="font-extrabold text-base">
+                        {capitalizeFirstLetter(item.nombre)}{" "}
+                        {capitalizeFirstLetter(item.apellido)}
+                        {" - "}
+                      </Text>
+                      <Text className="text-base">
+                        {truncateText(item.asignatura)}
+                      </Text>
                     </View>
 
-                    <View style={{
-                      flexDirection:"row"
-                    }}>
-                    <Text className="font-extrabold text-base">{item.nombre_salon}{":"} </Text>
-                    <Text  className="text-base">{item.numero_salon}</Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                      }}
+                    >
+                      <Text className="font-extrabold text-base">
+                        {item.nombre_salon}
+                        {":"}{" "}
+                      </Text>
+                      <Text className="text-base">{item.numero_salon}</Text>
                     </View>
-                    <View style={{
-                      flexDirection:"row"
-                    }}>
-                    <Text className="font-extrabold text-base">Observacion: </Text>
-                    <Text className="text-base">{truncateText(item.comentario)}</Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                      }}
+                    >
+                      <Text className="font-extrabold text-base">
+                        Observacion:{" "}
+                      </Text>
+                      <Text className="text-base">
+                        {truncateText(item.comentario)}
+                      </Text>
                     </View>
                   </View>
                 </TouchableOpacity>
