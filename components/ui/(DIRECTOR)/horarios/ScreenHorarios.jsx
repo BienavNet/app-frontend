@@ -1,6 +1,6 @@
 import { TouchableOpacity } from "react-native";
-import {ListHorario} from "./list";
-import {RegisterHorario} from "./register";
+import { ListHorario } from "./list";
+import { RegisterHorario } from "./register";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import CustomStack from "../../Components/customStack";
 
@@ -31,4 +31,4 @@ export const IndexHorario = () => {
     },
   ];
   return <CustomStack initialRouteName="ListScreen" screens={screens} />;
-}
+};

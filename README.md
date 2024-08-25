@@ -133,3 +133,7 @@ swiper [link:](https://github.com/leecade/react-native-swiper)
 > npm i react-native-swiper --save
 
 > npm i react-native-chart-kit
+
+eslint-plugin-react-hooks
+> npm install eslint -D
+> npx eslint --init

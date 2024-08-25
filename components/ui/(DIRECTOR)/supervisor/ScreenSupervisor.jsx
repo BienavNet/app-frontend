@@ -4,7 +4,7 @@ import { RegistrarSupervisor } from "./register";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import CustomStack from "../../Components/customStack";
 
-export const IndexSupervisor =() =>{
+export const IndexSupervisor = () => {
   const screens = [
     {
       name: "ListScreen",
@@ -31,4 +31,4 @@ export const IndexSupervisor =() =>{
     },
   ];
   return <CustomStack initialRouteName="ListScreen" screens={screens} />;
-}
+};

@@ -13,7 +13,6 @@ export const RegisterDetailHorario = ({ navigation, route , idhorario, editing, 
     />
       <ScrollView className="pt-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex pb-5 h-full">
-          {console.log("editing ??????? ", editing)}
           {!editing ? (
            <FormRegisterDetailHorario
            handleCloseModal={handleCloseModal}

@@ -1,48 +1,36 @@
-import { Alert } from "react-native";
-import { Snackbar } from "@react-native-material/core";
+import { Alert } from 'react-native';
 
-export const DeleteConfirmation = ({ nameDelete, onPress }) => {
-  () => {
+export const DeleteConfirmation = (nameDelete, onPress ) => {
+  return () => {
     Alert.alert(
-      `Eliminar ${nameDelete}`,
-      `¿Estás seguro de que deseas eliminar este  ${nameDelete}?`,
+      'Confirmación de Eliminación',
+      `¿Estás seguro de que quieres eliminar ${nameDelete}?`,
       [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await onPress();
-              <Snackbar
-                message={`${nameDelete}, Eliminado con exito.`}
-                style={{
-                  position: "absolute",
-                  start: 16,
-                  end: 16,
-                  bottom: 16,
-                  backgroundColor: "green",
-                }}
-              />;
-            } catch (error) {
-              <Snackbar
-                message={`Error al eliminar ${nameDelete}.` + error}
-                style={{
-                  position: "absolute",
-                  start: 16,
-                  end: 16,
-                  bottom: 16,
-                  backgroundColor: "red",
-                }}
-              />;
-            }
-          },
-        },
-      ]
+        { text: 'Cancelar', style: 'cancel' },  
+        { text: 'Eliminar', onPress: onPress }, 
+      ],
+      { cancelable: false }
     );
   };
-  return null;
 };
+
+
+// import { Alert } from "react-native";
+
+// export const DeleteConfirmation = ({ nameDelete, onPress }) => {
+//     Alert.alert(
+//       `Eliminar ${nameDelete}`,
+//       `¿Estás seguro de que deseas eliminar este  ${nameDelete}?`,
+//       [
+//         {
+//           text: "Cancelar",
+//           style: "cancel",
+//         },
+//         {
+//           text: "Eliminar",
+//           style: "destructive",
+//           onPress:onPress
+//         },
+//       ]
+//     );
+// };

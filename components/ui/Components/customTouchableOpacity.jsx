@@ -3,8 +3,8 @@ import { useNavigation } from "@react-navigation/native";
 
 const CustomTouchableOpacity = ({
   navigateToFormScreen,
-  screenName = "FormScreen",
-  paramKey = "id",
+  screenName,
+  paramKey ,
   paramValue,
   children,
 }) => {

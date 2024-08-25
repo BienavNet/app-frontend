@@ -14,6 +14,7 @@ export const CustomInput = ({
   label,
   icon,
   variant,
+  error,
 }) => {
   return (
     <Controller
@@ -22,7 +23,6 @@ export const CustomInput = ({
       rules={rules}
       render={({
         field: { onChange, onBlur, value },
-        fieldState: { error },
       }) => (
         <>
           <View className="p-2">

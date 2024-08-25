@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text, ScrollView } from "react-native";
+import { TouchableOpacity, View, Text, ScrollView, Alert } from "react-native";
 import {
   CustomInput,
   CustomInputCheckBox,
@@ -12,48 +12,48 @@ import { useRouter } from "expo-router";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Feather from "@expo/vector-icons/Feather";
-import { useToast } from "react-native-toast-notifications";
+// import { useToast } from "react-native-toast-notifications";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 function FormLogin() {
   const router = useRouter();
-  const toast = useToast();
+  // const toast = useToast();
   const { login, user } = useAuth();
 
-  const ToastSuccess = (message) => {
-    toast.show(message, {
-      icon: <Feather name="check-circle" size={30} color="green" />,
-      style: {
-        backgroundColor: "green",
-        borderColor: "green",
-      },
-      type: "Success",
-      duration: 300,
-      successColor: "green",
-      textStyle: {
-        fontSize: 16,
-        color: "white",
-      },
-      animationType: "zoom-in",
-    });
-  };
+  // const ToastSuccess = (message) => {
+  //   toast.show(message, {
+  //     icon: <Feather name="check-circle" size={30} color="green" />,
+  //     style: {
+  //       backgroundColor: "green",
+  //       borderColor: "green",
+  //     },
+  //     type: "Success",
+  //     duration: 300,
+  //     successColor: "green",
+  //     textStyle: {
+  //       fontSize: 16,
+  //       color: "white",
+  //     },
+  //     animationType: "zoom-in",
+  //   });
+  // };
 
-  const ToastError = (error) => {
-    toast.show(error, {
-      icon: <MaterialIcons name="error" size={30} color="#ffffff" />,
-      style: {
-        backgroundColor: "red",
-        borderColor: "red",
-      },
-      type: "Error",
-      duration: 500,
-      dangerColor: "red",
-      textStyle: {
-        fontSize: 16,
-        color: "white",
-      },
-      animationType: "zoom-in",
-    });
-  };
+  // const ToastError = (error) => {
+  //   toast.show(error, {
+  //     icon: <MaterialIcons name="error" size={30} color="#ffffff" />,
+  //     style: {
+  //       backgroundColor: "red",
+  //       borderColor: "red",
+  //     },
+  //     type: "Error",
+  //     duration: 500,
+  //     dangerColor: "red",
+  //     textStyle: {
+  //       fontSize: 16,
+  //       color: "white",
+  //     },
+  //     animationType: "zoom-in",
+  //   });
+  // };
 
   const { handleSubmit, control, reset } = useForm({
     resolver: yupResolver(loging),
@@ -63,12 +63,13 @@ function FormLogin() {
     const { correo, contrasena, rol } = data;
     try {
       await login(correo, contrasena, rol);
-      ToastSuccess("login successfully");
+     Alert.alert("logeado successfully")
       console.log("user logged in", user);
       if (user) router.push("/home");
       reset();
     } catch (error) {
-      ToastError(error.message);
+      Alert.alert("error", error.message);
+      // ToastError(error.message);
       reset();
     }
   };

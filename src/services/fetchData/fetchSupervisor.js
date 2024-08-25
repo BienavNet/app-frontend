@@ -18,7 +18,7 @@ try {
 export const getSupervisor = async () => {
     try {
         const response = await axiosInstance.get('/supervisor/');
-        console.log("response data de supervisor", response.data)
+        console.log("response data de supervisor ALL", response.data)
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)
@@ -28,7 +28,7 @@ export const getSupervisor = async () => {
 export const getSupervisorOne = async (cedula) => {
     try {
         const response = await axiosInstance.get(`/supervisor/${cedula}`);
-        console.log(response.data, "response data: getSupervisorOne")
+        console.log(response.data, "response data: getSupervisor ONE")
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)
@@ -37,7 +37,7 @@ export const getSupervisorOne = async (cedula) => {
 
 export const deleteSupervisorOne = async (cedula) => {
     try {
-        const response = await axiosInstance.delete(`/api/supervisor/delete/${cedula}`);
+        const response = await axiosInstance.delete(`/supervisor/delete/${cedula}`);
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)

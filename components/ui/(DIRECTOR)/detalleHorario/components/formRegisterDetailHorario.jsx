@@ -6,7 +6,7 @@ import { CustomTimePicker } from "../../../../share/inputs/customDateTimePicker"
 import { diasArray } from "../../../../../src/utils/schemas/horarioSchema";
 import { CustomFlatList } from "../../../../share/inputs/customFlatList";
 import { CustomPiker } from "../../../../share/inputs/customPicker";
-import { Snackbar } from "@react-native-material/core";
+
 import {
   registerDetailHorario,
   updateDetailHorario,
@@ -21,12 +21,23 @@ import { getSupervisor } from "../../../../../src/services/fetchData/fetchSuperv
 import { generateClassDates } from "../../../../../src/utils/functiones/functions";
 import Loading from "../../../../share/loading";
 import { SubmitButton } from "../../../../share/button/submitButton";
+import useToastMessage from "../../../../share/ToasNotification";
+// import {
+//   toastError,
+//   toastLoadedSuccessfully,
+//   toastLoading,
+//   toastRedirecting,
+//   toastRegisterin,
+//   toastSuccess,
+//   toastUpdating,
+// } from "../../../../share/ToasNotification";
 export const FormRegisterDetailHorario = ({
   navigation,
   idhorario,
   editing,
   handleCloseModal,
 }) => {
+  const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const {
     handleSubmit,
     control,
@@ -45,13 +56,12 @@ export const FormRegisterDetailHorario = ({
   const [supervisors, setSupervisors] = useState([]);
   console.log("supervisors state", supervisors);
 
-  const getSupervisors = useCallback(async () => {
+  const fetchSupervisors = useCallback(async () => {
     try {
       const res = await getSupervisor();
-      console.log("response the supervisors", res);
       setSupervisors(res);
     } catch (error) {
-      console.error("Error fetching supervisors:", error.message);
+      throw new Error("Error fetching supervisors:", error.message);
     }
   }, []);
 
@@ -68,8 +78,7 @@ export const FormRegisterDetailHorario = ({
 
   const countClassesForSupervisors = async () => {
     if (supervisors.length === 0) {
-      console.error("No supervisors available.");
-      return {};
+      throw new Error("No supervisors available.");
     }
     const counts = {};
     supervisors.forEach((s) => {
@@ -127,14 +136,14 @@ export const FormRegisterDetailHorario = ({
     const fetchData = async () => {
       try {
         await fetchSalones();
-        await getSupervisors();
+        await fetchSupervisors();
       } catch (error) {
         throw new Error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, [fetchSalones, getSupervisors]);
+  }, [fetchSalones, fetchSupervisors]);
 
   useEffect(() => {
     if (supervisors.length > 0) {
@@ -145,30 +154,42 @@ export const FormRegisterDetailHorario = ({
           throw new Error("Error counting classes:", error);
         }
       };
-
       countClasses();
     }
   }, [supervisors]);
+
   const onsubmit = async (data) => {
     const { salon, dia, hora_inicio, hora_fin } = data;
+    let horario = idhorario;
     try {
       if (!editing) {
-        let horario = idhorario;
+        showToast({
+          message: STATUS_MESSAGES[APP_STATUS.REGISTERING],
+          type: "success",
+          id: APP_STATUS.REGISTERING,
+        });
         await registerDetailHorario(horario, dia, hora_inicio, hora_fin);
-
+        showToast({
+          message: STATUS_MESSAGES[APP_STATUS.LOADING],
+          type: "success",
+          id: APP_STATUS.LOADING,
+        });
         const startDate = new Date(); // Fecha de inicio
         const endDate = new Date(startDate); // Fecha de final
         endDate.setMonth(endDate.getMonth() + 6);
         const classCounts = await countClassesForSupervisors();
-
         if (!classCounts) throw new Error("Error counting classes");
+        showToast({
+          message: STATUS_MESSAGES[APP_STATUS.LOADING],
+          type: "warning",
+          id: APP_STATUS.LOADING,
+        });
         const ESTADO = "pendiente";
         const classesToRegister = await Promise.all(
           generateClassDates(dia, startDate, endDate).map(async (clase) => {
             const supervisorID = await assignSupervisors();
-            if (!supervisorID) {
+            if (!supervisorID)
               throw new Error("No se pudo asignar un supervisor");
-            }
             return {
               horario: idhorario,
               salon,
@@ -178,8 +199,18 @@ export const FormRegisterDetailHorario = ({
             };
           })
         );
-        setLoading(true);
+        showToast({
+          message: STATUS_MESSAGES[APP_STATUS.LOADED_SUCCESSFULLY],
+          type: "success",
+          id: APP_STATUS.LOADED_SUCCESSFULLY,
+        });
         try {
+          showToast({
+            message: STATUS_MESSAGES[APP_STATUS.REGISTERING],
+            type: "success",
+            id: APP_STATUS.REGISTERING,
+          });
+          setLoading(true);
           await Promise.all(
             classesToRegister.map((clase) =>
               registerClase(
@@ -191,25 +222,45 @@ export const FormRegisterDetailHorario = ({
               )
             )
           );
-          setLoading(true);
+          showToast({
+            message: STATUS_MESSAGES[APP_STATUS.LOADED_SUCCESSFULLY],
+            type: "success",
+            id: APP_STATUS.LOADED_SUCCESSFULLY,
+          });
           reset();
+          showToast({
+            message: STATUS_MESSAGES[APP_STATUS.REDIRECTING],
+            type: "warning",
+            id: APP_STATUS.REDIRECTING,
+          });
           handleCloseModal();
-          Alert.alert("Registrado exitosamente ✔️✔️");
           navigation.navigate("ListScreen");
         } catch (error) {
-          Alert.alert("Error..... ❌❌");
           reset();
-          throw new Error("Error: " + error.message);
+          showToast({
+            message: STATUS_MESSAGES[APP_STATUS.ERROR],
+            type: "danger",
+            id: APP_STATUS.ERROR,
+          });
         }
       } else {
+        showToast({
+          message: STATUS_MESSAGES[APP_STATUS.UPDATING],
+          type: "success",
+          id: APP_STATUS.UPDATING,
+        });
         await updateDetailHorario(route.params.id, data);
-        console.log("update successfully");
+        reset();
       }
     } catch (error) {
       reset();
-      throw new Error("Error: " + error.message);
+      showToast({
+        message: STATUS_MESSAGES[APP_STATUS.ERROR],
+        type: "danger",
+        id: APP_STATUS.ERROR,
+      });
     } finally {
-      setLoading(false); // Finaliza el estado de carga
+      setLoading(false);
     }
   };
   return (

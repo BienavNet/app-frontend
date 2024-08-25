@@ -17,7 +17,7 @@ import { ScreenViewMore } from "../(DIRECTOR)/horarios/component/ScreenViewMore"
 import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { NotRegistration } from "../../share/noRegistration";
 import { ViewHorario } from "../(DIRECTOR)/horarios/component/viewHorario";
-import { DeleteConfirmation } from "../../share/deletePress";
+// import { DeleteConfirmation } from "../../share/deletePress";
 import { SearchView } from "../(DIRECTOR)/horarios/component/searchMore&viewValue";
 import { InfoHorario } from "../(DIRECTOR)/horarios/component/infoHorario";
 
@@ -82,28 +82,28 @@ export const ListItemComponentHorario = ({
     setSelectedItem(null);
   };
 
-  const handleDeletePress = (itemId) => {
-    DeleteConfirmation({
-      nameDelete: modalTitle,
-      onPress: async () => {
-        try {
-          const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
-          for (const detail_horario of detailhorarioD) {
-            await deleteDataAsociated(detail_horario.id);
-          }
-          const claseD = await getClassesByHorarioID(itemId);
-          for (const clases of claseD) {
-            await DeleteClasesOne(clases.id);
-          }
-          await deleteData(itemId);
-          setItems(items.filter((item) => item.id !== itemId));
-          Alert.alert(`${modalTitle} eliminado con éxito`);
-        } catch (error) {
-          Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
-        }
-      },
-    });
-  };
+  // const handleDeletePress = (itemId) => {
+  //   DeleteConfirmation({
+  //     nameDelete: modalTitle,
+  //     onPress: async () => {
+  //       try {
+  //         const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
+  //         for (const detail_horario of detailhorarioD) {
+  //           await deleteDataAsociated(detail_horario.id);
+  //         }
+  //         const claseD = await getClassesByHorarioID(itemId);
+  //         for (const clases of claseD) {
+  //           await DeleteClasesOne(clases.id);
+  //         }
+  //         await deleteData(itemId);
+  //         setItems(items.filter((item) => item.id !== itemId));
+  //         Alert.alert(`${modalTitle} eliminado con éxito`);
+  //       } catch (error) {
+  //         Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
+  //       }
+  //     },
+  //   });
+  // };
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await fetchItems();

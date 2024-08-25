@@ -3,25 +3,29 @@ import { View, ScrollView, Alert } from "react-native";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { useToast } from "react-native-toast-notifications";
+import {
+  register,
+  update,
+} from "../../../../src/utils/schemas/login&registerSchema";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { SubmitButton } from "../../../share/button/submitButton";
 import { HeaderTitle } from "../../../share/titulos/headerTitle";
-
+// import useToastMessage from "../../../share/ToasNotification";
 export const RegistrarEntidad = ({
   navigation,
   route,
   tipoEntidad,
   getEntidadOne,
   registerEntidad,
-  updateEntidad,
-  schema,
+  updateEntidad
 }) => {
+  // const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const [editing, setEditing] = useState(false);
-
+  
   useEffect(() => {
     if (route.params && route.params.cedula) {
+      console.log("router parmas cedula", route.params.cedula);
       setEditing(true);
       navigation.setOptions({ headerTitle: `Actualizar ${tipoEntidad}` });
       (async () => {
@@ -41,61 +45,52 @@ export const RegistrarEntidad = ({
       })();
     }
   }, [route.params]);
-
-  const toast = useToast();
-  const ToastSuccess = (message) => {
-    toast.show(message, {
-      icon: <FontAwesome6 name="check-circle" size={30} color="green" />,
-      style: {
-        backgroundColor: "green",
-        borderColor: "green",
-      },
-      type: "Success",
-      duration: 3000,
-      textStyle: {
-        fontSize: 16,
-        color: "white",
-      },
-      animationType: "zoom-in",
-    });
-  };
-
-  const ToastError = (error) => {
-    toast.show(error, {
-      icon: <MaterialIcons name="error" size={30} color="#ffffff" />,
-      style: {
-        backgroundColor: "red",
-        borderColor: "red",
-      },
-      type: "Error",
-      duration: 1000,
-      textStyle: {
-        fontSize: 16,
-        color: "white",
-      },
-      animationType: "zoom-in",
-    });
-  };
+  
+  const { handleSubmit, control, reset,formState:{
+    errors
+  } } = useForm({
+    resolver: yupResolver(editing ? update : register),
+  });
 
   const onsubmit = async (data) => {
     const { nombre, apellido, correo, cedula, contrasena } = data;
+    console.log("data", nombre, apellido, correo, cedula, contrasena);
     try {
       if (!editing) {
+        // showToast({
+        //   message: STATUS_MESSAGES[APP_STATUS.SUCCESS],
+        //   type: "success",
+        //   id: APP_STATUS.SUCCESS,
+        // });
         await registerEntidad(nombre, apellido, cedula, correo, contrasena);
-        ToastSuccess("Registro exitoso");
+        reset();
       } else {
+        // showToast({
+        //   message: STATUS_MESSAGES[APP_STATUS.UPDATING],
+        //   type: "success",
+        //   id: APP_STATUS.UPDATING,
+        // });
         await updateEntidad(route.params.cedula, data);
+        reset();
       }
-      reset();
-      navigation.navigate("ListScreen");
+      // showToast({
+      //   message: STATUS_MESSAGES[APP_STATUS.REDIRECTING],
+      //   type: "warning",
+      //   id: APP_STATUS.REDIRECTING,
+      //   onClose: () => {
+      //     navigation.navigate("ListScreen");
+      //   },
+      // });
     } catch (error) {
-      ToastError(error.message || JSON.stringify(error));
+      reset();
+      // showToast({
+      //   message: STATUS_MESSAGES[APP_STATUS.ERROR],
+      //   type: "danger",
+      //   id: APP_STATUS.ERROR,
+      // });
     }
   };
 
-  const { handleSubmit, control, reset } = useForm({
-    resolver: yupResolver(editing ? schema.update : schema.register),
-  });
 
   return (
     <>
@@ -106,68 +101,137 @@ export const RegistrarEntidad = ({
       />
       <ScrollView className="pt-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex items-left mx-4 space-y-3 h-full">
-          {!editing && (
-            <View>
-              <CustomInput
-                variant="outlined"
-                name="cedula"
-                control={control}
-                placeholder="123456789"
-                className="text-buttonColor"
-                keyboardType="numeric"
-                label="Cédula"
-                icon={<FontAwesome6 name="id-badge" size={24} color="black" />}
-              />
-            </View>
-          )}
-          <View className="flex-row justify-items-stretch">
-            <View className="w-1/2 justify-self-start">
-              <CustomInput
-                variant="outlined"
-                control={control}
-                placeholder="Nombre"
-                label="Nombre"
-                icon={
-                  <FontAwesome6 name="user-circle" size={24} color="black" />
-                }
-                name="nombre"
-              />
-            </View>
-            <View className="w-1/2 justify-self-end">
-              <CustomInput
-                variant="outlined"
-                name="apellido"
-                control={control}
-                placeholder="Apellido"
-                label="Apellido"
-              />
-            </View>
-          </View>
-          <View>
-            <CustomInput
-              variant="outlined"
-              name="correo"
-              control={control}
-              placeholder="example@example.com"
-              keyboardType="email-address"
-              label="Correo Electrónico"
-              icon={
-                <MaterialIcons name="alternate-email" size={24} color="black" />
-              }
-            />
-          </View>
-          {!editing && (
-            <View>
-              <CustomInput
-                variant="outlined"
-                name="contrasena"
-                control={control}
-                label="Contraseña"
-                placeholder="password"
-                secureTextEntry={true}
-                icon={<MaterialIcons name="password" size={24} color="black" />}
-              />
-            </View>
+          {!editing ? (
+            <>
+              <View>
+                <CustomInput
+               error={errors.cedula}
+                  variant="outlined"
+                  name="cedula"
+                  control={control}
+                  placeholder="123456789"
+                  className="text-buttonColor"
+                  keyboardType="numeric"
+                  label="Cedula"
+                  icon={
+                    <FontAwesome6 name="id-badge" size={24} color="black" />
+                  }
+                />
+              </View>
+              <View className="flex-row justify-items-stretch">
+                <View className="w-1/2 justify-self-start">
+                  <CustomInput
+                    variant="outlined"
+                    control={control}
+                    error={errors.nombre}
+                    placeholder="example"
+                    label="Nombre"
+                    icon={
+                      <FontAwesome6
+                        name="user-circle"
+                        size={24}
+                        color="black"
+                      />
+                    }
+                    name="nombre"
+                  />
+                </View>
+
+                <View className="w-1/2 justify-self-end">
+                  <CustomInput
+                  error={errors.apellido}
+                    variant="outlined"
+                    name="apellido"
+                    control={control}
+                    placeholder="example"
+                    label="Apellido"
+                  />
+                </View>
+              </View>
+
+              <View>
+                <CustomInput
+                  variant="outlined"
+                  name="correo"
+                  error={errors.correo}
+                  control={control}
+                  placeholder="example@example.com"
+                  keyboardType="email-address"
+                  label="Correo Electronico"
+                  icon={
+                    <MaterialIcons
+                      name="alternate-email"
+                      size={24}
+                      color="black"
+                    />
+                  }
+                />
+              </View>
+
+              <View>
+                <CustomInput
+                error={errors.contrasena}
+                  variant="outlined"
+                  name="contrasena"
+                  control={control}
+                  label="Contraseña"
+                  placeholder="password"
+                  secureTextEntry={true}
+                  icon={
+                    <MaterialIcons name="password" size={24} color="black" />
+                  }
+                />
+              </View>
+            </>
+          ) : (
+            <>
+              <View className="flex-row justify-items-stretch">
+                <View className="w-1/2 justify-self-start">
+                  <CustomInput
+                    variant="outlined"
+                    control={control}
+                    placeholder="example"
+                    label="Nombre"
+                    icon={
+                      <FontAwesome6
+                        name="user-circle"
+                        size={24}
+                        color="black"
+                      />
+                    }
+                    name="nombre"
+                  />
+                </View>
+
+                <View className="w-1/2 justify-self-end">
+                  <CustomInput
+                    variant="outlined"
+                    name="apellido"
+                    control={control}
+                    placeholder="example"
+                    label="Apellido"
+                  />
+                </View>
+              </View>
+
+              <View>
+                <CustomInput
+                  variant="outlined"
+                  name="correo"
+                  control={control}
+                  placeholder="example@example.com"
+                  keyboardType="email-address"
+                  label="Correo Electronico"
+                  icon={
+                    <MaterialIcons
+                      name="alternate-email"
+                      size={24}
+                      color="black"
+                    />
+                  }
+                />
+              </View>
+            </>
           )}
           <SubmitButton onPress={handleSubmit(onsubmit)} editing={editing} />
         </View>
