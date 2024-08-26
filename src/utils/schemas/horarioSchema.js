@@ -2,7 +2,7 @@ import * as yup from "yup";
 import asignaturas from "../../../components/ui/(DIRECTOR)/horarios/json/asignaturas.json";
 
 const asignaturList = asignaturas.map((a) => a.asignatura);
-// registar un salon
+// registar un horario
 export const horarioRegisterSchema = yup.object({
   docente: yup
     .number()
@@ -16,7 +16,6 @@ export const horarioRegisterSchema = yup.object({
 });
 
 /// schemas para detalle horario
-
 export const diasArray = [
   "Lunes",
   "Martes",
@@ -26,14 +25,7 @@ export const diasArray = [
   "Sabado",
 ];
 
-// export const Status = ["Pendiente", "Completada", "Cancelada"]; //perdida
-
 export const detailHorarioRegister = yup.object({
-  // horario: yup
-  //   .number()
-  //   .typeError("Horario debe ser válido")
-  //   .required("El Horario es obligatorio")
-  //   .integer("Horario debe ser valido"),
   salon: yup
     .number()
     .typeError("Salon debe ser válido")
@@ -59,19 +51,4 @@ export const detailHorarioRegister = yup.object({
         return hora_inicio && value && value > hora_inicio;
       }
     ),
-  // schema de las clases
-  // supervisor: yup
-  //   .number()
-  //   .typeError("Supervisor debe ser válido")
-  //   .required("El supervisor es obligatorio")
-  //   .integer("Supervisor debe ser valido"),
-  // estado: yup
-  //   .string()
-  //   .oneOf(Status, "Debe seleccionar una opción válida")
-  //   .required("Debe seleccionar una opción"),
-  // fecha: yup
-  //   .date()
-  //   .required("La fecha es obligatoria")
-  //   .min(new Date(), "La fecha no puede ser en el pasado")
-  //   .typeError("Fecha inválida"),
 });

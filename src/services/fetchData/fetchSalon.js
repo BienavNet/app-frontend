@@ -1,5 +1,16 @@
 import axiosInstance from "../axios";
 
+export const getCategorySalon = async () => {
+    try {
+        const response = await axiosInstance.get("/salon/categoria-salon/salon");
+        console.log('response CATEGORYY all', response)
+        console.log('response CATEGORYY all', response.data)
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response ? error.response.data.message : error.message);
+    }
+}
+
 export const getSalon = async () => {
     try {
         const response = await axiosInstance.get(`/salon/`);
@@ -15,7 +26,6 @@ export const getSalonOne = async (id) => {
     try {
         const response = await axiosInstance.get(`/salon/${id}`);
         console.log('response id', response.data)
-        return response.data;
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)

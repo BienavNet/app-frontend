@@ -1,5 +1,6 @@
 import * as yup from "yup";
 
+const ROLES =["supervisor", "docente", "director"]
 //iniciar sesion Schema para All
 export const loging = yup.object({
   contrasena: yup.string().required("Password es requerido").min(4).max(16),
@@ -15,7 +16,7 @@ export const loging = yup.object({
   rol: yup
     .string()
     .oneOf(
-      ["supervisor", "docente", "director"],
+      ROLES,
       "Debe seleccionar una opción válida"
     )
     .required("Debe seleccionar una opción"),

@@ -13,6 +13,7 @@ import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { NotRegistration } from "../../share/noRegistration";
 import { InfoSalones } from "../(DIRECTOR)/salones/components/InfoSalones";
 import { ViewSalones } from "../(DIRECTOR)/salones/components/viewSalones";
+import CustomTouchableOpacity from "./customTouchableOpacity";
 
 export const ListItemSalones = ({
   getDataAll,
@@ -104,7 +105,15 @@ export const ListItemSalones = ({
             />
             <ListItem.Content>
               <ListItem.Title>
-                <TouchableOpacity
+                <CustomTouchableOpacity
+                  navigateToFormScreen={navigateToFormScreen}
+                  screenName="FormScreen"
+                  paramKey="id"
+                  paramValue={item.id}
+                >
+                  <ViewSalones item={item} />
+                </CustomTouchableOpacity>
+                {/* <TouchableOpacity
                   className="flex-row"
                   onPress={() =>
                     navigateToFormScreen
@@ -115,7 +124,7 @@ export const ListItemSalones = ({
                   }
                 >
                   <ViewSalones item={item} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />

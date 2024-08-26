@@ -11,7 +11,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { SubmitButton } from "../../../share/button/submitButton";
 import { HeaderTitle } from "../../../share/titulos/headerTitle";
-// import useToastMessage from "../../../share/ToasNotification";
+import useToastMessage from "../../../share/ToasNotification";
 export const RegistrarEntidad = ({
   navigation,
   route,
@@ -20,7 +20,7 @@ export const RegistrarEntidad = ({
   registerEntidad,
   updateEntidad
 }) => {
-  // const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
+  const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const [editing, setEditing] = useState(false);
   
   useEffect(() => {
@@ -57,37 +57,37 @@ export const RegistrarEntidad = ({
     console.log("data", nombre, apellido, correo, cedula, contrasena);
     try {
       if (!editing) {
-        // showToast({
-        //   message: STATUS_MESSAGES[APP_STATUS.SUCCESS],
-        //   type: "success",
-        //   id: APP_STATUS.SUCCESS,
-        // });
+        showToast({
+          message: STATUS_MESSAGES[APP_STATUS.SUCCESS],
+          type: "success",
+          id: APP_STATUS.SUCCESS,
+        });
         await registerEntidad(nombre, apellido, cedula, correo, contrasena);
         reset();
       } else {
-        // showToast({
-        //   message: STATUS_MESSAGES[APP_STATUS.UPDATING],
-        //   type: "success",
-        //   id: APP_STATUS.UPDATING,
-        // });
+        showToast({
+          message: STATUS_MESSAGES[APP_STATUS.UPDATING],
+          type: "success",
+          id: APP_STATUS.UPDATING,
+        });
         await updateEntidad(route.params.cedula, data);
         reset();
       }
-      // showToast({
-      //   message: STATUS_MESSAGES[APP_STATUS.REDIRECTING],
-      //   type: "warning",
-      //   id: APP_STATUS.REDIRECTING,
-      //   onClose: () => {
-      //     navigation.navigate("ListScreen");
-      //   },
-      // });
+      showToast({
+        message: STATUS_MESSAGES[APP_STATUS.REDIRECTING],
+        type: "warning",
+        id: APP_STATUS.REDIRECTING,
+        onClose: () => {
+          navigation.navigate("ListScreen");
+        },
+      });
     } catch (error) {
       reset();
-      // showToast({
-      //   message: STATUS_MESSAGES[APP_STATUS.ERROR],
-      //   type: "danger",
-      //   id: APP_STATUS.ERROR,
-      // });
+      showToast({
+        message: STATUS_MESSAGES[APP_STATUS.ERROR],
+        type: "danger",
+        id: APP_STATUS.ERROR,
+      });
     }
   };
 
@@ -190,7 +190,6 @@ export const RegistrarEntidad = ({
                   <CustomInput
                     variant="outlined"
                     control={control}
-                    placeholder="example"
                     label="Nombre"
                     icon={
                       <FontAwesome6
@@ -208,7 +207,6 @@ export const RegistrarEntidad = ({
                     variant="outlined"
                     name="apellido"
                     control={control}
-                    placeholder="example"
                     label="Apellido"
                   />
                 </View>
@@ -219,7 +217,6 @@ export const RegistrarEntidad = ({
                   variant="outlined"
                   name="correo"
                   control={control}
-                  placeholder="example@example.com"
                   keyboardType="email-address"
                   label="Correo Electronico"
                   icon={

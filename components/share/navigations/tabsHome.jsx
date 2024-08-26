@@ -36,7 +36,7 @@ export const TabsHome = ({ tabsConfig }) => {
       initialRouteName="Home"
       screenOptions={({ route, navigation }) => ({
         tabBarStyle:
-          route.name == "Docentes" && isKeyboardVisible
+        (["Docentes", "Salones"].includes(route.name)  && isKeyboardVisible)
             ? { display: "none" }
             : { display: "flex" },
         tabBarActiveTintColor: "#3111F3",

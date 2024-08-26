@@ -15,7 +15,7 @@ export default function Dropdown({
           style={{
             borderWidth: 1,
             borderColor: error ? "red" : "#000",
-            borderRadius: 8,
+            borderRadius: 4,
             overflow: "hidden",
           }}
         >
@@ -24,9 +24,11 @@ export default function Dropdown({
             
               selectedValue={value}
               onValueChange={(itemValue) => onChange(itemValue)}
-              style={{ height: 50, width: "100%" }}
+              style={{ width: "100%", height:"95%"}}
             >
-              <Picker.Item style={{fontSize: 18}} label={placeholder} value="" />
+              <Picker.Item style={{fontSize: 18
+
+              }} label={placeholder} value="" />
               {data.map((item) => (
                 <Picker.Item
                   style={{
@@ -47,7 +49,7 @@ export default function Dropdown({
 const styles = StyleSheet.create({
   pickerContainer: {
     backgroundColor: "#ffffff",
-    borderRadius: 8,
+    borderRadius: 4,
     overflow: "hidden",
   },
 });
