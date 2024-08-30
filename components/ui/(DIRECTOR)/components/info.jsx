@@ -1,7 +1,7 @@
 import { Text, StyleSheet, View } from "react-native";
-import { capitalizeFirstLetter } from "../../../../../src/utils/functiones/functions";
+import { capitalizeFirstLetter } from "../../../../src/utils/functiones/functions";
 
-export const InfoDocente = ({ selectedItem }) => {
+export const InfoDS = ({ selectedItem }) => {
   return (
     <View className="bg-white shadow-2xl rounded-lg p-3 w-full">
       <Text style={[styles.Title1]}>Nombre y apellido</Text>

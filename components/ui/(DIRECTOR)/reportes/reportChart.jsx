@@ -70,7 +70,7 @@ export const ReportChart = () => {
 
   const uniqueSmasu = smasu
     .map((salon) => salon.numero_salon)
-    .filter((value, index, self) => self.indexOf(value) === index); 
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   const data = {
     labels: uniqueSmasu.map((salon) => `#${salon}`),
@@ -143,43 +143,58 @@ export const ReportChart = () => {
   return (
     <ScrollView>
       <Text style={styles.title}> Salon Menos Utilizado</Text>
-      <BarChart
-        style={styles.chartContainer}
-        data={data}
-        width={screenWidth - 10}
-        height={200}
-        chartConfig={chartConfig}
-      />
-        <Text style={styles.title}> Docente con mas Comentarios Realizado</Text>
-      <BarChart
-        style={styles.chartContainer}
-        data={docenteMasComentariosData}
-        width={screenWidth - 10}
-        height={200}
-        chartConfig={chartConfig}
-      />
-        <Text style={styles.title}> Horas del Dia mas Asignada</Text>
-      <PieChart
-        style={styles.chartContainer}
-        data={pieChartData}
-        width={screenWidth - 10}
-        height={200}
-        chartConfig={chartConfig}
-        accessor={"population"}
-        backgroundColor={"#1371C3"}
-        paddingLeft={"-20"}
-        // absolute
-        center={[20, 0]}
-      />
-  <Text style={styles.title}> Dias de la Semana mas Asignado</Text>
-      <LineChart
-        style={styles.chartContainer}
-        data={lineChartData}
-        width={screenWidth - 10}
-        height={200}
-        chartConfig={chartConfig}
-        bezier
-      />
+      {smasu.length > 0 ? (
+        <BarChart
+          style={styles.chartContainer}
+          data={data}
+          width={screenWidth - 10}
+          height={200}
+          chartConfig={chartConfig}
+        />
+      ) : (
+        <Text style={styles.noDataText}>Sin registro</Text>
+      )}
+      <Text style={styles.title}> Docente con mas Comentarios Realizado</Text>
+      {smasu.length > 0 ? (
+        <BarChart
+          style={styles.chartContainer}
+          data={data}
+          width={screenWidth - 10}
+          height={200}
+          chartConfig={chartConfig}
+        />
+      ) : (
+        <Text style={styles.noDataText}>Sin registro</Text>
+      )}
+      <Text style={styles.title}> Horas del Dia mas Asignada</Text>
+      {pieChartData.length > 0 ? (
+        <PieChart
+          style={styles.chartContainer}
+          data={pieChartData}
+          width={screenWidth - 10}
+          height={200}
+          chartConfig={chartConfig}
+          accessor={"population"}
+          backgroundColor={"#1371C3"}
+          paddingLeft={"-20"}
+          center={[20, 0]}
+        />
+      ) : (
+        <Text style={styles.noDataText}>Sin registro</Text>
+      )}
+      <Text style={styles.title}> Dias de la Semana mas Asignado</Text>
+      {sortedDiasmas.length > 0 ? (
+        <LineChart
+          style={styles.chartContainer}
+          data={lineChartData}
+          width={screenWidth - 10}
+          height={200}
+          chartConfig={chartConfig}
+          bezier
+        />
+      ) : (
+        <Text style={styles.noDataText}>Sin registro</Text>
+      )}
     </ScrollView>
   );
 };
@@ -191,7 +206,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 8,
   },
-
 
   chartContainer: {
     marginVertical: 5,

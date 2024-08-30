@@ -8,6 +8,10 @@ export default function Dropdown({
   value,
   error,
 }) {
+
+  // const selectedItem = data.find(item => item.id === value);
+  // const selectedLabel = selectedItem ? selectedItem.label : placeholder;
+
   return (
     <View style={{ marginVertical: 10}}>
         <ScrollView className="">
@@ -20,15 +24,11 @@ export default function Dropdown({
           }}
         >
           <View style={styles.pickerContainer}>
-            <Picker
-            
+            <Picker 
               selectedValue={value}
               onValueChange={(itemValue) => onChange(itemValue)}
-              style={{ width: "100%", height:"95%"}}
-            >
-              <Picker.Item style={{fontSize: 18
-
-              }} label={placeholder} value="" />
+              style={{ width: "100%", height:"95%"}}>
+              <Picker.Item style={{fontSize: 18}} label={placeholder} value="" />
               {data.map((item) => (
                 <Picker.Item
                   style={{

@@ -1,9 +1,9 @@
-import { Alert, Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { Alert, Text, TouchableOpacity, View, StyleSheet, ImageBackground } from "react-native";
 import { useAuth } from "../../../src/hooks/useAuth";
-import { DrawerItemList } from "@react-navigation/drawer";
-
+import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
+import { Divider } from "@rneui/base";
 export const CustomDrawerContent = (props) => {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   console.log("logout", logout);
   const handleLogout = () => {
     Alert.alert(
@@ -16,8 +16,13 @@ export const CustomDrawerContent = (props) => {
         },
         {
           text: "Confirmar",
-          onPress: () => {
-            logout();
+          onPress: async () => {
+            try {
+              Alert.alert("Cerrando sesión......... Nos vemos pronto 👋")
+              await logout();
+            } catch (error) {
+              console.error("Error durante el cierre de sesión:", error);
+            } 
           },
         },
       ],
@@ -25,9 +30,38 @@ export const CustomDrawerContent = (props) => {
     );
   };
   return (
-    <View style={{ flex: 1, paddingTop: 30 }}>
+    <View style={{ flex: 1 }}>
+      <DrawerContentScrollView {...props}
+      contentContainerStyle={{
+        // backgroundColor: "red",
+        // paddingHorizontal: 16,
+        // paddingVertical: 24,
+        // paddingBottom: 32,
+        // borderBottomWidth: 1,
+        // borderBottomColor: "#E5E5E5",
+      }}
+      >
+      <ImageBackground
+      style={{
+        padding:20
+      }}
+      source={require('../../../assets/img/fondoazulmobil.jpg')}
+      >
+     
+      <Text style={{
+        fontSize:18,
+        color: "#FFFFFF",
+      }}>{user.nombre}{" "}{user.apellido}</Text>
+         <Text style={{
+        fontSize:18,
+        color: "#FFFFFF",
+      }}>{user.user}</Text>
+      </ImageBackground>
       <DrawerItemList {...props} />
+      
+      </DrawerContentScrollView>
       <View style={{ flex: 1, justifyContent: "flex-end", padding: 5 }}>
+      <Divider width={2}/>
         <TouchableOpacity
           style={styles.button}
           onPress={handleLogout}

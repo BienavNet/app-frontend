@@ -46,7 +46,8 @@ const handlers = {
 const reducer = (state, action) =>
   handlers[action.type] ? handlers[action.type](state, action) : state;
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = (props) => {
+  const {children} = props;
   const [state, dispatch] = useReducer(reducer, initialState);
   const isMounted = useRef(false);
 
@@ -77,6 +78,7 @@ export const AuthProvider = ({ children }) => {
           });
         }
       } catch (error) {
+        console.log(error);
         dispatch({
           type: "INITIALIZE",
           payload: {
@@ -105,6 +107,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = () => {
+    resetSession();
+    dispatch({
+      type: "LOGOUT",
+    });
+  };
+
   const login = async (correo, contrasena, rol) => {
     try {
       await getTokens(correo, contrasena, rol);
@@ -116,17 +125,17 @@ export const AuthProvider = ({ children }) => {
           user,
         },
       });
+      if (!user) {
+        throw new Error("No se pudo obtener la información del usuario.");
+      }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message;
-      throw new Error(errorMessage);
+      logout();
+      return Promise.reject(error)
+      // console.log("error.message JWT", error.message);
+      // console.log("error JWT", error);
+      // const errorMessage = error.response?.data?.message || error.message;
+      // throw new Error(errorMessage);
     }
-  };
-
-  const logout = () => {
-    resetSession();
-    dispatch({
-      type: "LOGOUT",
-    });
   };
 
   return (

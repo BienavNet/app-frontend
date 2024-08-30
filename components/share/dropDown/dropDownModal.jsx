@@ -7,23 +7,35 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Platform,
-  Dimensions,
 } from "react-native";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { truncateText } from "../../../src/utils/functiones/functions";
+import { capitalizeFirstLetter, truncateText } from "../../../src/utils/functiones/functions";
+
 export default function DropdownModal({
+  value,
   data,
   onChange,
   placeholder,
   transparent,
   verticalOffset = 0
 }) {
+  console.log("datos del value", value);
   const [expanded, setExpanded] = useState(false);
-  const [value, setValue] = useState("");
+  const [valuee, setValue] = useState("");
   const buttonRef = useRef(null);
   const [top, setTop] = useState(0);
-  console.log("top", top);
+  useEffect(() => {
+    if (value !== undefined) {
+      const selected = data.find(item => item.id === value.toString());
+      if (selected) {
+        setValue(selected.label);
+      }
+      else{
+        setValue(value);
+      }
+    }
+  }, [value, data]);
 
   const toggleExpanded = useCallback(() => setExpanded(!expanded), [expanded]);
 
@@ -34,7 +46,6 @@ export default function DropdownModal({
     },
     [onChange]
   );
-
   return (
     <View
       ref={buttonRef}
@@ -52,7 +63,7 @@ export default function DropdownModal({
         activeOpacity={0.8}
         onPress={toggleExpanded}
       >
-        <Text style={styles.text}>{truncateText(value) || placeholder}</Text>
+        <Text style={styles.text}>{truncateText(valuee) || placeholder}</Text>
         <AntDesign name={expanded ? "caretup" : "caretdown"} />
       </TouchableOpacity>
       {expanded ? (
@@ -117,7 +128,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#d5d5d5",
     width: "100%",
     padding: 10,
-    borderRadius: 6,
+    borderRadius: 4,
     maxHeight: 250,
   },
   text: {
@@ -132,7 +143,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     paddingHorizontal: 15,
-    borderRadius: 8,
+    borderRadius: 4,
     borderWidth: 1,
     borderColor: "black",
   },

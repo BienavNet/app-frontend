@@ -17,21 +17,3 @@ export const ReportView = () => {
     </>
   );
 };
-// const styles = StyleSheet.create({
-//   title: {
-//     fontSize: 18,
-//     fontWeight: "bold",
-//     textAlign: "center",
-//     marginVertical: 8,
-//   },
-//   chartContainer: {
-//     marginVertical: 5,
-//     marginHorizontal: 5,
-//     borderRadius: 4,
-//     borderColor: "#7F7F7F",
-//     borderWidth: 1,
-//     shadowColor: "#000",
-//     shadowOpacity: 0.8,
-//     shadowRadius: 2,
-//   },
-// });

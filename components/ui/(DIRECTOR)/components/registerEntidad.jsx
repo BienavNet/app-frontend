@@ -22,7 +22,12 @@ export const RegistrarEntidad = ({
 }) => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const [editing, setEditing] = useState(false);
-  
+  const [initialValues, setInitialValues] = useState({}); 
+  const { handleSubmit, control, reset,formState:{
+    errors, isDirty
+  } } = useForm({
+    resolver: yupResolver(editing ? update : register),
+  });
   useEffect(() => {
     if (route.params && route.params.cedula) {
       console.log("router parmas cedula", route.params.cedula);
@@ -34,23 +39,24 @@ export const RegistrarEntidad = ({
           (ent) => ent.cedula === route.params.cedula
         );
         if (entidad) {
-          reset({
+          setInitialValues({
             nombre: entidad.nombre,
             apellido: entidad.apellido,
             correo: entidad.correo,
           });
+          reset({
+            nombre: entidad.nombre,
+            apellido: entidad.apellido,
+            correo: entidad.correo,
+              });
         } else {
           throw new Error(`${tipoEntidad} no encontrado.`);
         }
       })();
     }
   }, [route.params]);
-  
-  const { handleSubmit, control, reset,formState:{
-    errors
-  } } = useForm({
-    resolver: yupResolver(editing ? update : register),
-  });
+  const isDisabled = editing && !isDirty;
+
 
   const onsubmit = async (data) => {
     const { nombre, apellido, correo, cedula, contrasena } = data;
@@ -81,6 +87,7 @@ export const RegistrarEntidad = ({
           navigation.navigate("ListScreen");
         },
       });
+    
     } catch (error) {
       reset();
       showToast({
@@ -230,7 +237,7 @@ export const RegistrarEntidad = ({
               </View>
             </>
           )}
-          <SubmitButton onPress={handleSubmit(onsubmit)} editing={editing} />
+          <SubmitButton onPress={handleSubmit(onsubmit)} editing={editing}  isDisabled={isDisabled} />
         </View>
       </ScrollView>
     </>

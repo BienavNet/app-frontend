@@ -10,6 +10,7 @@ import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
 
 export const DrawerHome = ({ drawerScreens }) => {
   const { user } = useAuth();
+  console.log("DrawerNavigator", user)
   const Drawer = createDrawerNavigator();
   
   if (!user) {
@@ -21,8 +22,9 @@ export const DrawerHome = ({ drawerScreens }) => {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={({ route, navigation }) => ({
         headerShown: route.name === "Dashboard" ? false : true,
-        drawerActiveTintColor: "#3111F3",
+        drawerActiveTintColor: "#ffffff",
         drawerInactiveTintColor: "#000000",
+        drawerActiveBackgroundColor: "#3111F3", 
         drawerLabelStyle: { fontSize: 16 },
         headerStyle: { backgroundColor: "#3111F3" },
         headerTitleStyle: { color: "#fff" },
@@ -32,6 +34,9 @@ export const DrawerHome = ({ drawerScreens }) => {
                 <HeaderRigth rol={capitalizeFirstLetter(user.rol)} />
               ) : null;
         },
+        
+        
+
         headerLeft: () => {
           return (
             <HeaderLeft

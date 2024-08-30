@@ -1,14 +1,10 @@
-import { Text, ScrollView, StyleSheet, View } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { ListItem, Button, Divider } from "@rneui/themed";
+import { ScrollView, StyleSheet } from "react-native";
+import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useState } from "react";
-import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import { ModalComponente } from "./customModal";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Loading from "../../share/loading";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { NotRegistration } from "../../share/noRegistration";
 import { InfoSalones } from "../(DIRECTOR)/salones/components/InfoSalones";
@@ -22,7 +18,6 @@ export const ListItemSalones = ({
   itemIcon = "account",
   modalTitle = "Info",
 }) => {
-  const navigation = useNavigation();
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -113,18 +108,6 @@ export const ListItemSalones = ({
                 >
                   <ViewSalones item={item} />
                 </CustomTouchableOpacity>
-                {/* <TouchableOpacity
-                  className="flex-row"
-                  onPress={() =>
-                    navigateToFormScreen
-                      ? navigateToFormScreen(navigation, item.id)
-                      : navigation.navigate("FormScreen", {
-                          id: item.id,
-                        })
-                  }
-                >
-                  <ViewSalones item={item} />
-                </TouchableOpacity> */}
               </ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />

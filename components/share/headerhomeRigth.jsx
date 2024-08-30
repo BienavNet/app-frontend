@@ -1,9 +1,16 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function HeaderRigth({rol}) {
-  console.log("entrando rol a right", rol)
+export default function HeaderRight({ rol }) {
   return (
-    <View style={styles.headerContainer}>
+    <View
+      style={[styles.headerContainer, rol === "Director" && { width: "50%" }]}
+    >
+      {rol === "Director" ? (
+        <TouchableOpacity title="">
+          <Ionicons name="notifications-sharp" size={24} color="#ffffff" />
+        </TouchableOpacity>
+      ) : null}
       <View style={styles.rightContainer}>
         <Text style={styles.rol}>{rol}</Text>
       </View>
@@ -13,22 +20,20 @@ export default function HeaderRigth({rol}) {
 
 const styles = StyleSheet.create({
   headerContainer: {
+    flexDirection: "row",
     margin: 2,
     alignItems: "center",
-    justifyContent: "space-between",
     padding: 2,
     width: "40%",
   },
 
   rol: {
     fontSize: 18,
-    color: "black",
     fontWeight: "bold",
-    color:'#ffffff',
-
+    color: "#ffffff",
   },
   rightContainer: {
-    marginLeft:25,
+    marginLeft: 15,
     flexDirection: "row",
     alignItems: "center",
   },

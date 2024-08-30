@@ -3,7 +3,7 @@ import asignaturas from "../../../components/ui/(DIRECTOR)/horarios/json/asignat
 
 const asignaturList = asignaturas.map((a) => a.asignatura);
 // registar un horario
-export const horarioRegisterSchema = yup.object({
+export const horarioSchema = yup.object({
   docente: yup
     .number()
     .typeError("Docente debe ser válido")
@@ -13,6 +13,17 @@ export const horarioRegisterSchema = yup.object({
     .string()
     .oneOf(asignaturList, "Debe seleccionar una asignatura válida")
     .required("Debe seleccionar una opción"),
+});
+
+// edit horario
+export const horarioEditSchema = yup.object({
+  docente: yup
+    .number()
+    .typeError("Docente debe ser válido")
+    .integer("Docente debe ser valido"),
+  asignatura: yup
+    .string()
+    .oneOf(asignaturList, "Debe seleccionar una asignatura válida")
 });
 
 /// schemas para detalle horario

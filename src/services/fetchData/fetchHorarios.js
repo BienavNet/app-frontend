@@ -1,7 +1,6 @@
 import axiosInstance from "../axios";
 
 export const registerHorario= async (docente, asignatura)  => {
-    console.log("entrando --->" + " docente: ", docente + " asignatura: ", asignatura);
 try {
     const response = await axiosInstance.post('/horarios/save', {docente, asignatura});
      return response;
@@ -10,10 +9,8 @@ try {
 }
 }
 export const getHorarioOne = async (id) => {
-    console.log('id que entra para traer', id)
     try {
         const response = await axiosInstance.get(`/horarios/detail/${id}`);
-        console.log(JSON.stringify(response.data, null, 2), "return de los data de horario por one ");
         return response.data;
     } catch (error) {
         console.error('Error en la actualización:', error.response?.data);
@@ -31,8 +28,10 @@ export const getHorarioAll = async () => {
 }
 
 export const DeleteHorarioOne = async (id) => {
+    console.log("id a eliminar :", id)
     try {
         const response = await axiosInstance.delete(`/horarios/delete/${id}`);
+        console.log("response delete horario one",response.data)
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)
@@ -40,8 +39,10 @@ export const DeleteHorarioOne = async (id) => {
 }
 
 export const updateHorario = async (id, data) => {
+    console.log("id actualizar :", id + " datos actualizar: ", data)
     try {
         const response = await axiosInstance.patch(`/horarios/update/${id}`, data);
+        console.log("updateHorario response :", response.data)
         return response.data;
     } catch (error) {
         console.error('Error en la actualización:', error.response?.data);

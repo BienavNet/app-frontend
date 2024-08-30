@@ -36,7 +36,7 @@ const HomeScreen = (props) => {
         tabBarIcon: ({ color }) => (
           <MaterialCommunityIcons
             name="human-male-board"
-            size={SIZE}
+            size={28}
             color={color}
           />
         ),
@@ -102,19 +102,6 @@ export const HomeDirector = () => {
         ),
       },
     },
-    // {
-    //   name: "Detalle Horario",
-    //   component: IndexDetailHorarios,
-    //   options: {
-    //     drawerIcon: ({ color }) => (
-    //       <FontAwesome6 name="list-alt" size={SIZE} color={color} />
-    //     ),
-    //   },
-    // },
   ];
-  return (
-    <Authenticated>
-      <DrawerHome drawerScreens={directorDrawerScreens} />
-    </Authenticated>
-  );
+  return <DrawerHome drawerScreens={directorDrawerScreens} />;
 };

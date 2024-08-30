@@ -13,6 +13,7 @@ export const PublicRoute = (props) => {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+  console.log("auth PublicRoute: ", auth);
 
   useEffect(() => {
     if (isMounted) {
@@ -22,8 +23,8 @@ export const PublicRoute = (props) => {
       } else {
         setIsVerified(true);
       }
-    }
-  }, [auth.isAuthenticated, isMounted, router]);
+     }
+  }, [auth.isAuthenticated,router, isMounted]);
 
-  return isVerified ? <>{children}</> : null;
+  return isVerified ? <>{children}</>: null;
 };

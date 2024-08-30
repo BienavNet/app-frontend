@@ -1,7 +1,7 @@
 import { Text } from "react-native";
-import { capitalizeFirstLetter } from "../../../../../src/utils/functiones/functions";
+import { capitalizeFirstLetter } from "../../../../src/utils/functiones/functions";
 
-export const ViewDocente = ({ item }) => {
+export const ViewDS = ({ item }) => {
   return (
     <>
       <Text className="font-extrabold text-lg">

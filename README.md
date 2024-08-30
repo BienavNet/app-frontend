@@ -137,3 +137,6 @@ swiper [link:](https://github.com/leecade/react-native-swiper)
 eslint-plugin-react-hooks
 > npm install eslint -D
 > npx eslint --init
+
+react-native-svg
+> npm i react-native-svg

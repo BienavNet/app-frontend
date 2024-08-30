@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { View, useWindowDimensions, Text, StyleSheet } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-// import { RegistrarDocente } from "../docentes/(registrarDocente)/formregister";
 import { ListDetailReport } from "./list";
 import { ReportChart } from "./reportChart";
 const ActualizarDocente = () => (
@@ -11,7 +10,6 @@ const ActualizarDocente = () => (
 const renderScene = SceneMap({
   first: ReportChart,
   second: ListDetailReport,
-  // third: ActualizarDocente,
 });
 
 export default function TabViewTop() {
@@ -21,7 +19,6 @@ export default function TabViewTop() {
   const [routes] = useState([
     { key: "first", title: "Reportes" },
     { key: "second", title: "Comentarios" },
-    // { key: "third", title: "Actualizar" },
   ]);
   const renderTabBar = (props) => (
     <TabBar

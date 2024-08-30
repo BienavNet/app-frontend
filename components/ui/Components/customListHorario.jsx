@@ -1,4 +1,4 @@
-import { ScrollView, Alert,  StyleSheet } from "react-native";
+import { ScrollView, Alert, StyleSheet } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useEffect, useState } from "react";
 
@@ -82,28 +82,48 @@ export const ListItemComponentHorario = ({
     setSelectedItem(null);
   };
 
-  // const handleDeletePress = (itemId) => {
-  //   DeleteConfirmation({
-  //     nameDelete: modalTitle,
-  //     onPress: async () => {
-  //       try {
-  //         const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
-  //         for (const detail_horario of detailhorarioD) {
-  //           await deleteDataAsociated(detail_horario.id);
-  //         }
-  //         const claseD = await getClassesByHorarioID(itemId);
-  //         for (const clases of claseD) {
-  //           await DeleteClasesOne(clases.id);
-  //         }
-  //         await deleteData(itemId);
-  //         setItems(items.filter((item) => item.id !== itemId));
-  //         Alert.alert(`${modalTitle} eliminado con éxito`);
-  //       } catch (error) {
-  //         Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
-  //       }
-  //     },
-  //   });
-  // };
+  const handleDeletePress = (itemId) => {
+    Alert.alert(
+      `Eliminar ${modalTitle}`,
+      `¿Estás seguro de que deseas eliminar este ${modalTitle.toLowerCase()}?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
+              console.log("detailhorarioD", detailhorarioD);
+              await Promise.all(
+                detailhorarioD.map(async (detail_horario) => {
+                  await deleteDataAsociated(detail_horario.id);
+                  console.log("Detalle de horario eliminado ID:", detail_horario.id);
+                })
+              );
+              Alert.alert('Eliminando......', "ya casi damos por hecho");
+              const claseD = await getClassesByHorarioID(itemId);
+              console.log("claseD", claseD);
+              await Promise.all(
+                claseD.map(async (clase) => {
+                  await DeleteClasesOne(clase.id);
+                  console.log("Clase eliminada ID:", clase.id);
+                })
+              );
+              await deleteData(itemId);
+              setItems(items.filter((item) => item.id !== itemId));
+              Alert.alert(`${modalTitle} eliminado con éxito`);
+            } catch (error) {
+              Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
+            }
+          },
+        },
+      ]
+    );
+  };
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await fetchItems();

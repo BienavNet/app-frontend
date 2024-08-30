@@ -20,11 +20,12 @@ import Loading from "../../../share/loading";
 
 export const UpdateSalon = ({ navigation, route }) => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
+  const [initialValues, setInitialValues] = useState({}); 
   const {
     handleSubmit,
     control,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm({
     resolver: yupResolver(updateSalonSchema),
   });
@@ -65,6 +66,14 @@ export const UpdateSalon = ({ navigation, route }) => {
         const value = response.find((doc) => doc.id === route.params.id);
         console.log(value, "Salon value");
         if (value) {
+          setInitialValues({
+            categoria_salon: value.categoria_salon,
+            nombre: value.nombre,
+            numero_salon: value.numero_salon?.toString(),
+            capacidad: value.capacidad?.toString(),
+            INTernet: value.INTernet || "",
+            tv: value.tv || "",
+          });
           reset({
             categoria_salon: value.categoria_salon,
             nombre: value.nombre,
@@ -84,23 +93,23 @@ export const UpdateSalon = ({ navigation, route }) => {
       })();
     }
   }, [route.params]);
+  const isDisabled = editing && !isDirty;
 
   const upsubmit = async (data) => {
     setLoading(true);
     try {
       if (editing) {
         await updateSalon(route.params.id, data);
-        reset();
-
         showToast({
           message: STATUS_MESSAGES[APP_STATUS.UPDATING],
           type: "success",
           id: APP_STATUS.UPDATING,
           onClose: () => {
-            navigation.navigate("ListScreen");
-            setLoading(false);
+            reset();
           },
         });
+        navigation.navigate("ListScreen");
+        setLoading(false);
       } else {
         reset();
         showToast({
@@ -202,7 +211,7 @@ export const UpdateSalon = ({ navigation, route }) => {
                       <CustomSwitch name="tv" control={control} label="TV" />
                     </View>
                   </View>
-                  <SubmitButton editing={editing} onPress={handleUpdatePress} />
+                  <SubmitButton editing={editing} onPress={handleUpdatePress} isDisabled={isDisabled}/>
                 </>
               )}
             </>

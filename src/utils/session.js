@@ -14,6 +14,7 @@ export const setSession = async (accessToken = null) => {
 };
 
 export const resetSession = async () => {
-  await AsyncStorage.removeItem("access_token");
+  const rresult = await AsyncStorage.removeItem("access_token");
+  console.log(rresult, "Access token null")
   delete axiosInstance.defaults.headers.common["Authorization"];
 };

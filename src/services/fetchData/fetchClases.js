@@ -48,8 +48,10 @@ export const getClasesAll = async () => {
 }
 
 export const DeleteClasesOne = async (id) => {
+    console.log('delete clases ID: ', id)
     try {
         const response = await axiosInstance.delete(`/clase/delete/${id}`);
+        console.log('delete clases: ', response.data)
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)
