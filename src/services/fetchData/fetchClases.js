@@ -13,7 +13,6 @@ try {
      });
      return response.data;
 } catch (error) {
-    console.error('Error registering class:', error.message);
     throw new Error(error.response.data.message)
 }
 }
@@ -22,7 +21,6 @@ export const getClasesOne = async (id) => {
         const response = await axiosInstance.get(`/clase/${id}`);
         return response.data;
     } catch (error) {
-        console.error('Error en la actualización:', error.response?.data);
         throw new Error(error.response?.data?.message || 'Error en la actualización')
     }
 }
@@ -32,7 +30,7 @@ export const getClassesByHorarioID = async (id) => {
         const response = await axiosInstance.get(`/clase/timetable/${id}`);
         return response.data;
     } catch (error) {
-        console.error('Error en la actualización:', error.response?.data);
+      
         throw new Error(error.response?.data?.message || 'Error en la actualización')
     }
 }
@@ -40,7 +38,6 @@ export const getClassesByHorarioID = async (id) => {
 export const getClasesAll = async () => {
     try {
         const response = await axiosInstance.get('/clase/');
-        console.log('response clases: ', response.data)
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)
@@ -51,7 +48,6 @@ export const DeleteClasesOne = async (id) => {
     console.log('delete clases ID: ', id)
     try {
         const response = await axiosInstance.delete(`/clase/delete/${id}`);
-        console.log('delete clases: ', response.data)
         return response.data;
     } catch (error) {
         throw new Error(error.response.data.message)

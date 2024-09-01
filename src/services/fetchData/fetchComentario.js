@@ -34,7 +34,6 @@ export const getComentarioOne = async (id) => {
         const response = await axiosInstance.get(`/comentarios/${id}`);
         return response.data;
     } catch (error) {
-        console.error('Error en la actualización:', error.response?.data);
         throw new Error(error.response?.data?.message || 'Error en la actualización')
     }
 }
@@ -43,7 +42,6 @@ export const getComentarioSalonOne = async (salon) => {
         const response = await axiosInstance.get(`/comentarios/salon/${salon}`);
         return response.data;
     } catch (error) {
-        console.error('Error en la actualización:', error.response?.data);
         throw new Error(error.response?.data?.message || 'Error en la actualización')
     }
 }

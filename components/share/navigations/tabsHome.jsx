@@ -5,7 +5,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Redirect } from "expo-router";
 import { useAuth } from "../../../src/hooks/useAuth";
 
-export const TabsHome = ({ tabsConfig }) => {
+export const TabsHome = ({ tabsConfig, customTabBarStyle, activeTinColor = "#3111F3",inactiveTinColoe = "#000000" }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const Tab = createBottomTabNavigator();
   const { user } = useAuth();
@@ -31,7 +31,18 @@ export const TabsHome = ({ tabsConfig }) => {
       };
     }, [])
   );
-
+  const defaultTabBarStyle = {
+    display: "flex",
+    position: "absolute",
+    bottom: 10,
+    left: 15,
+    right: 15,
+    elevation: 0,
+    borderRadius: 12,
+    height: 70,
+    backgroundColor: "#ffffff",
+    ...styles.shadow,
+  };
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -40,18 +51,11 @@ export const TabsHome = ({ tabsConfig }) => {
           ["Docentes", "Salones"].includes(route.name) && isKeyboardVisible
             ? { display: "none" }
             : {
-                display: "flex",
-                position: "absolute",
-                bottom: 10,
-                left: 15,
-                right: 15,
-                elevation: 0,
-                borderRadius: 12,
-                height: 70,
-                ...styles.shadow,
+                ...defaultTabBarStyle,
+                ...customTabBarStyle,
               },
-        tabBarActiveTintColor: "#3111F3",
-        tabBarInactiveTintColor: "#000000",
+        tabBarActiveTintColor: activeTinColor,
+        tabBarInactiveTintColor: inactiveTinColoe,
         tabBarLabelStyle: {
           fontSize: 16,
           fontWeight: "bold",

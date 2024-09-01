@@ -1,7 +1,6 @@
 import { DrawerHome } from "../../../components/share/navigations/DrawerNavigation";
 import { IndexSupervisor } from "../../../components/ui/(DIRECTOR)/supervisor/ScreenSupervisor";
 import { IndexComentario } from "../../../components/ui/(DIRECTOR)/comentario/ScreenComentario";
-
 import { TabsHome } from "../../../components/share/navigations/tabsHome";
 import { IndexDocente } from "../../../components/ui/(DIRECTOR)/docentes/ScreenDocente";
 import { IndexHorario } from "../../../components/ui/(DIRECTOR)/horarios/ScreenHorarios";
@@ -9,7 +8,6 @@ import { IndexSalones } from "../../../components/ui/(DIRECTOR)/salones/ScreenSa
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Authenticated } from "../../../src/hooks/Authenticated";
 import { ReportView } from "./reportView";
 
 const HomeScreen = (props) => {
@@ -24,7 +22,7 @@ const HomeScreen = (props) => {
         tabBarIcon: ({ color }) => (
           <FontAwesome6 name="house" size={SIZE} color={color} />
         ),
-        tabBarBadge: 4,
+        // tabBarBadge: 4,
       },
     },
     {

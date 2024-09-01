@@ -13,7 +13,6 @@ export const getDetailHorarioOne = async (id) => {
         const response = await axiosInstance.get(`/horarios/detalles/${id}`);
         return response.data;
     } catch (error) {
-        console.error('Error en la actualización:', error.response?.data);
         throw new Error(error.response?.data?.message || 'Error en la actualización')
     }
 }
@@ -21,10 +20,8 @@ export const getDetailHorarioByHorarioID = async (id) => {
     console.log('id entro en detail horario by horarioId', id);
     try {
         const response = await axiosInstance.get(`/horarios/detalles/timetable/${id}`);
-        console.log("response de horario by id: " + response.data)
         return response.data;
     } catch (error) {
-        console.error('Error en la actualización:', error.response?.data);
         throw new Error(error.response?.data?.message || 'Error en la actualización')
     }
 }
@@ -51,7 +48,6 @@ export const updateDetailHorario = async (id, data) => {
         const response = await axiosInstance.patch(`/horarios/detalles/update/${id}`, data);
         return response.data;
     } catch (error) {
-        console.error('Error en la actualización:', error.response?.data);
         throw new Error(error.response?.data?.message || 'Error en la actualización')
     }
 }

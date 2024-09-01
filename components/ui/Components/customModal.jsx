@@ -1,4 +1,4 @@
-import { Modal, View, Text, TouchableOpacity } from "react-native";
+import { Modal, View, Text, TouchableOpacity, ScrollView } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 export const ModalComponente = ({
   modalVisible,
@@ -41,7 +41,7 @@ export const ModalComponente = ({
             modalStyle.content,
           ]}
         >
-          <>
+          <ScrollView className="h-full">
             <View style={{ flexDirection: "row-reverse", marginBottom: 12 }}>
               {canCloseModal && (
                 <TouchableOpacity onPress={handleCloseModal}>
@@ -50,7 +50,7 @@ export const ModalComponente = ({
               )}
             </View>
             <View className="w-[100%]">{children}</View>
-          </>
+          </ScrollView>
         </View>
       </View>
     </Modal>

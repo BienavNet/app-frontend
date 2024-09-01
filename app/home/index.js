@@ -1,6 +1,7 @@
 import { Authenticated } from "../../src/hooks/Authenticated";
 import { useAuth } from "../../src/hooks/useAuth";
 import { HomeDirector } from "./director/index";
+import { HomeSupervisor } from "./supervisor/index";
 import { Redirect } from "expo-router";
 
 export default function Index() {
@@ -12,13 +13,13 @@ export default function Index() {
     case "director":
       ComponentToRender = HomeDirector;
       break;
+    case "supervisor":
+      ComponentToRender = HomeSupervisor;
+      break;
     // case "docente":
     //   ComponentToRender = "/(docente)";
     //   break;
-    // case "supervisor":
 
-    //   ComponentToRender = "/(supervisor)";
-    //   break;
     default:
       return <Redirect href="/" />;
   }

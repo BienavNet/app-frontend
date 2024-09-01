@@ -10,17 +10,15 @@ export const CustomInput = ({
   placeholder,
   secureTextEntry,
   keyBoardType,
-  rules = {},
   label,
   icon,
   variant,
-  error,
+  error,enable = true
 }) => {
   return (
     <Controller
       control={control}
       name={name}
-      rules={rules}
       render={({
         field: { onChange, onBlur, value },
       }) => (
@@ -47,6 +45,7 @@ export const CustomInput = ({
               keyboardType={keyBoardType}
               autoComplete="off"
               secureTextEntry={secureTextEntry}
+              editable={enable}
             />
           </View>
           {error && (
