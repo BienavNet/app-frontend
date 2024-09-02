@@ -1,4 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
+import { ColorItem } from "../../styles/StylesGlobal";
 const Stack = createStackNavigator();
 
 const CustomStack = ({ initialRouteName, screens }) => {
@@ -13,11 +14,11 @@ const CustomStack = ({ initialRouteName, screens }) => {
             title: screen.title,
             headerShown: screen.hideHeader ? false : true,
             headerStyle: {
-              backgroundColor: screen.headerStyle?.backgroundColor || "#1371C3",
+              backgroundColor: screen.headerStyle?.backgroundColor || "#ffffff",
             },
             headerTintColor: screen.headerTintColor || "#fff",
             headerTitleStyle: {
-              color: screen.headerTitleStyle?.color || "#ffffff",
+              color: screen.headerTitleStyle?.color || ColorItem.DeepFir,
             },
             headerRight: screen.headerRight
               ? () => screen.headerRight(navigation)

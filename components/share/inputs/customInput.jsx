@@ -27,12 +27,12 @@ export const CustomInput = ({
             <TextInput
               inputContainerStyle={{
                 backgroundColor:"#ffffff",
-                borderBottomColor: error ? "red" : null, // Borde inferior rojo si hay error
+                borderBottomColor: error ? "#E71717" : null, // Borde inferior rojo si hay error
                 borderBottomWidth: error ? 2 : null,
               }}
-              color={`${error ? "red" : "#1371C3"}`}
+              color={`${error ? "#E71717" : "#3C9B61"}`}
               className={`bg-black/5 rounded-xl w-full ${
-                error ? "border-red-500" : "border-slate-400"
+                error ? "#E71717" : "border-slate-400"
               } border`}
               variant={variant}
               label={label}
@@ -65,16 +65,15 @@ export const CustomInput = ({
 
 const CheckBox = ({ label, value, rfv, onChange, error, selectedOption }) => {
   const isSelected = selectedOption === value;
-  const borderColor =
-    error && !selectedOption ? "red" : isSelected ? "black" : "#929292";
+  const borderColor = error && !selectedOption ? "red" : isSelected ? "black" : "#929292";
   return (
-    <View className="mb-5 flex-row">
+    <View className="mb-1 flex-row">
       <Checkbox
         style={{
           backgroundColor:"#FFFFFF",
           width: 25,
           height: 25,
-          borderColor,
+          borderColor:borderColor,
         }}
         value={rfv === value}
         onValueChange={() => onChange(value)}
@@ -87,7 +86,6 @@ const CheckBox = ({ label, value, rfv, onChange, error, selectedOption }) => {
 
 export const CustomInputCheckBox = ({ control, name, title, error }) => {
   const [selectedOption, setSelectedOption] = useState(null);
-
   const handleCheckboxChange = (onChange, value) => {
     setSelectedOption(value);
     onChange(value);
@@ -100,11 +98,9 @@ export const CustomInputCheckBox = ({ control, name, title, error }) => {
       render={({ field: { onChange, value } }) => {
         return (
           <View className="flex w-full justify-center">
-            <Text className="p-5 font-semibold text-subtitle">{title}</Text>
+            <Text className="p-3 font-semibold text-subtitle">{title}</Text>
             <View className="flex-row w-full justify-around">
               <CheckBox
-              
-
                 error={error}
                 onChange={() => handleCheckboxChange(onChange, "supervisor")}
                 rfv={value}
@@ -130,7 +126,7 @@ export const CustomInputCheckBox = ({ control, name, title, error }) => {
               />
             </View>
             {error && (
-              <Text className="text-red-400 self-stretch pl-3">
+              <Text style={styles.errorText}>
                 {error.message || "Error"}
               </Text>
             )}
@@ -143,7 +139,7 @@ export const CustomInputCheckBox = ({ control, name, title, error }) => {
 
 const styles = StyleSheet.create({
   errorText: {
-    color: "red",
+    color: "#E71717",
     alignSelf: "stretch",
     paddingLeft: 16,
   },

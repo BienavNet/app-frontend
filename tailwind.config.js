@@ -9,11 +9,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // buttonColor:"#390099",
-        // backgroundColor :"#B692C2",
-        // textInput:'#DFE3E3',
-        // textPrincipal:'#3379E2',
-
+        // SOLO SE IMPORTAN CUANDO SE UTILIZA EL TAG className (Tailwind CSS)
         UPCLuigi: "#43B21E", // VERDER Luigi
         UPCGreenSymphony: "#67A623", //  VERDER Green Symphony
         UPCKellyGreen: "#3C9B61", //  VERDER Kelly Green

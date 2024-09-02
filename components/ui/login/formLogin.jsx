@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text, ScrollView, Alert } from "react-native";
+import { TouchableOpacity, View, Text, ScrollView } from "react-native";
 import {
   CustomInput,
   CustomInputCheckBox,
@@ -12,6 +12,9 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import useToastMessage from "../../share/ToasNotification";
 import { useEffect, useState } from "react";
+import { Buttonlogin } from "../../share/button/buttonLogin";
+import { ColorItem } from "../../styles/StylesGlobal";
+
 export const FormLogin = () => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const router = useRouter();
@@ -73,46 +76,47 @@ export const FormLogin = () => {
     }
   }, [isAuthenticated, user]);
   return (
-    <>
-      <ScrollView className="pb-10">
-        <View className="flex items-left mx-4 space-y-6">
-          <CustomInput
-            error={errors.correo}
-            icon={<FontAwesome6 name="user-circle" size={24} color={`${errors.correo ? 'red' : '#92c3ed'}`} />}
-            label="Correo Electronico"
-            control={control}
-            name="correo"
-            placeholder="Example@example.com"
-            keyBoardType="email-address"
+    <View className="flex items-left mx-4 space-y-2">
+      <CustomInput
+        error={errors.correo}
+        icon={
+          <FontAwesome6
+            name="user-circle"
+            size={24}
+            color={`${errors.correo ? "red" : ColorItem.DeepFir}`}
           />
-          <CustomInput
-            error={errors.contrasena}
-            label="password"
-            icon={<MaterialIcons name="password" size={24} color={`${errors.contrasena ? 'red' : '#92c3ed'}`} />}
-            control={control}
-            name="contrasena"
-            placeholder="********"
-            secureTextEntry={true}
+        }
+        label="Correo Electronico"
+        control={control}
+        name="correo"
+        placeholder="Example@example.com"
+        keyBoardType="email-address"
+      />
+      <CustomInput
+        error={errors.contrasena}
+        label="password"
+        icon={
+          <MaterialIcons
+            name="password"
+            size={24}
+            color={`${errors.contrasena ? "red" : ColorItem.DeepFir}`}
           />
-          {/*checkbox*/}
-          <CustomInputCheckBox
-            control={control}
-            name="rol"
-            title="Soy un"
-            error={errors.rol}
-          />
-          <View className="w-full">
-            <TouchableOpacity
-              onPress={handleSubmit(onsubmit)}
-              className="w-11/12 self-center bg-textPrincipal p-3 rounded-2xl mb-3"
-            >
-              <Text className="text-white text-center font-bold text-xl">
-                Iniciar Sesion
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
-    </>
+        }
+        control={control}
+        name="contrasena"
+        placeholder="********"
+        secureTextEntry={true}
+      />
+      {/*checkbox*/}
+      <CustomInputCheckBox
+        control={control}
+        name="rol"
+        title="Soy un"
+        error={errors.rol}
+      />
+      <Buttonlogin 
+      error={errors}
+      onPress={handleSubmit(onsubmit)} />
+    </View>
   );
 };

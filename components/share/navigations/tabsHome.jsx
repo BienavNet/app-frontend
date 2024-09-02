@@ -4,8 +4,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useFocusEffect } from "@react-navigation/native";
 import { Redirect } from "expo-router";
 import { useAuth } from "../../../src/hooks/useAuth";
+import { ColorItem } from "../../styles/StylesGlobal";
 
-export const TabsHome = ({ tabsConfig, customTabBarStyle, activeTinColor = "#3111F3",inactiveTinColoe = "#000000" }) => {
+export const TabsHome = ({
+  tabsConfig,
+  customTabBarStyle,
+  activeTinColor = "#3111F3",
+  inactiveTinColoe = "#000000",
+}) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const Tab = createBottomTabNavigator();
   const { user } = useAuth();
@@ -40,7 +46,7 @@ export const TabsHome = ({ tabsConfig, customTabBarStyle, activeTinColor = "#311
     elevation: 0,
     borderRadius: 12,
     height: 70,
-    backgroundColor: "#ffffff",
+    backgroundColor: ColorItem.MediumGreen,
     ...styles.shadow,
   };
   return (
@@ -76,7 +82,7 @@ export const TabsHome = ({ tabsConfig, customTabBarStyle, activeTinColor = "#311
 
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: "#7f5df0",
+    shadowColor: "black",
     shadowOffset: {
       width: 0,
       height: 10,

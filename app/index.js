@@ -1,52 +1,106 @@
 import { FormLogin } from "../components/ui/login/formLogin";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View, Text, StyleSheet } from "react-native";
-import { SvgLogin } from "../assets/svg/iconLogin";
+import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
 import { PublicRoute } from "../src/hooks/PublicRoute";
+import LogoUPCWhite from "../assets/svg/LogoUpcWhite";
+import LogoSistemasUPC from "../assets/svg/LogoSistemas";
+import { stylesColors } from "../components/styles/StylesGlobal";
 export default function Index() {
   const insert = useSafeAreaInsets();
   console.log("Insert", insert);
   return (
     <PublicRoute>
-      <View style={{ paddingTop: insert.top, paddingBottom: insert.bottom }}>
-        <View style={styles.containerSVG}>
-          <SvgLogin style={styles.svgIcon} />
-          <Text style={styles.title}>
-            App {"\n"}
-            ClassRooms
-          </Text>
-        </View>
-        <View
+      <View
+        style={{
+          paddingTop: insert.top,
+          paddingBottom: insert.bottom,
+          flex: 1,
+        }}
+      >
+        <ImageBackground
+          resizeMode="cover"
+          source={require("../assets/webp/FondoIndex.webp")}
           style={{
-            width: "100%",
-            height:"100%",
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            backgroundColor: "#D6DEDE",
-            paddingVertical: 15,
-            shadowColor: "black",
+            flex: 1,
           }}
         >
-          <FormLogin />
-        </View>
+          <View
+            style={{
+              justifyContent: "center",
+              flexDirection: "row",
+              width: "100%",
+              marginVertical: 60,
+              padding: 12,
+            }}
+          >
+            <View className="bg-UPCMediumGreen" style={[styles.contentIcon]}>
+              <LogoUPCWhite />
+            </View>
+            <View
+              style={[
+                styles.contentIcon,
+                {
+                  backgroundColor: "white",
+                  borderWidth: 2,
+                  borderColor: "green",
+                },
+              ]}
+            >
+              <LogoSistemasUPC />
+            </View>
+          </View>
+          <View
+            style={[stylesColors.BackgroundZircon,
+              {
+                bottom: 10,
+                width: "100%",
+                height: 453,
+                borderBottomRightRadius: 20,
+                borderBottomLeftRadius: 20,
+                paddingVertical: 15,
+                shadowColor: "black",
+                marginBottom: 20,
+              }
+            ]}
+          >
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                paddingBottom: 20,
+              }}
+            >
+              <Text style={styles.title} className="text-UPCDeepFir">
+                Welcome
+              </Text>
+            </View>
+            <FormLogin />
+          </View>
+        </ImageBackground>
       </View>
     </PublicRoute>
   );
 }
 
 const styles = StyleSheet.create({
-  containerSVG: {
-    width: "100%",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
+  // containerSVG: {
+  //   width: "100%",
+  //   justifyContent: "flex-start",
+  //   alignItems: "center",
+  // },
   title: {
-    position: "absolute",
-    left: 15,
-    bottom: 20,
+    width: 200,
+    height: 40,
     fontSize: 38,
     fontWeight: "bold",
-    color: "#20232a",
-    textAlign: "left",
+    textAlign: "center",
+  },
+
+  contentIcon: {
+    width: "35%",
+    margin: 4,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

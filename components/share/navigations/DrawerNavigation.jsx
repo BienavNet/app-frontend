@@ -7,6 +7,7 @@ import HeaderRigth from "../headerhomeRigth";
 import { DrawerActions } from "@react-navigation/native";
 import { Redirect } from "expo-router";
 import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
+import { ColorItem, stylesColors } from "../../styles/StylesGlobal";
 
 export const DrawerHome = ({ drawerScreens }) => {
   const { user } = useAuth();
@@ -26,7 +27,7 @@ export const DrawerHome = ({ drawerScreens }) => {
         drawerInactiveTintColor: "#000000",
         drawerActiveBackgroundColor: "#3111F3", 
         drawerLabelStyle: { fontSize: 16 },
-        headerStyle: { backgroundColor: "#3111F3" },
+        headerStyle: { backgroundColor: ColorItem.MediumGreen },
         headerTitleStyle: { color: "#fff" },
         headerRight: () => {
           console.log(route.name ,"router.name");
