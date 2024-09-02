@@ -24,8 +24,9 @@ export const DrawerHome = ({ drawerScreens }) => {
       screenOptions={({ route, navigation }) => ({
         headerShown: route.name === "Dashboard" ? false : true,
         drawerActiveTintColor: "#ffffff",
-        drawerInactiveTintColor: "#000000",
-        drawerActiveBackgroundColor: "#3111F3", 
+        drawerInactiveTintColor: ColorItem.DeepFir,
+        drawerActiveBackgroundColor:ColorItem.MediumGreen, 
+        drawerInactiveBackgroundColor:ColorItem.Zircon,
         drawerLabelStyle: { fontSize: 16 },
         headerStyle: { backgroundColor: ColorItem.MediumGreen },
         headerTitleStyle: { color: "#fff" },

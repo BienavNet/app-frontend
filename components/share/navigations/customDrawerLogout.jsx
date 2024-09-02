@@ -2,6 +2,44 @@ import { Alert, Text, TouchableOpacity, View, StyleSheet, ImageBackground } from
 import { useAuth } from "../../../src/hooks/useAuth";
 import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import { Divider } from "@rneui/base";
+import { ColorItem } from "../../styles/StylesGlobal";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+
+const ButtonLogin = ({title = "Cerrar Sesión", onPress}) =>{
+  return(
+    <View style={{ flex: 1, justifyContent: "flex-end"}}>
+    <Divider width={2}/>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onPress}
+      >
+         <View className="flex-row items-center justify-around">
+         <SimpleLineIcons
+          name="logout"
+          size={25}
+          color={ColorItem.DeepFir}
+        />
+        <Text style={styles.text}>{title}</Text>
+         </View>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
+const DrawerContent = ({user}) => {
+  return(
+    <ImageBackground style={{padding:20}}
+    source={require('../../../assets/img/fondoazulmobil.jpg')}>
+    <Text style={{fontSize:18, color: "#FFFFFF",}}>
+    {user.nombre}{" "}{user.apellido}
+    </Text>
+    <Text style={{fontSize:18, color: "#FFFFFF",}}>
+    {user.user}
+    </Text>
+    </ImageBackground>
+  )
+}
+
 export const CustomDrawerContent = (props) => {
   const { logout, user } = useAuth();
   console.log("logout", logout);
@@ -31,63 +69,25 @@ export const CustomDrawerContent = (props) => {
   };
   return (
     <View style={{ flex: 1 }}>
-      <DrawerContentScrollView {...props}
-      contentContainerStyle={{
-        // backgroundColor: "red",
-        // paddingHorizontal: 16,
-        // paddingVertical: 24,
-        // paddingBottom: 32,
-        // borderBottomWidth: 1,
-        // borderBottomColor: "#E5E5E5",
-      }}
-      >
-      <ImageBackground
-      style={{
-        padding:20
-      }}
-      source={require('../../../assets/img/fondoazulmobil.jpg')}
-      >
-     
-      <Text style={{
-        fontSize:18,
-        color: "#FFFFFF",
-      }}>{user.nombre}{" "}{user.apellido}</Text>
-         <Text style={{
-        fontSize:18,
-        color: "#FFFFFF",
-      }}>{user.user}</Text>
-      </ImageBackground>
+      <DrawerContentScrollView {...props}>
+      <DrawerContent user={user}/>
       <DrawerItemList {...props} />
-      
       </DrawerContentScrollView>
-      <View style={{ flex: 1, justifyContent: "flex-end", padding: 5 }}>
-      <Divider width={2}/>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleLogout}
-          color="red"
-        >
-          <Text style={styles.text}>Cerrar Sesión</Text>
-        </TouchableOpacity>
-      </View>
+     <ButtonLogin onPress={handleLogout}/> 
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 10,
+    paddingVertical:10,
     borderRadius: 4,
-    elevation: 3,
-    backgroundColor: "red",
   },
   text: {
-    fontSize: 16,
-    lineHeight: 21,
+    fontSize: 18,
+    marginRight:50,
     fontWeight: "bold",
     letterSpacing: 0.25,
-    color: "white",
+    color: ColorItem.DeepFir,
   },
 });

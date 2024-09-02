@@ -9,8 +9,8 @@ import { ColorItem } from "../../styles/StylesGlobal";
 export const TabsHome = ({
   tabsConfig,
   customTabBarStyle,
-  activeTinColor = "#3111F3",
-  inactiveTinColoe = "#000000",
+  activeTinColor = "#ffffff",
+  inactiveTinColoe = ColorItem.DeepFir,
 }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const Tab = createBottomTabNavigator();
@@ -65,7 +65,11 @@ export const TabsHome = ({
         tabBarLabelStyle: {
           fontSize: 16,
           fontWeight: "bold",
+          paddingBottom:10
         },
+        tabBarIconStyle:{
+          marginBottom: -10
+        }
       })}
     >
       {tabsConfig.map((tab, index) => (

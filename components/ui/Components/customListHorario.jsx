@@ -266,50 +266,6 @@ export const ListItemComponentHorario = ({
   );
 };
 
-const styles = StyleSheet.create({
-  Title1: {
-    fontSize: 18,
-    fontWeight: "bold",
-    backgroundColor: "#1371C3",
-    color: "white",
-    textAlign: "center",
-    paddingVertical: 5,
-    marginBottom: 6,
-  },
-  vertical: {
-    marginBottom: 10,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-  },
-  text: {
-    textAlign: "center",
-    padding: 5,
-    fontSize: 16,
-    fontWeight: "medium",
-    marginBottom: 5,
-  },
-  asignatura: {
-    fontSize: 16,
-    fontWeight: "medium",
-    padding: 5,
-    marginBottom: 5,
-  },
-  // viewmore: {
-  //   flexDirection: "row",
-  //   justifyContent: "space-between",
-  //   marginTop: 12,
-  //   paddingHorizontal: 20,
-  //   paddingVertical: 12,
-  // },
-  // subtitle: {
-  //   paddingVertical: 12,
-  //   fontSize: 17,
-  //   fontWeight: "600",
-  //   color: "#999999",
-  // },
-});
-
 {
   /* <View>
             <Text style={[styles.Title1]}>Días asignados</Text>

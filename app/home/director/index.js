@@ -34,7 +34,7 @@ const HomeScreen = (props) => {
         tabBarIcon: ({ color }) => (
           <MaterialCommunityIcons
             name="human-male-board"
-            size={28}
+            size={30}
             color={color}
           />
         ),

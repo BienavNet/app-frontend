@@ -9,6 +9,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Loading from "../../share/loading";
 import { NotRegistration } from "../../share/noRegistration";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
+import { styles } from "../../styles/StylesGlobal";
+
 // import { DeleteConfirmation } from "../../share/deletePress";
 export const ListItemComentario = ({
   getDataAll,
@@ -218,26 +220,3 @@ export const ListItemComentario = ({
   );
 };
 
-const styles = StyleSheet.create({
-  Title1: {
-    fontSize: 18,
-    fontWeight: "bold",
-    backgroundColor: "#1371C3",
-    color: "white",
-    textAlign: "center",
-    paddingVertical: 5,
-    marginBottom: 6,
-  },
-  text: {
-    textAlign: "center",
-    padding: 5,
-    fontSize: 16,
-    fontWeight: "medium",
-    marginBottom: 5,
-  },
-  comentario: {
-    fontSize: 18,
-    fontWeight: "medium",
-    paddingLeft: 10,
-  },
-});

@@ -1,11 +1,13 @@
-import React, { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo } from "react";
 import {
-  StyleSheet,
   TouchableWithoutFeedback,
   View,
   Text,
   ScrollView,
 } from "react-native";
+import {styles} from "../../styles/StylesGlobal"
+
+
 import moment from "moment";
 import Swiper from "react-native-swiper";
 import { NotRegistrationDate } from "../../share/noRegistration";
@@ -133,74 +135,3 @@ export default function SimpleDatePicker({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "100%",
-  },
-  picker: {
-    flex: 1,
-    maxHeight: 74,
-    paddingVertical: 6,
-    flexDirection: "row",
-    alignItems: "center",
-    overflow: "hidden",
-    width: "100%",
-  },
-  subtitle: {
-    fontSize: 17,
-    fontWeight: "600",
-    color: "#999999",
-    marginBottom: 12,
-  },
-  footer: {
-    marginTop: "auto",
-    paddingHorizontal: 16,
-  },
-  /** Item */
-  item: {
-    flex: 1,
-    height: 50,
-    marginHorizontal: 4,
-    paddingVertical: 6,
-    paddingHorizontal: 4,
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "#e3e3e3",
-    flexDirection: "column",
-    alignItems: "center",
-    backgroundColor: "white",
-  },
-  itemRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    // paddingHorizontal: 12,
-    overflow: "hidden",
-  },
-  itemWeekday: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: "#737373",
-    marginBottom: 4,
-  },
-  itemDate: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#111",
-  },
-  /** Placeholder */
-  placeholder: {
-    height: "100%",
-    marginTop: 0,
-    padding: 0,
-  },
-  placeholderInset: {
-    borderWidth: 3,
-    borderColor: "#ffffff",
-    borderRadius: 8,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
-});

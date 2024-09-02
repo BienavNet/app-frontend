@@ -1,10 +1,10 @@
 import { FormLogin } from "../components/ui/login/formLogin";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
+import { View, Text,ImageBackground } from "react-native";
 import { PublicRoute } from "../src/hooks/PublicRoute";
 import LogoUPCWhite from "../assets/svg/LogoUpcWhite";
 import LogoSistemasUPC from "../assets/svg/LogoSistemas";
-import { stylesColors } from "../components/styles/StylesGlobal";
+import { styles, stylesColors } from "../components/styles/StylesGlobal";
 export default function Index() {
   const insert = useSafeAreaInsets();
   console.log("Insert", insert);
@@ -70,7 +70,7 @@ export default function Index() {
                 paddingBottom: 20,
               }}
             >
-              <Text style={styles.title} className="text-UPCDeepFir">
+              <Text style={styles.titleWelcome} className="text-UPCDeepFir">
                 Welcome
               </Text>
             </View>
@@ -82,25 +82,3 @@ export default function Index() {
   );
 }
 
-const styles = StyleSheet.create({
-  // containerSVG: {
-  //   width: "100%",
-  //   justifyContent: "flex-start",
-  //   alignItems: "center",
-  // },
-  title: {
-    width: 200,
-    height: 40,
-    fontSize: 38,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-
-  contentIcon: {
-    width: "35%",
-    margin: 4,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

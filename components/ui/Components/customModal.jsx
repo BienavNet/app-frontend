@@ -1,4 +1,4 @@
-import { Modal, View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { Modal, View, TouchableOpacity, ScrollView } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 export const ModalComponente = ({
   modalVisible,

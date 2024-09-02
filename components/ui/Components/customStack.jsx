@@ -13,16 +13,10 @@ const CustomStack = ({ initialRouteName, screens }) => {
           options={({ navigation }) => ({
             title: screen.title,
             headerShown: screen.hideHeader ? false : true,
-            headerStyle: {
-              backgroundColor: screen.headerStyle?.backgroundColor || "#ffffff",
-            },
-            headerTintColor: screen.headerTintColor || "#fff",
-            headerTitleStyle: {
-              color: screen.headerTitleStyle?.color || ColorItem.DeepFir,
-            },
-            headerRight: screen.headerRight
-              ? () => screen.headerRight(navigation)
-              : undefined,
+            headerStyle: { backgroundColor: screen.headerStyle?.backgroundColor || "#ffffff"},
+            headerTintColor: screen.headerTintColor || ColorItem.DeepFir,
+            headerTitleStyle: {color: screen.headerTitleStyle?.color || ColorItem.DeepFir},
+            headerRight: screen.headerRight ? () => screen.headerRight(navigation) : undefined,
           })}
         />
       ))}
