@@ -54,7 +54,7 @@ export const TabsHome = ({
       initialRouteName="Home"
       screenOptions={({ route, navigation }) => ({
         tabBarStyle:
-          ["Docentes", "Salones"].includes(route.name) && isKeyboardVisible
+          ["Docentes", "Salones", "Dashboard", "Comentario", "Horarios"].includes(route.name) && isKeyboardVisible
             ? { display: "none" }
             : {
                 ...defaultTabBarStyle,

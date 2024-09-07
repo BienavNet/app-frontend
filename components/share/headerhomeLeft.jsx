@@ -1,19 +1,17 @@
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 
-export default function HeaderLeft({icon, onPress}) {
+export default function HeaderLeft({ icon, onPress }) {
   return (
     <View style={styles.headerContainer}>
-       <TouchableOpacity onPress={onPress}>
-       {icon}
-       </TouchableOpacity>
+      <TouchableOpacity onPress={onPress}>{icon}</TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingLeft:10,
-    paddingBottom:0,
-    paddingTop:5
-  }
+    paddingLeft: 10,
+    paddingBottom: 0,
+    paddingTop: 5,
+  },
 });

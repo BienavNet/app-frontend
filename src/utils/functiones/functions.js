@@ -36,11 +36,18 @@ export const generateClassDates = (dia, startDate, endDate) => {
   return classesToRegister;
 };
 
-// devuelve la primera letra de un string en mayuscula
+// devuelve el string pero con la primera letra de un string en mayuscula {"docente" ---> "Docente"}
 export const capitalizeFirstLetter = (name) => {
   return name.charAt(0).toUpperCase() + name.slice(1);
 };
 
+// devuelve la primera letra de un string en mayuscula {"Pendiente" ---> "P"}
+export function getFirstLetter(word) {
+  if (word && word.length > 0) {
+    return word.charAt(0).toUpperCase();
+  }
+  return '';
+}
 export const formatHourHHMMTime = (currentTime) => {
   const hours = currentTime.getHours();
   const minutes = currentTime.getMinutes();
@@ -53,9 +60,9 @@ export const formatHourHHMM = (currentTime) => {
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, "0")}`;
 };
 
-export const truncateText = (text) => {
+export const truncateText = (text, maxLegth = 7) => {
   if (text.length > 15) {
-    return text.substring(0, 7) + "...";
+    return text.substring(0, maxLegth) + "...";
   }
   return text;
 };

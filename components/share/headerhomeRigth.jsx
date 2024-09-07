@@ -1,17 +1,17 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function HeaderRight({ rol }) {
+export default function HeaderRight({ rol, navigation }) {
   return (
     <View
       style={[styles.headerContainer, rol === "Director" && { width: "50%" }]}
     >
       {rol === "Director" ? (
-        <TouchableOpacity title="">
+        <TouchableOpacity onPress={() => navigation.navigate("NotificationStack")}>
           <Ionicons name="notifications-sharp" size={24} color="#ffffff" />
         </TouchableOpacity>
       ) : null}
-      <View style={styles.rightContainer}>
+      <View style={styles.rightContainer}>      
         <Text style={styles.rol}>{rol}</Text>
       </View>
     </View>

@@ -1,7 +1,6 @@
-import { ScrollView, Alert, StyleSheet } from "react-native";
+import { ScrollView, Alert,  } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
-import { useCallback, useEffect, useState } from "react";
-
+import { useCallback, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -13,7 +12,7 @@ import {
   getClassesByHorarioID,
 } from "../../../src/services/fetchData/fetchClases";
 import SimpleDatePicker from "./customSimpleDatePicker";
-import { ScreenViewMore } from "../(DIRECTOR)/horarios/component/ScreenViewMore";
+import ScreenViewMore from "../(DIRECTOR)/horarios/component/ScreenViewMore";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { NotRegistration } from "../../share/noRegistration";
 import { ViewHorario } from "../(DIRECTOR)/horarios/component/viewHorario";
@@ -34,6 +33,7 @@ export const ListItemComponentHorario = ({
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [value, setValue] = useState(new Date())
   console.log("setSelectedItem ------------", selectedItem);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -49,7 +49,7 @@ export const ListItemComponentHorario = ({
       setLoading(false);
     }
   }, [getDataAll]);
-  const [value, setValue] = useState(new Date());
+ 
   useFocusEffect(
     useCallback(() => {
       fetchItems();
@@ -140,15 +140,6 @@ export const ListItemComponentHorario = ({
   const handleDateChange = (date) => {
     setValue(date);
   };
-  useEffect(() => {
-    if (modalVisible) {
-      setLoading(true);
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [modalVisible]);
   return (
     <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
       {loading ? (
@@ -219,21 +210,6 @@ export const ListItemComponentHorario = ({
               value={value}
               handleOpenSecondModal={handleOpenSecondModal}
             />
-            {/* <View style={[styles.viewmore]}>
-              <Text style={styles.subtitle}>{value.toDateString()}</Text>
-
-              <Button
-                onPress={handleOpenSecondModal}
-                color="#1371C3"
-                buttonStyle={{ width: 100 }}
-                radius={"sm"}
-                type="clear"
-              >
-                Ver mas
-                <MaterialIcons name="expand-more" size={24} color="#1371C3" />
-              </Button>
-            </View> */}
-
             <SimpleDatePicker
               onDateChange={handleDateChange}
               selectedDate={selectedItem?.horarios
@@ -242,10 +218,8 @@ export const ListItemComponentHorario = ({
                   const currentMonth = new Date().getMonth();
                   return horario.getMonth() === currentMonth;
                 })}
-              viewSelectDate={selectedItem?.horarios.find(
-                (horario) =>
-                  new Date(horario.fecha).toDateString() ===
-                  value.toDateString()
+              viewSelectDate={selectedItem?.horarios.find((horario) =>
+                  new Date(horario.fecha).toDateString() ===value.toDateString()
               )}
             />
           </>
@@ -265,49 +239,3 @@ export const ListItemComponentHorario = ({
     </ScrollView>
   );
 };
-
-{
-  /* <View>
-            <Text style={[styles.Title1]}>Días asignados</Text>
-            <Text style={[styles.text]}>{selectedItem.dia}</Text>
-          </View> */
-}
-{
-  /* {selectedItem.horarios.map((horario, index) => (
-          <View key={index} style={{ marginBottom: 15 }}>
-            <Text style={[styles.Title1]}>Día Asignado</Text>
-            <Text style={[styles.text]}>{horario.dia}</Text>
-
-            <Text style={[styles.Title1]}>Horas Concedidas</Text>
-            <View style={styles.vertical}>
-              <Text style={[styles.text]}>
-                {formatHourHHMMAMPM(horario.hora_inicio)}
-              </Text>
-              <Divider orientation="vertical" width={5} />
-              <Text style={[styles.text]}>
-                {formatHourHHMMAMPM(horario.hora_fin)}
-              </Text>
-            </View>
-
-            <Text style={[styles.Title1]}>Categoría</Text>
-            <Text style={[styles.text]}>{horario.categoria}</Text>
-
-            <Text style={[styles.Title1]}>Número de Salón</Text>
-            <Text style={[styles.text]}>{horario.numero_salon}</Text>
-          </View>
-        ))} */
-}
-{
-  /* <View>
-            <Text style={[styles.Title1]}>Horas concedidas</Text>
-            <View style={styles.vertical}>
-              <Text style={[styles.text]}>
-                {formatHourHHMMAMPM(selectedItem.hora_inicio)}
-              </Text>
-              <Divider orientation="vertical" width={5} />
-              <Text style={[styles.text]}>
-                {formatHourHHMMAMPM(selectedItem.hora_fin)}
-              </Text>
-            </View>
-          </View> */
-}

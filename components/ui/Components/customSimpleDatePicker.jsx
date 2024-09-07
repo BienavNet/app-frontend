@@ -9,19 +9,24 @@ import {styles} from "../../styles/StylesGlobal"
 
 
 import moment from "moment";
+import "moment/locale/es"
 import Swiper from "react-native-swiper";
 import { NotRegistrationDate } from "../../share/noRegistration";
 import { ViewDatePicker } from "../(DIRECTOR)/horarios/component/viewDatePicker";
 
+// Configuracion moment para usar español 'es'
+moment.locale('es');
 export default function SimpleDatePicker({
   selectedDate,
   onDateChange,
   viewSelectDate,
 }) {
+  console.log("onDateChange", onDateChange)
+  console.log("selectDatePicker", selectedDate)
+  console.log("selectDatePicker selectedDate[0]", selectedDate[0])
   const swiper = useRef();
-  const [value, setValue] = useState(
-    selectedDate.length > 0 ? selectedDate[0] : new Date()
-  );
+  const [value, setValue] = useState(selectedDate[0]);
+  
   console.log(" set value", value);
   const [week, setWeek] = useState(0);
   console.log(" set week", week);
@@ -104,7 +109,7 @@ export default function SimpleDatePicker({
                       <Text
                         style={[styles.itemDate, isActive && { color: "#fff" }]}
                       >
-                        {moment(item.fecha).date()}
+                       {moment(item.fecha).locale('es').date()}
                       </Text>
                     </View>
                   </TouchableWithoutFeedback>

@@ -7,16 +7,17 @@ import HeaderRigth from "../headerhomeRigth";
 import { DrawerActions } from "@react-navigation/native";
 import { Redirect } from "expo-router";
 import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
-import { ColorItem, stylesColors } from "../../styles/StylesGlobal";
+import { ColorItem } from "../../styles/StylesGlobal";
+import NotificationStackScreen from "../../ui/(DIRECTOR)/notifications/screenNotifications";
 
 export const DrawerHome = ({ drawerScreens }) => {
   const { user } = useAuth();
-  console.log("DrawerNavigator", user)
-  const Drawer = createDrawerNavigator();
-  
+  // console.log("DrawerNavigator", user)
   if (!user) {
     return <Redirect href="/" />;
   }
+
+  const Drawer = createDrawerNavigator();
 
   return (
     <Drawer.Navigator
@@ -25,44 +26,50 @@ export const DrawerHome = ({ drawerScreens }) => {
         headerShown: route.name === "Dashboard" ? false : true,
         drawerActiveTintColor: "#ffffff",
         drawerInactiveTintColor: ColorItem.DeepFir,
-        drawerActiveBackgroundColor:ColorItem.MediumGreen, 
-        drawerInactiveBackgroundColor:ColorItem.Zircon,
+        drawerActiveBackgroundColor: ColorItem.MediumGreen,
+        drawerInactiveBackgroundColor: ColorItem.Zircon,
         drawerLabelStyle: { fontSize: 16 },
         headerStyle: { backgroundColor: ColorItem.MediumGreen },
         headerTitleStyle: { color: "#fff" },
         headerRight: () => {
-          console.log(route.name ,"router.name");
+          // console.log(route.name ,"router.name");
           return route.name === "Home" ? (
-                <HeaderRigth rol={capitalizeFirstLetter(user.rol)} />
-              ) : null;
+            <HeaderRigth
+              rol={capitalizeFirstLetter(user.rol)}
+              navigation={navigation}
+            />
+          ) : null;
         },
-        
-        
 
         headerLeft: () => {
-          return (
-            <HeaderLeft
-              onPress={() => {
-                navigation.dispatch(DrawerActions.openDrawer());
-              }}
-              icon={
-                <FontAwesome6 name="bars-staggered" size={30} color="#ffffff" />
-              }
-            />
-          );
+            return (
+              <HeaderLeft
+                onPress={() => {
+                  navigation.dispatch(DrawerActions.openDrawer());
+                }}
+                icon={<FontAwesome6 name="bars-staggered" size={30} color="#ffffff" />}
+              />
+            );
+          // }
         },
       })}
     >
-      {drawerScreens.map((screen, index) => {
-        return (
-          <Drawer.Screen
-            key={index}
-            name={screen.name}
-            component={screen.component}
-            options={screen.options}
-          />
-        );
-      })}
+      {drawerScreens.map((screen, index) => (
+        <Drawer.Screen
+          key={index}
+          name={screen.name}
+          component={screen.component}
+          options={screen.options}
+        />
+      ))}
+      <Drawer.Screen
+        name="NotificationStack"
+        component={NotificationStackScreen}
+        options={{
+          headerShown: false, // Ocultar en header del Drawer
+          drawerItemStyle: { display: "none" } // Ocultar en el drawer
+        }} 
+      />
     </Drawer.Navigator>
   );
 };

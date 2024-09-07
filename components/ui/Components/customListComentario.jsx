@@ -1,4 +1,4 @@
-import { Text, ScrollView, View, StyleSheet } from "react-native";
+import { Text, ScrollView, View, Alert } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useEffect, useState } from "react";
@@ -10,6 +10,10 @@ import Loading from "../../share/loading";
 import { NotRegistration } from "../../share/noRegistration";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { styles } from "../../styles/StylesGlobal";
+import {
+  deleteComentarioDocente,
+  DeleteComentarioOne,
+} from "../../../src/services/fetchData/fetchComentario";
 
 // import { DeleteConfirmation } from "../../share/deletePress";
 export const ListItemComentario = ({
@@ -75,29 +79,31 @@ export const ListItemComentario = ({
     setModalVisible(false);
     setSelectedItem(null);
   };
-
-  // const handleDeletePress = (itemId) => {
-  //   DeleteConfirmation({
-  //     nameDelete: modalTitle,
-  //     onPress: async () => {
-  //       try {
-  //         const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
-  //         for (const detail_horario of detailhorarioD) {
-  //           await deleteDataAsociated(detail_horario.id);
-  //         }
-  //         const claseD = await getClassesByHorarioID(itemId);
-  //         for (const clases of claseD) {
-  //           await DeleteClasesOne(clases.id);
-  //         }
-  //         await deleteData(itemId);
-  //         setItems(items.filter((item) => item.id !== itemId));
-  //         Alert.alert(`${modalTitle} eliminado con éxito`);
-  //       } catch (error) {
-  //         Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
-  //       }
-  //     },
-  //   });
-  // };
+  const handleDeletePress = (itemId) => {
+    Alert.alert(
+      `Eliminar ${modalTitle}`,
+      `¿Estás seguro de que deseas eliminar este ${modalTitle.toLowerCase()}?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await DeleteComentarioOne(itemId);
+              setItems(items.filter((item) => item.id !== itemId));
+              Alert.alert(`${modalTitle} eliminado con éxito`);
+            } catch (error) {
+              Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
+            }
+          },
+        },
+      ]
+    );
+  };
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -219,4 +225,3 @@ export const ListItemComentario = ({
     </ScrollView>
   );
 };
-

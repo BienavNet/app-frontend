@@ -56,6 +56,7 @@ export const MultilineTextInput = ({
                 onChange(text); // Pasamos el texto actualizado al formulario
               }
             }}
+            
             onBlur={onBlur}
             value={value}
             numberOfLines={numberOfLines}
@@ -72,7 +73,7 @@ export const MultilineTextInput = ({
             style={{
               paddingTop: StatusBar.currentHeight,
             }}
-          >
+          > 
             <Text style={{ color: "black", fontSize: 14 }}>
               {charCount} / {maxLength} caracteres
             </Text>

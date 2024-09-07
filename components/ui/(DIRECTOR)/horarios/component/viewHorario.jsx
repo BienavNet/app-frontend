@@ -1,5 +1,8 @@
 import { Text } from "react-native";
-import { capitalizeFirstLetter, truncateText } from "../../../../../src/utils/functiones/functions";
+import {
+  capitalizeFirstLetter,
+  truncateText,
+} from "../../../../../src/utils/functiones/functions";
 
 export const ViewHorario = ({ item }) => {
   return (

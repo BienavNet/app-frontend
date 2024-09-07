@@ -9,6 +9,8 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { ReportView } from "./reportView";
+import { IndexNotifications } from "../../../components/ui/(DIRECTOR)/notifications/screenNotifications";
+
 
 const HomeScreen = (props) => {
   const SIZE = 26;

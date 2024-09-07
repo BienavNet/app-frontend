@@ -174,4 +174,15 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  tabBar: {
+    backgroundColor: "#fff", // Color de fondo de la barra de pestañas
+  },
+  indicator: {
+    elevation: 5,
+    backgroundColor: ColorItem.KellyGreen, // Color del indicador de pestaña activa
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 });

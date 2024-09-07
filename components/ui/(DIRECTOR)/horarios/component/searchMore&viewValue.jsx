@@ -1,36 +1,32 @@
 import { Text, View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Button } from "@rneui/themed";
-import { styles } from "../../../../styles/StylesGlobal";
-
+import { ColorItem, styles } from "../../../../styles/StylesGlobal";
+import moment from "moment";
+import "moment/locale/es";
 
 export const SearchView = ({ value, handleOpenSecondModal }) => {
+  console.log("Fecha recibida en SearchView:", value);
+
   return (
     <View style={[styles.viewmore]}>
-      <Text style={styles.subtitle}>{value.toDateString()}</Text>
+      <Text style={styles.subtitle}>
+        {moment(value).format("ddd D MMM YYYY")}
+      </Text>
       <Button
         onPress={handleOpenSecondModal}
-        color="#1371C3"
+        color={ColorItem.KellyGreen}
         buttonStyle={{ width: 100 }}
         radius={"sm"}
         type="clear"
       >
         Ver mas
-        <MaterialIcons name="expand-more" size={24} color="#1371C3" />
+        <MaterialIcons
+          name="expand-more"
+          size={24}
+          color={ColorItem.KellyGreen}
+        />
       </Button>
     </View>
   );
 };
-// const styles = StyleSheet.create({
-//   viewmore: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     paddingHorizontal: 20,
-//   },
-//   subtitle: {
-//     paddingVertical: 12,
-//     fontSize: 17,
-//     fontWeight: "600",
-//     color: "#999999",
-//   },
-// });

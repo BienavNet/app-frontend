@@ -1,36 +1,40 @@
 import { useState } from "react";
-import { useWindowDimensions, Text, StyleSheet } from "react-native";
+import { useWindowDimensions, Text } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import { ReportView_Filter } from "./list";
-import { EstadisticasReportes } from "./reportChart";
+import { FilterNotRead, FilterRead,NotificationAll } from "./tabViewFilter";
 import { ColorItem, styles } from "../../../styles/StylesGlobal";
 
 const renderScene = SceneMap({
-  first: EstadisticasReportes,
-  second: ReportView_Filter,
+  first: NotificationAll,    
+  second:FilterRead,
+  tree: FilterNotRead 
 });
 
-
-export default function TabViewTop() {
+export default function Notification() {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
 
   const [routes] = useState([
-    { key: "first", title: "Estadisticas" },
-    { key: "second", title: "Reportes" },
+    { key: "first", title: "Todas" },
+    { key: "second", title: "Leidas" },
+    { key: "tree", title: "No leidas" },
   ]);
 
   const renderTabBar = (props) => (
     <TabBar
       {...props}
       indicatorStyle={styles.indicator}
-      style={styles.tabBar}
+      style={{
+        backgroundColor:ColorItem.MediumGreen
+      }}
       labelStyle={styles.label}
       renderLabel={({ route, focused }) => (
         <Text
           style={[
             styles.label,
-            { color: focused ? ColorItem.DeepFir : "#61665E" },
+
+            { color: focused ? "#fff" : ColorItem.OceanCrest},
+            {fontWeight:focused ? "bold" : "400"},
           ]}
         >
           {route.title}

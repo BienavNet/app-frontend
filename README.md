@@ -140,3 +140,6 @@ eslint-plugin-react-hooks
 
 react-native-svg
 > npm i react-native-svg
+
+react-native-calendars
+npm i react-native-calendars

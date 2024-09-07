@@ -18,7 +18,7 @@ const colors = [
   "rgba(54, 162, 235, 1)", // Azul
   "rgba(255, 159, 64, 1)", // Naranja
 ];
-export const ReportChart = () => {
+export const EstadisticasReportes = () => {
   const [dqmct, setDqmct] = useState([]); //docent con mas comentario realizado
   const [sqmct, setSqmct] = useState(null); // salon que mas comentario tiene
   const [smasu, setSmasU] = useState([]); // salo mas utilizado
