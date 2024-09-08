@@ -71,7 +71,7 @@ const ContentNofitications = ({ cedula, estado = "todas" }) => {
               backgroundColor:
                 item.estado === "leida"
                   ? "#fff"
-                  : ColorItem.Zircon,
+                  : "#ecf3ff",
             }}
           >
             <View
@@ -143,7 +143,7 @@ const ContentNofitications = ({ cedula, estado = "todas" }) => {
                       <Ionicons
                         name="checkmark-done"
                         size={24}
-                        color={item.estado === "leida" ? "blue" : "gray"}
+                        color={item.estado === "leida" ? "#009ae5" : "#65686c"}
                       />
                     </View>
                   </View>

@@ -13,8 +13,8 @@ export const registerNotification = async (mensaje, de, para) => {
   }
 };
 
+// ✅
 export const getNotificationCedulaEstado = async (cedula, estado) => {
-  console.log("cedula del loegado en notification", cedula, "estado filtrado o optional", estado)
   try {
     const response = await axiosInstance.get(`/notificaciones/obtener/${cedula}/${estado}`);
     console.log("response", response.data)
@@ -36,6 +36,7 @@ export const getNotificationAll = async () => {
   }
 };
 
+// ✅
 export const updateNotificationId = async (id, estado) => {
   try {
     const response = await axiosInstance.patch(`/notificaciones/${id}`, {estado});

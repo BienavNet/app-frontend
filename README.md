@@ -143,3 +143,9 @@ react-native-svg
 
 react-native-calendars
 npm i react-native-calendars
+
+library that provides separate APIs for Audio and Video playback.
+> npx expo install expo-av
+
+install y uso del webscoket
+> npm install socket.io-client
