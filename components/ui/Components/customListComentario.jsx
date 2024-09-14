@@ -3,7 +3,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Loading from "../../share/loading";
@@ -11,7 +11,6 @@ import { NotRegistration } from "../../share/noRegistration";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { styles } from "../../styles/StylesGlobal";
 import {
-  deleteComentarioDocente,
   DeleteComentarioOne,
 } from "../../../src/services/fetchData/fetchComentario";
 
@@ -25,13 +24,10 @@ export const ListItemComentario = ({
   itemIcon = "account",
   modalTitle = "Info",
 }) => {
-  const navigation = useNavigation();
   const [viewedComments, setViewedComments] = useState({});
   const [items, setItems] = useState([]);
-  console.log("items ------------", items);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  console.log("setSelectedItem ------------", selectedItem);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -54,13 +50,10 @@ export const ListItemComentario = ({
   );
 
   const handleInfoPress = async (id) => {
-    console.log("id", id);
     try {
       setModalVisible(true);
       const res = await getDataOne(id);
-      console.log(res, "response res de handleInfoPress");
       const itemselected = res.find((value) => value.id === id);
-      console.log(itemselected, "item selected");
       if (itemselected) {
         setSelectedItem(itemselected);
         setViewedComments((prev) => ({ ...prev, [id]: true }));
@@ -120,6 +113,7 @@ export const ListItemComentario = ({
       return () => clearTimeout(timer);
     }
   }, [modalVisible]);
+
   return (
     <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
       {loading ? (
@@ -162,13 +156,6 @@ export const ListItemComentario = ({
               <ListItem.Title>
                 <TouchableOpacity
                   className="flex-row"
-                  onPress={() =>
-                    navigateToFormScreen
-                      ? navigateToFormScreen(navigation, item.id)
-                      : navigation.navigate("FormScreen", {
-                          id: item.id,
-                        })
-                  }
                 >
                   <Text className="font-extrabold text-lg">
                     {capitalizeFirstLetter(item.nombre)}

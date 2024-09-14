@@ -1,3 +1,18 @@
+import { Audio } from "expo-av";
+
+// Función para reproducir el sonido de notificación
+export default async function playNotificationSound(setSound) {
+  try {
+    const { sound } = await Audio.Sound.createAsync(
+      require("../../../assets/mp3/Sweet.mp3") // Ruta del archivo del sonido
+    );
+    setSound(sound);
+    await sound.playAsync(); 
+  } catch (error) {
+    throw Error("Error al reproducir el sonido de notificación:", error);
+  }
+}
+
 export const formatHourHHMMAMPM= (timeString) => {
   const [hours, minutes] = timeString.split(':');
   const date = new Date();

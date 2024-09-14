@@ -15,12 +15,11 @@ export const SearchView = ({ value, handleOpenSecondModal }) => {
       </Text>
       <Button
         onPress={handleOpenSecondModal}
-        color={ColorItem.KellyGreen}
-        buttonStyle={{ width: 100 }}
+        buttonStyle={{ width: 100}} 
         radius={"sm"}
         type="clear"
       >
-        Ver mas
+        <Text style={{color:ColorItem.KellyGreen, fontSize:16, marginBottom:4}}>Ver mas</Text>
         <MaterialIcons
           name="expand-more"
           size={24}

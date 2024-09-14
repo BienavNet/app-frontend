@@ -1,4 +1,4 @@
-import { ScrollView, Alert,  } from "react-native";
+import { ScrollView, Alert, Modal } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -33,7 +33,7 @@ export const ListItemComponentHorario = ({
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [value, setValue] = useState(new Date())
+  const [value, setValue] = useState(new Date());
   console.log("setSelectedItem ------------", selectedItem);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -49,7 +49,7 @@ export const ListItemComponentHorario = ({
       setLoading(false);
     }
   }, [getDataAll]);
- 
+
   useFocusEffect(
     useCallback(() => {
       fetchItems();
@@ -101,10 +101,13 @@ export const ListItemComponentHorario = ({
               await Promise.all(
                 detailhorarioD.map(async (detail_horario) => {
                   await deleteDataAsociated(detail_horario.id);
-                  console.log("Detalle de horario eliminado ID:", detail_horario.id);
+                  console.log(
+                    "Detalle de horario eliminado ID:",
+                    detail_horario.id
+                  );
                 })
               );
-              Alert.alert('Eliminando......', "ya casi damos por hecho");
+              Alert.alert("Eliminando......", "ya casi damos por hecho");
               const claseD = await getClassesByHorarioID(itemId);
               console.log("claseD", claseD);
               await Promise.all(
@@ -140,102 +143,108 @@ export const ListItemComponentHorario = ({
   const handleDateChange = (date) => {
     setValue(date);
   };
+
+const handleDateSelected = (selectedItem) => {
+  return selectedItem?.horarios.map((horario) => new Date(horario.fecha)).filter((horario) => {
+    const currentMonth = new Date().getMonth();
+    return horario.getMonth() === currentMonth;
+  })
+}
+
   return (
-    <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
-      {loading ? (
-        <Loading />
-      ) : items.length === 0 ? (
-        <NotRegistration />
-      ) : (
-        items.map((item, index) => (
-          <ListItem.Swipeable
-            key={`${item.id}-${index}`}
-            leftContent={(reset) => (
-              <Button
-                title="Info"
-                onPress={async () => {
-                  reset();
-                  await handleInfoPress(item.id);
-                }}
-                icon={{ name: "info", color: "white" }}
-                buttonStyle={{ minHeight: "100%" }}
-              />
-            )}
-            rightContent={(reset) => (
-              <Button
-                title="Delete"
-                onPress={() => {
-                  reset();
-                  handleDeletePress(item.id);
-                }}
-                icon={{ name: "delete", color: "white" }}
-                buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
-              />
-            )}
-          >
-            <Ionicons name="calendar" size={25} color="black" />
-            <ListItem.Content>
-              <ListItem.Title>
-                <TouchableOpacity
-                  className="flex-row"
-                  onPress={() =>
-                    navigateToFormScreen
-                      ? navigateToFormScreen(navigation, item.id)
-                      : navigation.navigate("FormScreen", {
-                          id: item.id,
-                        })
-                  }
-                >
-                  <ViewHorario item={item} />
-                </TouchableOpacity>
-              </ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem.Swipeable>
-        ))
-      )}
-      <ModalComponente
-        transparent={true}
-        modalStyle={{ height: "99%" }}
-        animationType={"slider"}
-        modalVisible={modalVisible}
-        handleCloseModal={handleCloseModal}
-      >
+    <>
+      <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
         {loading ? (
           <Loading />
-        ) : selectedItem ? (
-          <>
-            <InfoHorario selectedItem={selectedItem} />
-            <SearchView
-              value={value}
-              handleOpenSecondModal={handleOpenSecondModal}
-            />
-            <SimpleDatePicker
-              onDateChange={handleDateChange}
-              selectedDate={selectedItem?.horarios
-                .map((horario) => new Date(horario.fecha))
-                .filter((horario) => {
-                  const currentMonth = new Date().getMonth();
-                  return horario.getMonth() === currentMonth;
-                })}
-              viewSelectDate={selectedItem?.horarios.find((horario) =>
-                  new Date(horario.fecha).toDateString() ===value.toDateString()
-              )}
-            />
-          </>
-        ) : (
+        ) : items.length === 0 ? (
           <NotRegistration />
+        ) : (
+          items.map((item, index) => (
+            <ListItem.Swipeable
+              key={`${item.id}-${index}`}
+              leftContent={(reset) => (
+                <Button
+                  title="Info"
+                  onPress={async () => {
+                    reset();
+                    await handleInfoPress(item.id);
+                  }}
+                  icon={{ name: "info", color: "white" }}
+                  buttonStyle={{ minHeight: "100%" }}
+                />
+              )}
+              rightContent={(reset) => (
+                <Button
+                  title="Delete"
+                  onPress={() => {
+                    reset();
+                    handleDeletePress(item.id);
+                  }}
+                  icon={{ name: "delete", color: "white" }}
+                  buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
+                />
+              )}
+            >
+              <Ionicons name="calendar" size={25} color="black" />
+              <ListItem.Content>
+                <ListItem.Title>
+                  <TouchableOpacity
+                    className="flex-row"
+                    onPress={() =>
+                      navigateToFormScreen
+                        ? navigateToFormScreen(navigation, item.id)
+                        : navigation.navigate("FormScreen", {
+                            id: item.id,
+                          })
+                    }
+                  >
+                    <ViewHorario item={item} />
+                  </TouchableOpacity>
+                </ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem.Swipeable>
+          ))
         )}
-      </ModalComponente>
-      <ModalComponente
-        transparent={true}
-        modalStyle={{ height: "95%" }}
-        animationType={"slider"}
-        modalVisible={viewmoreModalVisible}
-        handleCloseModal={handleCloseSecondModal}
+        <ModalComponente
+          transparent={true}
+          modalStyle={{ height: "99%" }}
+          animationType={"slider"}
+          modalVisible={modalVisible}
+          handleCloseModal={handleCloseModal}
+        >
+          {loading ? (
+            <Loading />
+          ) : selectedItem ? (
+            <>
+              <InfoHorario selectedItem={selectedItem} />
+              <SearchView
+                value={value}
+                handleOpenSecondModal={handleOpenSecondModal}
+              />
+              <SimpleDatePicker
+                onDateChange={handleDateChange}
+                selectedDate={handleDateSelected(selectedItem)}
+                viewSelectDate={selectedItem?.horarios.find((horario) =>new Date(horario.fecha).toDateString() === value.toDateString())}
+              />
+            </>
+          ) : (
+            <NotRegistration />
+          )}
+        </ModalComponente>
+      </ScrollView>
+      <Modal
+            animationType="slide" // fade none slider
+            transparent={false} // true o false
+            visible={viewmoreModalVisible}
+        // transparent={true}
+        // modalStyle={{ height: "98%" }}
+        // animationType={"slider"}
+        // modalVisible={viewmoreModalVisible}
+        // handleCloseModal={handleCloseSecondModal}
       >
-        <ScreenViewMore />
-      </ModalComponente>
-    </ScrollView>
+        <ScreenViewMore  selectedDate={selectedItem}/>
+      </Modal>a
+    </>
   );
 };

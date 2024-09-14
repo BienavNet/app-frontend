@@ -50,3 +50,13 @@ export const updateSupervisor = async (cedula, data) => {
         throw new Error(error.response?.data?.message || 'Error en la actualización')
     }
 }
+
+/// supervisor fetch
+export const getSupervisorCedula = async (cedula) => {
+    try {
+        const response = await axiosInstance.get(`/supervisor/cedula/${cedula}`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message)
+    }
+}

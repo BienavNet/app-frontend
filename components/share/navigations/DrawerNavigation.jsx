@@ -12,7 +12,6 @@ import NotificationStackScreen from "../../ui/(DIRECTOR)/notifications/screenNot
 
 export const DrawerHome = ({ drawerScreens }) => {
   const { user } = useAuth();
-  // console.log("DrawerNavigator", user)
   if (!user) {
     return <Redirect href="/" />;
   }
@@ -32,7 +31,6 @@ export const DrawerHome = ({ drawerScreens }) => {
         headerStyle: { backgroundColor: ColorItem.MediumGreen },
         headerTitleStyle: { color: "#fff" },
         headerRight: () => {
-          // console.log(route.name ,"router.name");
           return route.name === "Home" ? (
             <HeaderRigth
               rol={capitalizeFirstLetter(user.rol)}

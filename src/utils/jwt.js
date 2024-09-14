@@ -4,7 +4,6 @@ export const validateToken = (token) => {
   try {
     decodedToken = jwtDecode(token);
   } catch (error) {
-    console.log("error jwt", error)
     return false;
   }
   const isValid = decodedToken && now < decodedToken.exp;

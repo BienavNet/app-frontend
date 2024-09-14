@@ -3,50 +3,106 @@ import {
   Animated,
   ScrollView,
   StyleSheet,
-  Text,
   View,
   Platform,
-  StatusBar,Alert,
+  StatusBar,
+  Alert,
   TextInput,
+  Text,
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import { useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Feather from "@expo/vector-icons/Feather";
 import { useAuth } from "../../../src/hooks/useAuth";
-// import { getFeatureViewAnimation } from "./utils";
-
-
-const DATA = [
-  { id: 1 },
-  { id: 2 },
-  { id: 3 },
-  { id: 4 },
-  { id: 5 },
-  { id: 6 },
-  { id: 7 },
-  { id: 8 },
-  { id: 9 },
-  { id: 10 },
-];
+import { ColorItem } from "../../../components/styles/StylesGlobal";
+import { Ionicons } from "@expo/vector-icons";
+import { socket } from "../../../src/utils/socket";
+import playNotificationSound, {
+  capitalizeFirstLetter,
+} from "../../../src/utils/functiones/functions";
+import { Badge } from "@rneui/themed";
+import { useNavigation } from "@react-navigation/native";
+import { getSupervisorCedula } from "../../../src/services/fetchData/fetchSupervisor";
+import { FeColorMatrix } from "react-native-svg";
 
 const Header_Max_Height = 118;
 const Header_Min_Height = 57;
 const Scroll_Distance = Header_Max_Height - Header_Min_Height;
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+const AnimatedText = Animated.createAnimatedComponent(Text);
 
-export const ScrollViewScreen = ({children}) => {
-  const {logout} = useAuth();
+export const ScrollViewScreen = ({ children }) => {
+  const { user } = useAuth();
+  const CEDULA = user.cedula;
+  const CORREO = user.user;
+  const navigation = useNavigation();
+  const [totalUnreadNotification, setTotalUnreadNotification] = useState(0);
+  const [datasupervisor, setDataSupervisor] = useState([]);
+  console.log("datasupervisor", datasupervisor);
+  console.log("setTotalUnreadNotification", totalUnreadNotification);
+  const [sound, setSound] = useState(null);
+  const [displayedInfo, setDisplayedInfo] = useState(null);
+  const fetchSupervisor = useCallback(async () => {
+    try {
+      const res = await getSupervisorCedula(CEDULA);
+      setDataSupervisor(res);
+    } catch (error) {
+      throw Error("Failed to fetch :", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      await fetchSupervisor();
+    })();
+  }, [fetchSupervisor]);
+
+  const handleNewNotification = (data) => {
+    if (data > totalUnreadNotification) {
+      playNotificationSound(setSound);
+      setTotalUnreadNotification(data);
+    } else if (data < totalUnreadNotification) {
+      setTotalUnreadNotification(data);
+    } else {
+      console.log("No hay nuevas notificaciones");
+    }
+  };
+
+  useEffect(() => {
+    const handleNotification = (data) => {
+      console.log(data, "handleNotification");
+      handleNewNotification(data);
+    };
+    const handleDefaulNotification = (data) => {
+      console.log(data, "handleDefaulNotification");
+      setTotalUnreadNotification(data);
+    };
+
+    if (socket) {
+      socket.on("notification", handleNotification);
+      socket.on("count-notification", handleDefaulNotification);
+    }
+
+    return () => {
+      if (socket) {
+        socket.off("notification", handleNotification); // Limpiar el listener cuando el componente se desmonte
+        socket.off("count-notification", handleDefaulNotification);
+      }
+      if (sound) {
+        sound.unloadAsync(); // Descargar el sonido si está cargado
+      }
+    };
+  }, [sound]);
+  const { logout } = useAuth();
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef(null);
-  
-  // const lastOffsetY = useRef(0);
-  // const scrollDirection = useRef();
+
   const animatedHeaderHeight = scrollOffsetY.interpolate({
     inputRange: [0, Scroll_Distance],
     outputRange: [Header_Max_Height, Header_Min_Height],
     extrapolate: "clamp",
   });
+
   const handleLogout = () => {
     Alert.alert(
       "Confirmación de Cierre de Sesión",
@@ -60,22 +116,24 @@ export const ScrollViewScreen = ({children}) => {
           text: "Confirmar",
           onPress: async () => {
             try {
-              Alert.alert("Cerrando sesión......... Nos vemos pronto 👋")
+              Alert.alert("Cerrando sesión......... Nos vemos pronto 👋");
               await logout();
             } catch (error) {
               console.error("Error durante el cierre de sesión:", error);
-            } 
+            }
           },
         },
       ],
       { cancelable: true }
     );
   };
+
   const animatedHeaderColor = scrollOffsetY.interpolate({
     inputRange: [0, Scroll_Distance],
-    outputRange: ["#3111F3", "#1371C3"],
+    outputRange: [ColorItem.MediumGreen, ColorItem.KellyGreen],
     extrapolate: "clamp",
   });
+
   const textInputAnimation = {
     transform: [
       {
@@ -99,10 +157,38 @@ export const ScrollViewScreen = ({children}) => {
       extrapolate: "clamp",
     }),
   };
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event) => {
+        const { y } = event.nativeEvent.contentOffset;
+        // Define el umbral donde el encabezado desaparece y el nuevo mensaje se muestra
+        if (y < 100) {
+          setDisplayedInfo(null);
+        } else if (y < 200) {
+          setDisplayedInfo(
+            <View style={{}}>
+              <Text
+                style={{
+                  marginLeft: 30,
+                  fontSize: 18,
+                  color: "white",
+                }}
+              >
+                {capitalizeFirstLetter(CORREO)}
+              </Text>
+            </View>
+          );
+        }
+      },
+    }
+  );
+
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
-
       <SafeAreaView>
         <View style={styles.upperHeaderPlaceholder} />
       </SafeAreaView>
@@ -116,57 +202,66 @@ export const ScrollViewScreen = ({children}) => {
         ]}
       >
         <View style={styles.upperHeader}>
-          <View style={styles.searchContainer}>
-            <Feather
-              size={18}
-              name="search"
+          {datasupervisor.map((item, index) => (
+            <View style={styles.searchContainer} key={item.id}>
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                {displayedInfo}
+              </Text>
+              <AnimatedText
+                style={[
+                  textInputAnimation,
+                  {
+                    marginLeft: 10,
+                    marginRight: 10,
+                  },
+                ]}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 18,
+                  }}
+                >
+                  {capitalizeFirstLetter(item.nombre)}{" "}
+                  {capitalizeFirstLetter(item.apellido)}
+                </Text>
+              </AnimatedText>
+            </View>
+          ))}
+          <TouchableOpacity
+            onPress={() => navigation.navigate("NotificationStack")}
+          >
+            <Ionicons
+              name="notifications-sharp"
+              size={24}
+              color="#ffffff"
+              style={styles.bell}
+            />
+            {totalUnreadNotification > 0 && (
+              <Badge
+                status="primary"
+                value={totalUnreadNotification}
+                containerStyle={{ position: "absolute", top: 2, left: 35 }}
+              />
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleLogout}>
+            <SimpleLineIcons
+              name="logout"
+              size={22}
               color="white"
-              style={{ marginLeft: 8 }}
+              style={styles.bell}
             />
-            <AnimatedTextInput
-              placeholder="Escribe aqui..."
-              placeholderTextColor="rgba(255, 255, 255, 0.8)"
-              style={[styles.searchInput, textInputAnimation]}
-            />
-          </View>
-         <TouchableOpacity
-         onPress={handleLogout}
-         >
-         <SimpleLineIcons
-            name="logout"
-            size={22}
-            color="white"
-            style={styles.bell}
-          />
-         </TouchableOpacity>
+          </TouchableOpacity>
         </View>
       </Animated.View>
-
       <ScrollView
         scrollEventThrottle={16}
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
-          {
-            useNativeDriver: false,
-          }
-        )}
-        // onScrollEndDrag={() => {
-        //   scrollViewRef.current?.scrollTo({
-        //     y: scrollDirection.current === 'down' ? 0 : 0,
-        //     animated: true,
-        //   });
-        // }}
+        onScroll={handleScroll}
       >
-        {
-          children
-        // DATA.map((val) => (
-        //   <View style={styles.card} key={val.id}>
-        //     <Text style={styles.subtitle}>({val.id})</Text>
-        //   </View>
-        // ))
-        }
+        {children}
       </ScrollView>
     </View>
   );
@@ -176,8 +271,6 @@ const styles = StyleSheet.create({
   headerContent: {
     width: "100%",
     zIndex: 9999,
-    // position: "absolute",
-    // backgroundColor: "#AF0C6E",
     paddingTop: Platform.OS === "android" ? 12 : 0,
   },
   upperHeaderPlaceholder: {
@@ -188,12 +281,12 @@ const styles = StyleSheet.create({
     // backgroundColor: "red",
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
+    paddingHorizontal: 13,
     height: Header_Min_Height,
     // paddingTop: 4,
   },
   searchContainer: {
-    flex: 1,
+    flexDirection: "row",
     justifyContent: "center",
   },
   searchInput: {
@@ -206,26 +299,12 @@ const styles = StyleSheet.create({
     paddingLeft: 32,
   },
   bell: {
-    marginHorizontal: 32,
+    marginHorizontal: 25,
   },
   spaceForHeader: {
-    backgroundColor: "green",
     height: Header_Max_Height,
   },
-  // card: {
-  //   height: 100,
-  //   backgroundColor: "#E6DDC4",
-  //   marginTop: 10,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  //   marginHorizontal: 10,
-  // },
-  // subtitle: {
-  //   color: "#181D31",
-  //   fontWeight: "bold",
-  // },
   scrollViewContent: {
     height: Header_Max_Height,
-    backgroundColor: "orange",
   },
 });

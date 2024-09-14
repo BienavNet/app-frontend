@@ -1,7 +1,8 @@
-import { Text, StyleSheet, View } from "react-native";
+import { Text,View } from "react-native";
 import { formatHourHHMMAMPM } from "../../../../../src/utils/functiones/functions";
 import { Divider } from "@rneui/themed";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { styles } from "../../../../styles/StylesGlobal";
 
 export const ViewDatePicker = ({ viewSelectDate }) => {
   return (
@@ -85,41 +86,3 @@ export const ViewDatePicker = ({ viewSelectDate }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  Title1: {
-    fontSize: 18,
-    fontWeight: "bold",
-    backgroundColor: "#1371C3",
-    color: "white",
-    textAlign: "center",
-    paddingVertical: 5,
-    marginBottom: 6,
-  },
-  Title11: {
-    fontSize: 18,
-    fontWeight: "bold",
-    backgroundColor: "#1371C3",
-    color: "white",
-    textAlign: "center",
-    paddingVertical: 5,
-  },
-  vertical: {
-    marginBottom: 10,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-  },
-  text: {
-    textAlign: "center",
-    padding: 5,
-    fontSize: 16,
-    fontWeight: "medium",
-  },
-  text1: {
-    textAlign: "center",
-    padding: 8,
-    fontSize: 16,
-    fontWeight: "medium",
-  },
-});

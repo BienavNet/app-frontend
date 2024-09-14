@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text, ScrollView } from "react-native";
+import { View } from "react-native";
 import {
   CustomInput,
   CustomInputCheckBox,
@@ -43,9 +43,9 @@ export const FormLogin = () => {
     try {
       await login(correo, contrasena, rol);
       showToast({
-        message: STATUS_MESSAGES[APP_STATUS.SUCCESS],
+        message: STATUS_MESSAGES[APP_STATUS.LOADED_SUCCESSFULLY],
         type: "success",
-        id: APP_STATUS.SUCCESS,
+        id: APP_STATUS.LOADED_SUCCESSFULLY,
       });
       if (user) {
         showToast({

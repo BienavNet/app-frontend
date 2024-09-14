@@ -1,0 +1,154 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { getClaseSupervisor } from "../../../../../src/services/fetchData/fetchClases";
+import { useAuth } from "../../../../../src/hooks/useAuth";
+import { useCallback, useEffect, useState } from "react";
+import {
+  capitalizeFirstLetter,
+  truncateText,
+} from "../../../../../src/utils/functiones/functions";
+import { ColorItem } from "../../../../styles/StylesGlobal";
+import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
+import { useNavigation } from "expo-router";
+
+export const CarListDocentes = () => {
+  const navigation = useNavigation();
+  const { user } = useAuth();
+  const CEDULA = user.cedula;
+  const [data, setData] = useState([]);
+  const fechtDataSupervisorId = useCallback(async () => {
+    try {
+      const res = await getClaseSupervisor(CEDULA);
+      setData(res);
+    } catch (error) {
+      throw new Error("Error getting supervisor by ID:", error);
+    }
+  }, []);
+
+  const handlePress = (data) => {
+    console.log("data selected", data);
+    navigation.navigate("RegisterReportStack", {
+      params: { data },
+    });
+  };
+
+  useEffect(() => {
+    (async () => {
+      await fechtDataSupervisorId();
+    })();
+  }, [fechtDataSupervisorId]);
+  return (
+    <>
+      {data.map((item, index) => (
+        <View key={item.id} style={styles.card}>
+          <TouchableOpacity
+            style={{
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              flexDirection: "row",
+              width: "100%",
+            }}
+            onPress={() => handlePress(item)}
+          >
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                paddingVertical: 10,
+                paddingHorizontal: 10,
+              }}
+            >
+              <MaterialCommunityIcons
+                name="google-classroom"
+                size={40}
+                color="black"
+              />
+            </View>
+
+            <View className="w-[75%]">
+              <View className="flex-row my-1">
+                <Text style={[styles.fontZise]}>
+                  {capitalizeFirstLetter(item.nombre_docente)}{" "}
+                  {capitalizeFirstLetter(item.apellido_docente)}
+                </Text>
+              </View>
+              <View className="flex-row my-1 justify-around">
+                <View className="flex">
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: ColorItem.OceanCrest,
+                      fontWeight: "500",
+                    }}
+                  >
+                    {truncateText(item.asignatura, 15)}
+                  </Text>
+                </View>
+                <View className="flex-row">
+                  <Text style={[styles.fontZise14]}>
+                    {item.numero_salon} {" · "}
+                  </Text>
+                  <Text style={[styles.fontZise14]}>
+                    {capitalizeFirstLetter(item.categoria)}
+                  </Text>
+                </View>
+              </View>
+              <View className="flex-row justify-between items-center my-1">
+                <DateChip item={new Date(item.fecha).toLocaleDateString()} />
+                <View
+                  style={{
+                    flexDirection: "row",
+                  }}
+                >
+                  <Text style={{ fontSize: 13, marginRight: 10 }}>
+                    {new Date(
+                      `${item.fecha.split("T")[0]}T${item.hora_inicio}`
+                    ).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </Text>
+                  <Text style={{ fontSize: 13 }}>
+                    {new Date(
+                      `${item.fecha.split("T")[0]}T${item.hora_fin}`
+                    ).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+      ))}
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  card: {
+    borderRadius: 8,
+    height: 100,
+    backgroundColor: "#B4B5B3",
+    marginVertical: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+  },
+  subtitle: {
+    color: "#181D31",
+    fontWeight: "bold",
+  },
+
+  fontZise: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "white",
+  },
+  fontZise14: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "white",
+  },
+});

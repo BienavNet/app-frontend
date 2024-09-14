@@ -5,6 +5,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Redirect } from "expo-router";
 import { useAuth } from "../../../src/hooks/useAuth";
 import { ColorItem } from "../../styles/StylesGlobal";
+import { initSockets } from "../../../src/utils/socket";
 
 export const TabsHome = ({
   tabsConfig,
@@ -15,6 +16,9 @@ export const TabsHome = ({
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const Tab = createBottomTabNavigator();
   const { user } = useAuth();
+  const ID = user.id
+  const ROL = user.rol
+  initSockets(ID, ROL)
   console.log("TabsHome", user);
 
   if (!user) return <Redirect href="/" />;
@@ -52,25 +56,36 @@ export const TabsHome = ({
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={({ route, navigation }) => ({
-        tabBarStyle:
-          ["Docentes", "Salones", "Dashboard", "Comentario", "Horarios"].includes(route.name) && isKeyboardVisible
-            ? { display: "none" }
-            : {
-                ...defaultTabBarStyle,
-                ...customTabBarStyle,
-              },
-        tabBarActiveTintColor: activeTinColor,
-        tabBarInactiveTintColor: inactiveTinColoe,
-        tabBarLabelStyle: {
-          fontSize: 16,
-          fontWeight: "bold",
-          paddingBottom:10
-        },
-        tabBarIconStyle:{
-          marginBottom: -10
-        }
-      })}
+      screenOptions={({ route, navigation }) => {
+        const routeName = navigation.getState()?.routes[navigation.getState().index]?.name;
+       console.log("routerName A PRUEBA", routeName)
+       const hiddenOptions =  [
+        "Docentes",
+        "Salones",
+        "Comentario",
+        "Horarios",
+        "Reportes",
+        "Clases",
+      ]
+      return {
+        tabBarStyle: hiddenOptions.includes(routeName) || isKeyboardVisible
+          ? { display: "none" }
+          : {
+              ...defaultTabBarStyle,
+              ...customTabBarStyle,
+            },
+      tabBarActiveTintColor: activeTinColor,
+      tabBarInactiveTintColor: inactiveTinColoe,
+      tabBarLabelStyle: {
+        fontSize: 16,
+        fontWeight: "bold",
+        paddingBottom: 10,
+      },
+      tabBarIconStyle: {
+        marginBottom: -10,
+      },
+      }
+      }}
     >
       {tabsConfig.map((tab, index) => (
         <Tab.Screen

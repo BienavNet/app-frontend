@@ -22,6 +22,16 @@ export const getReportSupervisorID = async (id) => {
   }
 };
 
+export const getReportSupervisorCedulaSalon = async (cedula, salon) => {
+  try {
+    const response = await axiosInstance.get(`/reporte/supervisor/${cedula}/salon/${salon}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+
 export const updateReportID = async (id, data) => {
   try {
     const response = await axiosInstance.patch(`/reporte/update/${id}`, data);
@@ -83,7 +93,6 @@ export const getDocenteQMasComentariosHaRealizado = async () => {
     );
     return response.data;
   } catch (error) {
-    console.log(Error, error.message);
     throw new Error(error.response?.data?.message);
   }
 };
@@ -95,7 +104,6 @@ export const getsalonMasComentarioTiene = async () => {
     );
     return response.data;
   } catch (error) {
-    console.log(Error, error.message);
     throw new Error(error.response?.data?.message);
   }
 };
@@ -107,7 +115,6 @@ export const getSalonMasUtilizado = async () => {
     );
     return response.data;
   } catch (error) {
-    console.log(Error, error.message);
     throw new Error(error.response?.data?.message);
   }
 };
@@ -119,7 +126,6 @@ export const getSalonMenosUtilizado = async () => {
     );
     return response.data;
   } catch (error) {
-    console.log(Error, error.message);
     throw new Error(error.response?.data?.message);
   }
 };
@@ -131,7 +137,6 @@ export const getCantidadDiaMasAsignado = async () => {
     );
     return response.data;
   } catch (error) {
-    console.log(Error, error.message);
     throw new Error(error.response?.data?.message);
   }
 };
@@ -143,7 +148,6 @@ export const getRangeHoursMasFrecuente = async () => {
     );
     return response.data;
   } catch (error) {
-    console.log(Error, error.message);
     throw new Error(error.response?.data?.message);
   }
 };

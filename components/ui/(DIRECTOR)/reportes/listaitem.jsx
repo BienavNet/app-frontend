@@ -1,5 +1,4 @@
-import React from "react";
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet } from "react-native"
 import {
   capitalizeFirstLetter,
   truncateText,

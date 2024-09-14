@@ -5,14 +5,14 @@ import {
   StyleSheet,
   Animated,
   Easing,
-  Text,View
+  Text,
+  View,
 } from "react-native";
-
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ColorItem } from "../../styles/StylesGlobal";
 import { useRef, useState } from "react";
 
-export const PopupMenu = ({ opcions }) => {
+export const PopupMenu = ({ opcions, onSelect }) => {
   const [visible, setVisible] = useState(false);
   const scale = useRef(new Animated.Value(0)).current;
 
@@ -26,18 +26,20 @@ export const PopupMenu = ({ opcions }) => {
     }).start(() => to === 0 && setVisible(false));
   }
 
+  const handleOptionSelect = (id) => {
+    if (onSelect) {
+      onSelect(id);
+    }
+
+    resizeBox(0);
+  };
   return (
     <>
-      <TouchableOpacity 
-        style={styles.menuButton}
-      onPress={() => resizeBox(1)}>
+      <TouchableOpacity style={styles.menuButton} onPress={() => resizeBox(1)}>
         <FontAwesome name="sliders" size={30} color={ColorItem.DeepFir} />
       </TouchableOpacity>
 
-      <Modal 
-      animationType="slide"
-      transparent 
-      visible={visible}>
+      <Modal animationType="slide" transparent visible={visible}>
         <SafeAreaView style={{ flex: 1 }} onTouchStart={() => resizeBox(0)}>
           <Animated.View
             style={[
@@ -62,18 +64,21 @@ export const PopupMenu = ({ opcions }) => {
                 style={[
                   styles.ButtonPopupMenu,
                   {
-                    borderBottomWidth: i === opcions.length -1 ? 0 : 1,
+                    borderBottomWidth: i === opcions.length - 1 ? 0 : 1,
                   },
                 ]}
                 key={i}
-                onPress={op.action}
+                onPress={() => {
+                  handleOptionSelect(op.id); // Llama a handleOptionSelect
+                  if (op.action) {
+                    op.action(); // Llama a op.action si existe
+                  }
+                }}
               >
                 <Text style={{ marginLeft: 10, color: "black" }}>
                   {op.title}
                 </Text>
-                <View style={{ marginLeft: 10 }}>
-                  {op.icon}
-                </View>
+                <View style={{ marginLeft: 10 }}>{op.icon}</View>
               </TouchableOpacity>
             ))}
           </Animated.View>
@@ -104,11 +109,11 @@ const styles = StyleSheet.create({
   menuButton: {
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical:8,
-    paddingHorizontal:10,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
     backgroundColor: "#fff",
     borderRadius: 4,
     margin: 2,
-    marginRight:10
+    marginRight: 10,
   },
 });

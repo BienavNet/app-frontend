@@ -73,7 +73,6 @@ export const ReportView_Filter = () => {
   );
 
   const handleOptionSelect = (option) => {
-
     setSelectedOption(option);
     setSearchText("");
     setSelectedItem(null);
@@ -371,15 +370,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  // detailsContainer: {
-  //   flex: 1,
-  //   marginHorizontal: 20,
-  //   marginVertical: 20,
-  //   // marginTop: 10,
-  //   padding: 10,
-  //   color: "black",
-  //   backgroundColor: "blue",
-  // },
   searchArea: {
     backgroundColor: "transparent",
     width: "100%",

@@ -17,7 +17,6 @@ export const getDetailHorarioOne = async (id) => {
     }
 }
 export const getDetailHorarioByHorarioID = async (id) => {
-    console.log('id entro en detail horario by horarioId', id);
     try {
         const response = await axiosInstance.get(`/horarios/detalles/timetable/${id}`);
         return response.data;

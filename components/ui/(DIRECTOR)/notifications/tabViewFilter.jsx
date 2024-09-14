@@ -24,15 +24,12 @@ const handleEditNotification = async (id) => {
 const ContentNofitications = ({ cedula, estado = "todas" }) => {
   const navigation = useNavigation();
   const [notificationall, setNotificationAll] = useState([]);
-  console.log("Content Nofitications", notificationall);
-
   const fetchNotificationsAll = useCallback(async () => {
     try {
       const res = await getNotificationCedulaEstado(cedula, estado);
-      console.log("RESponse de notification cedula x estado", res);
       setNotificationAll(res || []);
     } catch (error) {
-      console.error("Error fetching notifications:", error);
+      throw Error("Error fetching notifications:", error);
     }
   }, [estado]);
 

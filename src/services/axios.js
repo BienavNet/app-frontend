@@ -1,7 +1,4 @@
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
-
 const baseURL = process.env.EXPO_PUBLIC_URLBACKEND_API;
 const axiosInstance = axios.create({
   baseURL,

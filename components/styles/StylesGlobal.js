@@ -52,6 +52,22 @@ export const stylesColors = StyleSheet.create({
 });
 
 export const styles = StyleSheet.create({
+  Title11: {
+    fontSize: 18,
+    fontWeight: "bold",
+    backgroundColor: ColorItem.KellyGreen,
+    color: "white",
+    textAlign: "center",
+    paddingVertical: 5,
+  },
+
+  text1: {
+    textAlign: "center",
+    padding: 8,
+    fontSize: 16,
+    fontWeight: "medium",
+  },
+
   Title1: {
     fontSize: 18,
     fontWeight: "bold",
@@ -182,7 +198,7 @@ export const styles = StyleSheet.create({
     backgroundColor: ColorItem.KellyGreen, // Color del indicador de pestaña activa
   },
   label: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
   },
 });

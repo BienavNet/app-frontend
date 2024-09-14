@@ -5,7 +5,7 @@ import {
   Text,
   ScrollView,
 } from "react-native";
-import {styles} from "../../styles/StylesGlobal"
+import {ColorItem, styles} from "../../styles/StylesGlobal"
 
 
 import moment from "moment";
@@ -93,8 +93,8 @@ export default function SimpleDatePicker({
                       style={[
                         styles.item,
                         isActive && {
-                          backgroundColor: "#1371C3",
-                          borderColor: "#1371C3",
+                          backgroundColor: ColorItem.KellyGreen,
+                          borderColor: ColorItem.KellyGreen,
                         },
                       ]}
                     >

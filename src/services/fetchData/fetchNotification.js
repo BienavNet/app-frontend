@@ -17,10 +17,8 @@ export const registerNotification = async (mensaje, de, para) => {
 export const getNotificationCedulaEstado = async (cedula, estado) => {
   try {
     const response = await axiosInstance.get(`/notificaciones/obtener/${cedula}/${estado}`);
-    console.log("response", response.data)
     return response.data;
   } catch (error) {
-    console.error("Error fetching notifications:", error);
     throw new Error(error.response?.data?.message || "Unknown error");
   }
 };

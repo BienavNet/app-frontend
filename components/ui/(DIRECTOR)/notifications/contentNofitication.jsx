@@ -32,9 +32,10 @@ export default function Notification() {
         <Text
           style={[
             styles.label,
-
             { color: focused ? "#fff" : ColorItem.OceanCrest},
-            {fontWeight:focused ? "bold" : "400"},
+            {fontWeight:focused ? "bold" : "300"},
+            {width:70},
+            {fontSize:focused ? 16 : 15},
           ]}
         >
           {route.title}

@@ -184,27 +184,11 @@ export const ListComentario = () => {
           </View>
         )}
         {showSearchBar ? "" : <PopupMenu opcions={opciones} />}
-        {/* {!showSearchBar && (
-          <>
-            <TouchableOpacity
-              onPress={() => setShowSearchBar(!showSearchBar)}
-              style={{ marginRight: 10 }}
-            >
-              <FontAwesome5
-                name="search"
-                size={24}
-                color={ColorItem.MediumGreen}
-              />
-            </TouchableOpacity>
-            <PopupMenu opcions={opciones} />
-          </>
-        )} */}
       </View>
       <>
         {selectedOption && !selectedItem && (
           <FlatList
             data={list}
-            // style={styles.listFromSearchBar}
             renderItem={({ item }) => (
               <ListSelectItem
                 onPress={() => handleItemPress(item)}

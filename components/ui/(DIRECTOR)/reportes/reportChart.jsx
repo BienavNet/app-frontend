@@ -53,8 +53,8 @@ export const EstadisticasReportes = () => {
       setHoursmas(hoursmasData);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching data:", error);
       setLoading(false);
+      throw Error("Error fetching data:", error);
     }
   }, []);
 

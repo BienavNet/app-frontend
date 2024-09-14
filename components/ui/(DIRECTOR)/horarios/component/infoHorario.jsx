@@ -1,6 +1,6 @@
-import { Text, StyleSheet, View } from "react-native";
+import { Text,View } from "react-native";
 import { capitalizeFirstLetter } from "../../../../../src/utils/functiones/functions";
-
+import { styles } from "../../../../styles/StylesGlobal";
 export const InfoHorario = ({ selectedItem }) => {
   return (
     <View className="bg-white shadow-2xl rounded-lg p-3 w-full">
@@ -20,28 +20,3 @@ export const InfoHorario = ({ selectedItem }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  Title1: {
-    fontSize: 18,
-    fontWeight: "bold",
-    backgroundColor: "#1371C3",
-    color: "white",
-    textAlign: "center",
-    paddingVertical: 5,
-    marginBottom: 6,
-  },
-  text: {
-    textAlign: "center",
-    padding: 5,
-    fontSize: 16,
-    fontWeight: "medium",
-    marginBottom: 5,
-  },
-  asignatura: {
-    fontSize: 16,
-    fontWeight: "medium",
-    padding: 5,
-    marginBottom: 5,
-  },
-});

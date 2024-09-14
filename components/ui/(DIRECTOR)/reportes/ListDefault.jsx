@@ -1,18 +1,16 @@
 import { useState } from "react";
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import {
   capitalizeFirstLetter,
   truncateText,
 } from "../../../../src/utils/functiones/functions";
 import { StatusCircle } from "./components/StatusCircle";
-import TooltipText from "../../Components/customTooltipText";
 import { ColorItem } from "../../../styles/StylesGlobal";
 import { BoxView } from "../components/customBoxView";
 import { DateChip } from "./components/DateChip";
 import { FontAwesome } from "@expo/vector-icons";
 import { ListItem } from "@rneui/themed";
 export const ListViewDefault = ({ data, onPress }) => {
-  console.log(data, "<-------------------------listViewDefault data");
   const [expanded, setExpanded] = useState(false); // Estado para manejar si el acordeón está expandido
 
   return (
@@ -166,97 +164,6 @@ export const ListViewDefault = ({ data, onPress }) => {
       </ListItem>
     </ListItem.Accordion>
   );
-  // return (
-  //   <BoxView>
-  //     <TouchableOpacity onPress={onPress} style={styles.item}>
-  //       <View
-  //         style={{
-  //           flexDirection: "row",
-  //           alignItems: "center",
-  //           justifyContent: "space-between",
-  //         }}
-  //       >
-  //         <View
-  //           style={{
-  //             paddingRight: 30,
-  //           }}
-  //         >
-  //           <Text style={styles.itemP2}>
-  //             {capitalizeFirstLetter(data.nombre)}{" "}
-  //             {capitalizeFirstLetter(data.apellido)}
-  //           </Text>
-  //         </View>
-  //         <View
-  //           style={{
-  //             paddingRight: 30,
-  //           }}
-  //         >
-  //           <DateChip
-  //           item={ new Date(data.fecha).toLocaleDateString()}
-  //           />
-  //           {/* <Text style={styles.itemLeft}>{data.numero_salon}</Text> */}
-  //         </View>
-  //       </View>
-  //       <View
-  //         style={{
-  //           flexDirection: "row",
-  //           justifyContent: "space-between",
-  //         }}
-  //       >
-  //          <View
-  //           style={{
-  //             paddingRight: 30,
-  //           }}
-  //         >
-  //           <Text style={styles.itemLeft}>{data.asignatura}</Text>
-  //         </View>
-  //         <View
-  //           style={{
-  //             width: "50%",
-  //           }}
-  //         >
-  //           <Text style={styles.itemP2}>{truncateText(data.numero_salon)}</Text>
-  //         </View>
-  //       </View>
-  //       <View
-  //                     style={{
-  //                       marginBottom: 5,
-  //                       marginHorizontal: 8,
-  //                       justifyContent: "space-between",
-  //                       flexDirection: "row",
-  //                     }}
-  //                   >
-  //                     <View
-  //                       style={{
-  //                         width: "80%",
-  //                         flexDirection: "row",
-  //                       }}
-  //                     >
-  //                       <FontAwesome
-  //                         style={{
-  //                           marginTop: 2,
-  //                           marginHorizontal: 10,
-  //                         }}
-  //                         name="commenting"
-  //                         size={20}
-  //                         color={ColorItem.TarnishedSilver}
-  //                       />
-  //                       <TooltipText
-  //                         text={data.comentario}
-  //                         truncateLength={15}
-  //                       />
-  //                     </View>
-  //                     <View
-  //                       style={{
-  //                         width: "20%",
-  //                       }}
-  //                     >
-  //                       <StatusCircle item={data.estado} />
-  //                     </View>
-  //                   </View>
-  //     </TouchableOpacity>
-  //   </BoxView>
-  // );
 };
 
 const styles = StyleSheet.create({

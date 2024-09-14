@@ -1,4 +1,3 @@
-// useToastMessage.js
 import { useToast } from "react-native-toast-notifications";
 import { FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 

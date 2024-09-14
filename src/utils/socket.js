@@ -1,25 +1,35 @@
+import { useEffect, useState } from "react";
 import io from "socket.io-client";
-const SOCKET_URL = "http://10.0.2.2:5000";
 export let socket = null;
+const baseURL = process.env.EXPO_PUBLIC_URLWEBSOCKET;
+export function initSockets(userId, rol) {
+  const [unreadCount, setUnreadCount] = useState(0);
+  useEffect(() => {
+    socket = io(baseURL);
 
-export function initSockets(userId) {
-  socket = io(SOCKET_URL);
+    socket.on("connect", () => {
+      console.log("Conectado al servidor WebSocket");
+      socket.emit("authenticate", { userId, rol });
+    });
 
-  const authenticateUser = (userId) => {
-    socket.emit("authenticate", userId);
-  };
+    // Escuchar el evento de notificación
+    socket.on("send-notification-to-user", (count) => {
+      console.log("Notificaciones no leídas:", count);
+      setUnreadCount(count);
+    });
 
-  // Escuchar el evento de notificación
-  socket.on("notification", (data) => {
-    console.log("Notificaciones no leídas:", data);
-  });
+    socket.on("disconnect", () => {
+      console.log("Desconectado del servidor WebSocket");
+    });
 
-  socket.on("connect", () => {
-    console.log("Conectado al servidor WebSocket");
-    authenticateUser(userId);
-  });
+    // Limpiar la conexión cuando el componente se desmonta
+    return () => {
+      if (socket) {
+        socket.disconnect();
+        console.log("Socket desconectado");
+      }
+    };
+  }, [userId, rol]);
 
-  socket.on("disconnect", () => {
-    console.log("Desconectado del servidor WebSocket");
-  });
+  return unreadCount;
 }
