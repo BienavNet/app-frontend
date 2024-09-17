@@ -4,47 +4,48 @@ import { Badge } from "@rneui/themed";
 import { useEffect, useState } from "react";
 import { socket } from "../../src/utils/socket";
 import playNotificationSound from "../../src/utils/functiones/functions";
+import { useSocket } from "../../src/hooks/useSocket";
 
 export default function HeaderRight({ rol, navigation }) {
-  const [totalUnreadNotification, setTotalUnreadNotification] = useState(0);
-  console.log("setTotalUnreadNotification", totalUnreadNotification);
-  const [sound, setSound] = useState(null);
+  const {totalUnreadNotification} = useSocket();
+  // const [totalUnreadNotification, setTotalUnreadNotification] = useState(0);
+  // console.log("setTotalUnreadNotification", totalUnreadNotification);
+  // const [sound, setSound] = useState(null);
 
-  const handleNewNotification = (data) => {
-    if (data > totalUnreadNotification) {
-      playNotificationSound(setSound); 
-      setTotalUnreadNotification(data);
-    }
-    else if (data < totalUnreadNotification) {
-      setTotalUnreadNotification(data);
-    } else {
-      console.log("No hay nuevas notificaciones");
-    }
-  };
+  // const handleNewNotification = (data) => {
+  //   if (data > totalUnreadNotification) {
+  //     playNotificationSound(setSound);
+  //     setTotalUnreadNotification(data);
+  //   } else if (data < totalUnreadNotification) {
+  //     setTotalUnreadNotification(data);
+  //   } else {
+  //     console.log("No hay nuevas notificaciones");
+  //   }
+  // };
 
-  useEffect(() => {
-    const handleNotification = (data) => {
-      handleNewNotification(data);
-    };
-    const handleDefaulNotification = (data) => {
-      setTotalUnreadNotification(data);
-    };
-  
-    if (socket) {
-      socket.on("send-notification-to-user", handleNotification);
-      socket.on("count-notification", handleDefaulNotification )
-    }
-  
-    return () => {
-      if (socket) {
-        socket.off("send-notification-to-user", handleNotification);  // Limpiar el listener cuando el componente se desmonte
-        socket.off("count-notification", handleDefaulNotification);
-      }
-      if (sound) {
-        sound.unloadAsync(); // Descargar el sonido si está cargado
-      }
-    };
-  }, [sound,totalUnreadNotification]);
+  // useEffect(() => {
+  //   const handleNotification = (data) => {
+  //     handleNewNotification(data);
+  //   };
+  //   const handleDefaulNotification = (data) => {
+  //     setTotalUnreadNotification(data);
+  //   };
+
+  //   if (socket) {
+  //     socket.on("send-notification-to-user", handleNotification);
+  //     socket.on("count-notification", handleDefaulNotification);
+  //   }
+
+  //   return () => {
+  //     if (socket) {
+  //       socket.off("send-notification-to-user", handleNotification); // Limpiar el listener cuando el componente se desmonte
+  //       socket.off("count-notification", handleDefaulNotification);
+  //     }
+  //     if (sound) {
+  //       sound.unloadAsync(); // Descargar el sonido si está cargado
+  //     }
+  //   };
+  // }, [sound, totalUnreadNotification]);
 
   return (
     <View

@@ -19,7 +19,7 @@ export const FormLogin = () => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const router = useRouter();
   const { login, isAuthenticated, user } = useAuth();
-  console.log(user, "user en login test");
+
   const {
     handleSubmit,
     control,

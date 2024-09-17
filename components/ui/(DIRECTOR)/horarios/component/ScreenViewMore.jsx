@@ -111,7 +111,7 @@ function ScreenViewMore(props) {
             renderInfoItem(item, isFirst)
           )
         }}
-        minDate={"2024-01-01"}
+        minDate="2024-01-01"
       />
     </SafeAreaView>
   );

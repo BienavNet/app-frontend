@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Octicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { getClaseSupervisor } from "../../../../../src/services/fetchData/fetchClases";
 import { useAuth } from "../../../../../src/hooks/useAuth";
@@ -26,10 +26,7 @@ export const CarListDocentes = () => {
   }, []);
 
   const handlePress = (data) => {
-    console.log("data selected", data);
-    navigation.navigate("RegisterReportStack", {
-      params: { data },
-    });
+    navigation.navigate("RegistrarReporte", { data });
   };
 
   useEffect(() => {
@@ -66,11 +63,26 @@ export const CarListDocentes = () => {
             </View>
 
             <View className="w-[75%]">
-              <View className="flex-row my-1">
+              <View className="flex-row my-1 justify-between">
                 <Text style={[styles.fontZise]}>
                   {capitalizeFirstLetter(item.nombre_docente)}{" "}
                   {capitalizeFirstLetter(item.apellido_docente)}
                 </Text>
+                {
+  item.comentario && item.comentario.length > 0 ? (
+    <View>
+      <MaterialCommunityIcons
+        style={{
+          marginTop: 3,
+          marginHorizontal: 10,
+        }}
+        name="read"
+        size={22}
+        color="black"
+      />
+    </View>
+  ) : null
+}
               </View>
               <View className="flex-row my-1 justify-around">
                 <View className="flex">
@@ -131,7 +143,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     height: 100,
     backgroundColor: "#B4B5B3",
-    marginVertical: 8,
+    marginVertical: 5,
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 10,

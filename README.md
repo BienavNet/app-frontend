@@ -149,3 +149,8 @@ library that provides separate APIs for Audio and Video playback.
 
 install y uso del webscoket
 > npm install socket.io-client
+
+//Expo LinearGradient 
+> npx expo install expo-linear-gradient
+
+npm i lodash.isempty

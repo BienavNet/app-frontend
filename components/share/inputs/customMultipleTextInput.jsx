@@ -2,6 +2,7 @@ import { useState } from "react";
 import { View, Text, StatusBar, StyleSheet } from "react-native";
 import { Controller } from "react-hook-form";
 import { TextInput } from "@react-native-material/core";
+import { ColorItem } from "../../styles/StylesGlobal";
 
 export const MultilineTextInput = ({
   numberOfLines = 10,
@@ -11,8 +12,7 @@ export const MultilineTextInput = ({
   errors,
 }) => {
   const [charCount, setCharCount] = useState(0);
-  const maxLength = 255;
-  console.log("charCount:" + charCount);
+  const maxLength = 250;
   const handleTextChange = (text) => {
     setCharCount(text.length); // Contamos los caracteres del texto
     return text;
@@ -28,26 +28,20 @@ export const MultilineTextInput = ({
       }) => (
         <View
           style={{
-            flex:1,
+            flex: 1,
           }}
         >
           <TextInput
-            style={[
-              styles.MultilineText,
-              {
-                height:110,
-              },
-            ]}
+            style={{
+              height: 150,
+            }}
             autoCorrect={false}
             autoCapitalize="none"
-            color={`${error ? "red" : "#1371C3"}`}
-            // className={`bg-black/5  w-full ${
-            //   error ? "border-red-500" : "border-slate-400"
-            // } border`}
+            color={`${error ? "red" : ColorItem.GreenSymphony}`}
             variant="outlined"
             editable
             placeholder={placeholder}
-            placeholderTextColor="blue"
+            placeholderTextColor={ColorItem.DeepFir}
             autoComplete="off"
             multiline
             onChangeText={(text) => {
@@ -56,7 +50,6 @@ export const MultilineTextInput = ({
                 onChange(text); // Pasamos el texto actualizado al formulario
               }
             }}
-            
             onBlur={onBlur}
             value={value}
             numberOfLines={numberOfLines}
@@ -66,31 +59,19 @@ export const MultilineTextInput = ({
               borderBottomWidth: error ? 2 : null,
             }}
           />
-
+          {errors && (
+            <Text style={{ color: "red", fontSize: 16, paddingTop: 5 }}>
+              {errors.message}
+            </Text>
+          )}
           {/* Contador de caracteres */}
-          <View
-            className="flex-row justify-end"
-            style={{
-              paddingTop: StatusBar.currentHeight,
-            }}
-          > 
+          <View className="flex-row justify-end">
             <Text style={{ color: "black", fontSize: 14 }}>
               {charCount} / {maxLength} caracteres
             </Text>
           </View>
-
-          {errors && (
-            <Text style={{ color: "red", fontSize: 16 }}>{errors.message}</Text>
-          )}
         </View>
       )}
     />
   );
 };
-
-const styles = StyleSheet.create({
-  MultilineText: {
-    minHeight: 100,
-    textAlignVertical: "top",
-  },
-});

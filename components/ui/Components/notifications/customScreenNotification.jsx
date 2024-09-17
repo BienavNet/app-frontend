@@ -1,6 +1,5 @@
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { ColorItem } from "../../../styles/StylesGlobal";
-import Feather from "@expo/vector-icons/Feather";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import { Avatar } from "@rneui/themed";
 import { useCallback, useState } from "react";
 import {
@@ -8,10 +7,9 @@ import {
   updateNotificationId,
 } from "../../../../src/services/fetchData/fetchNotification";
 import { useFocusEffect } from "expo-router";
-import { useAuth } from "../../../../src/hooks/useAuth";
-import { DateChip } from "../reportes/components/DateChip";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { DateChip } from "../../(DIRECTOR)/reportes/components/DateChip";
+import { ColorItem } from "../../../styles/StylesGlobal";
 
 const handleEditNotification = async (id) => {
   try {
@@ -21,7 +19,7 @@ const handleEditNotification = async (id) => {
   }
 };
 
-const ContentNofitications = ({ cedula, estado = "todas" }) => {
+export const ContentNofitications = ({ cedula, estado = "todas" }) => {
   const navigation = useNavigation();
   const [notificationall, setNotificationAll] = useState([]);
   const fetchNotificationsAll = useCallback(async () => {
@@ -65,10 +63,7 @@ const ContentNofitications = ({ cedula, estado = "todas" }) => {
               borderBottomWidth: 1,
               borderColor: ColorItem.DeepFir,
               padding: 10,
-              backgroundColor:
-                item.estado === "leida"
-                  ? "#fff"
-                  : "#ecf3ff",
+              backgroundColor: item.estado === "leida" ? "#fff" : "#ecf3ff",
             }}
           >
             <View
@@ -109,7 +104,7 @@ const ContentNofitications = ({ cedula, estado = "todas" }) => {
                       color: "black",
                       fontSize: 15,
                       paddingBottom: 10,
-                      paddingLeft:5,
+                      paddingLeft: 5,
                     }}
                   >
                     {item.mensaje}
@@ -162,22 +157,4 @@ const ContentNofitications = ({ cedula, estado = "todas" }) => {
       </>
     </ScrollView>
   );
-};
-
-export const FilterNotRead = () => {
-  const { user } = useAuth();
-  const CEDULA = user.cedula;
-  return <ContentNofitications estado="no leida" cedula={CEDULA} />;
-};
-
-export const FilterRead = () => {
-  const { user } = useAuth();
-  const CEDULA = user.cedula;
-  return <ContentNofitications estado="leida" cedula={CEDULA} />;
-};
-
-export const NotificationAll = () => {
-  const { user } = useAuth();
-  const CEDULA = user.cedula;
-  return <ContentNofitications cedula={CEDULA} />;
 };

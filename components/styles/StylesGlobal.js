@@ -23,7 +23,6 @@ export const ColorItem = {
   OceanCrest:"#D6DEDE",
   GoldOre:"#EBC115",
   DeepSkyBlue:"#0D6EFD",
-  Luigi:"#43B21E",
 }
 
 export const stylesColors = StyleSheet.create({
@@ -38,7 +37,6 @@ export const stylesColors = StyleSheet.create({
   ColorOceanCrest: { color: "#D6DEDE" },
   ColorGoldOre: { color: "#EBC115" },
   ColorDeepSkyBlue: { color: "#0D6EFD" },
-  ColorLuigi: {color: "#43B21E",},
   BackgroundGreenSymphony: { backgroundColor: "#67A623" },
   BackgroundKellyGreen: { backgroundColor: "#3C9B61" },
   BackgroundMediumGreen: { backgroundColor: "#388253" },

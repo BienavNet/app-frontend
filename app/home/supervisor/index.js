@@ -1,15 +1,12 @@
 import { TabsHome } from "../../../components/share/navigations/tabsHome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { ContentIndex } from "./content";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TouchableOpacity, View, StyleSheet } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import NotificationStackScreenSu from "../../../components/ui/(SUPERVISOR)/notifications/screenNotifications";
-import StackModalRegisterReport from "../../../components/ui/(SUPERVISOR)/components/modal/stackModal";
 import Entypo from "@expo/vector-icons/Entypo";
 import { IndexReportesSupervisor } from "../../../components/ui/(SUPERVISOR)/reportes/indexReporte";
 import { IndexClases } from "../../../components/ui/(SUPERVISOR)/clases/indexClases";
 import { DrawerHome } from "../../../components/share/navigations/DrawerNavigation";
+import { IndexListSupervisor } from "../../../components/ui/(SUPERVISOR)/Home/screenHome";
 const CustomTabBarButton = ({ children, onPress }) => {
   return (
     <TouchableOpacity
@@ -33,36 +30,6 @@ const CustomTabBarButton = ({ children, onPress }) => {
     </TouchableOpacity>
   );
 };
-
-// const Stack = createNativeStackNavigator();
-// const HomeStack = () => {
-//   return (
-//     <Stack.Navigator>
-//       <Stack.Screen
-//         name="Home"
-//         component={ContentIndex}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="NotificationStack"
-//         component={NotificationStackScreenSu}
-//         options={{
-//           headerShown: false,
-//           drawerItemStyle: { display: "none" },
-//         }}
-//       />
-//       <Stack.Screen
-//         name="RegisterReportStack"
-//         component={StackModalRegisterReport}
-//         options={{
-//           headerShown: false,
-//           drawerItemStyle: { display: "none" },
-//         }}
-//       />
-//     </Stack.Navigator>
-//   );
-// };
-
 export const IndexSupervisor = (props) => {
   const TabBarStyle = {
     display: "flex",
@@ -78,7 +45,7 @@ export const IndexSupervisor = (props) => {
   const tabsSupervisor = [
     {
       name: "Dashboard",
-      component: ContentIndex,
+      component: IndexListSupervisor,
       options: {
         headerShown: false,
         tabBarLabel: "",
@@ -123,8 +90,7 @@ export const IndexSupervisor = (props) => {
   );
 };
 export const HomeSupervisor = () => {
-  const SIZE = 26;
-  const directorDrawerScreens = [
+  const supervisorDrawerScreens = [
     {
       name: "Home",
       component: IndexSupervisor,
@@ -133,30 +99,8 @@ export const HomeSupervisor = () => {
         drawerItemStyle: { display: "none" },
       },
     },
-    // {
-    //   name: "Supervisor",
-    //   component: IndexSupervisor,
-    //   options: {
-    //     drawerIcon: ({ color }) => (
-    //       <MaterialIcons
-    //         name="supervised-user-circle"
-    //         size={SIZE}
-    //         color={color}
-    //       />
-    //     ),
-    //   },
-    // },
-    // {
-    //   name: "Comentario",
-    //   component: IndexComentario,
-    //   options: {
-    //     drawerIcon: ({ color }) => (
-    //       <FontAwesome6 name="commenting" size={SIZE} color={color} />
-    //     ),
-    //   },
-    // },
   ];
-  return <DrawerHome drawerScreens={directorDrawerScreens} />;
+  return <DrawerHome drawerScreens={supervisorDrawerScreens} />;
 };
 
 const styles = StyleSheet.create({

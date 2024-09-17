@@ -1,30 +1,25 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { usePathname, useRouter } from "expo-router";
-import Loading from "../../components/share/loading";
+import { useRouter } from "expo-router";
 export const PublicRoute = (props) => {
-  const {children } = props;
+  const { children } = props;
   const auth = useAuth();
   const router = useRouter();
   const [isVerified, setIsVerified] = useState(false);
-  const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
-  console.log("auth PublicRoute: ", auth);
 
   useEffect(() => {
     if (isMounted) {
       if (auth.isAuthenticated) {
-        console.log(pathname, "pathname public route entro a home");
         router.replace("/home");
       } else {
         setIsVerified(true);
       }
-     }
-  }, [auth.isAuthenticated,router, isMounted]);
-
-  return isVerified ? <>{children}</>: null;
+    }
+  }, [auth.isAuthenticated, router, isMounted]);
+  return isVerified ? <>{children}</> : null;
 };

@@ -1,8 +1,10 @@
 import { Slot } from "expo-router";
 import { AuthProvider, AuthContext } from "../src/context/JWTAuthContext";
+import { NotificationProvider } from "../src/context/SocketContext";
 import Loading from "../components/share/loading";
 import { ToastProvider } from "react-native-toast-notifications";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ColorItem } from "../components/styles/StylesGlobal";
 
 //app
 export default LayoutApp = () => {
@@ -10,17 +12,17 @@ export default LayoutApp = () => {
     <SafeAreaProvider>
       <ToastProvider>
         <AuthProvider>
-          <AuthContext.Consumer>
-            {(auth) =>
-              !auth.isInitialized ? (
-                <Loading color="#0000ff" />
-              ) : (
-                <>
+          <NotificationProvider>
+            <AuthContext.Consumer>
+              {(auth) =>
+                !auth.isInitialized ? (
+                  <Loading color={ColorItem.KellyGreen} />
+                ) : (
                   <Slot />
-                </>
-              )
-            }
-          </AuthContext.Consumer>
+                )
+              }
+            </AuthContext.Consumer>
+          </NotificationProvider>
         </AuthProvider>
       </ToastProvider>
     </SafeAreaProvider>

@@ -71,7 +71,7 @@ export default function Index() {
               }}
             >
               <Text style={styles.titleWelcome} className="text-UPCDeepFir">
-                Welcome
+                Bienvenido
               </Text>
             </View>
             <FormLogin />

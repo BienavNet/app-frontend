@@ -11,12 +11,12 @@ import { ColorItem } from "../../styles/StylesGlobal";
 import NotificationStackScreen from "../../ui/(DIRECTOR)/notifications/screenNotifications";
 
 export const DrawerHome = ({ drawerScreens }) => {
+  const Drawer = createDrawerNavigator();
   const { user } = useAuth();
+  const ROL = user.rol;
   if (!user) {
     return <Redirect href="/" />;
   }
-
-  const Drawer = createDrawerNavigator();
 
   return (
     <Drawer.Navigator
@@ -41,12 +41,14 @@ export const DrawerHome = ({ drawerScreens }) => {
 
         headerLeft: () => {
             return (
+             ROL === "director" &&(
               <HeaderLeft
-                onPress={() => {
-                  navigation.dispatch(DrawerActions.openDrawer());
-                }}
-                icon={<FontAwesome6 name="bars-staggered" size={30} color="#ffffff" />}
-              />
+              onPress={() => {
+                navigation.dispatch(DrawerActions.openDrawer());
+              }}
+              icon={<FontAwesome6 name="bars-staggered" size={30} color="#ffffff" />}
+            />
+             )
             );
           // }
         },

@@ -1,4 +1,5 @@
 import { Audio } from "expo-av";
+import moment from "moment";
 
 // Función para reproducir el sonido de notificación
 export default async function playNotificationSound(setSound) {
@@ -91,3 +92,28 @@ export const formatTimeTo12Hour = (time24) => {
   const hour12 = hourInt % 12 || 12;
   return `${hour12}:${minute} ${ampm}`;
 };
+
+
+// Función para obtener las fechas futuras y deshabilitarlas
+  export const getFutureDatesDisabled = (minDate) => {
+    const marked = {};
+    const currentDate = moment().format("YYYY-MM-DD"); // Obtener la fecha actual
+    let date = moment(minDate); // Comenzar desde la fecha mínima
+  
+    // Iterar desde la fecha mínima hasta la fecha actual
+    while (date.isSameOrBefore(currentDate)) {
+      const dateString = date.format("YYYY-MM-DD"); // Formatear la fecha como string
+      marked[dateString] = { disabled: false }; // Habilitar las fechas hasta hoy
+      date = date.add(1, 'days'); // Avanzar un día
+    }
+  
+    // Deshabilitar todos los días futuros excepto el día actual
+    const tomorrow = moment().add(1, 'days');
+    while (tomorrow.isBefore(moment("2025-01-01"))) {
+      const futureDateString = tomorrow.format("YYYY-MM-DD");
+      marked[futureDateString] = { disabled: true }; // Deshabilitar días futuros
+      tomorrow.add(1, 'days'); // Avanzar un día
+    }
+  
+    return marked;
+}

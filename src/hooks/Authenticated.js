@@ -1,25 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { useRouter, usePathname} from "expo-router";
-import Loading from "../../components/share/loading";
+import { useRouter } from "expo-router";
 
 export const Authenticated = (props) => {
   const { children } = props;
   const auth = useAuth();
   const [isVerified, setIsVerified] = useState(false);
-   const router = useRouter();
-   console.log("auth authentication: ", auth);
- 
+  const router = useRouter();
   useEffect(() => {
-      if (!auth.isAuthenticated) {
-        console.log(pathname, "pathname autenticated entro a /")
-        router.replace('/');
-      } else {
-        setIsVerified(true);
-      }
-    
+    if (!auth.isAuthenticated) {
+      router.replace("/");
+    } else {
+      setIsVerified(true);
+    }
   }, [auth.isAuthenticated, router]);
-
-
-  return isVerified ? <>{children}</> :null;
+  return isVerified ? <>{children}</> : null;
 };

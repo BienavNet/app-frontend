@@ -2,10 +2,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { ColorItem } from "../../styles/StylesGlobal";
 import HeaderLeft from "../../share/headerhomeLeft";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-const Stack = createStackNavigator();
 
+const Stack = createStackNavigator();
 const CustomStack = ({ initialRouteName, screens }) => {
-  const notificationScreens = ["NotificationScreen", "ListClasscreen", "ListReportScreen"]; // solo las pantallas que esten en el array se le agg un button personalizado de back.
+  const notificationScreens = ["NotificationScreen", "ListClasscreen", "ListReportScreen" , "ClasesRegistro", "ComentariosDocente", "HorariosDocente"]; // solo las pantallas que esten en el array se le agg un button personalizado de back.
   return (
     <Stack.Navigator initialRouteName={initialRouteName}>
       {screens.map((screen, index) => (
@@ -54,5 +54,4 @@ const CustomStack = ({ initialRouteName, screens }) => {
     </Stack.Navigator>
   );
 };
-
 export default CustomStack;
