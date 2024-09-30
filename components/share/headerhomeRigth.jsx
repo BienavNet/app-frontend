@@ -1,10 +1,10 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Badge } from "@rneui/themed";
-import { useEffect, useState } from "react";
-import { socket } from "../../src/utils/socket";
-import playNotificationSound from "../../src/utils/functiones/functions";
-import { useSocket } from "../../src/hooks/useSocket";
+import { useSocket } from "../../src/hooks/use/useSocket";
+// import { useEffect, useState } from "react";
+// import { socket } from "../../src/utils/socket";
+// import playNotificationSound from "../../src/utils/functiones/functions";
 
 export default function HeaderRight({ rol, navigation }) {
   const {totalUnreadNotification} = useSocket();

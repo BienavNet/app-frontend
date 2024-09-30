@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, StatusBar, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { Controller } from "react-hook-form";
 import { TextInput } from "@react-native-material/core";
 import { ColorItem } from "../../styles/StylesGlobal";

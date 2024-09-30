@@ -199,4 +199,18 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
   },
+
+  //checkebox filter
+  contenCheckbox: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+  },
+  itemInfo: {
+    marginLeft: 20,
+  },
+  textinfo: {
+    fontSize: 18,
+    color: "black",
+  },
 });

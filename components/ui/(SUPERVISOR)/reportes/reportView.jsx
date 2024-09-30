@@ -6,41 +6,35 @@ import {
   FlatList,
   SafeAreaView,
 } from "react-native";
-import { getReportSupervisorCedulaSalon, getReportSupervisorID } from "../../../../src/services/fetchData/fetchReporte";
-import { useAuth } from "../../../../src/hooks/useAuth";
+import {
+  getReportSupervisorCedulaSalon,
+  getReportSupervisorID,
+} from "../../../../src/services/fetchData/fetchReporte";
 import { useFocusEffect } from "@react-navigation/native";
 import { ColorItem } from "../../../styles/StylesGlobal";
 import { getSupervisorCedula } from "../../../../src/services/fetchData/fetchSupervisor";
-import {  MaterialCommunityIcons } from "@expo/vector-icons";
 import { SearchBar } from "@rneui/themed";
-import { PopupMenu } from "../../Components/popupMenu";
 import ListFilterReport from "./components/listFilter";
 import { ListReportDefault } from "./components/listDefault";
-import { getSalon } from "../../../../src/services/fetchData/fetchSalon";
 import ListSelectItem from "./components/listSelectItem";
+import { ModalComponente } from "../../Components/customModal";
+import { Divider } from "@rneui/themed";
+import { Reset_Filter } from "../components/button/buttonReset&Filter";
+import { useSalonAll } from "../../../../src/hooks/customHooks";
+import { userData } from "../../../../src/hooks/use/userData";
+import { ChildFilter } from "../components/chid/chidFilter";
+
 export const ViewReportSup = () => {
-  const { user } = useAuth();
-  const CEDULA = user.cedula;
-  const [reportdefault, setReportDefault] = useState([]);
-  const [list, setList] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [showSearchBar, setShowSearchBar] = useState(false);
-  const [searchText, setSearchText] = useState("");
-  const [selectedItem, setSelectedItem] = useState([]);
-  const [salonAll, setSalonAll] = useState([]);
+  const { CEDULA } = userData();
+  const [reportdefault, setReportDefault] = useState([]); // lista que se muestra por defecto
+  const [list, setList] = useState([]); // lista de los datos filtrados
+  const [selectedOption, setSelectedOption] = useState(null); //
+  const [searchText, setSearchText] = useState(""); // para buscar en searchBar
+  const [selectedItem, setSelectedItem] = useState(null); // item de la lista  seleccionado
+  const salonAll = useSalonAll(); // recupero la lista de todos los salones
   const [additionalData, setAdditionalData] = useState([]);
-  console.log("additionalData", additionalData)
-
-
-  const fetchSalonAll = useCallback(async () => {
-    try {
-      const res = await getSalon();
-      console.log("response del all salon", res);
-      setSalonAll(res);
-    } catch (error) {
-      throw Error("Failted to get SupervisorID", error);
-    }
-  }, []);
+  const [modalSelect, setModalSelect] = useState(false); // estado del modal
+  const [temporarySelection, setTemporarySelection] = useState(null); // obtiene el item temporal mientras se le aplica en el boton de filtrar
 
   const fetchReportSupervisorID = useCallback(async () => {
     try {
@@ -57,38 +51,27 @@ export const ViewReportSup = () => {
     } catch (error) {
       throw Error("Failted to get SupervisorID", error);
     }
-  }, []);
+  }, [CEDULA]);
 
   useFocusEffect(
     useCallback(() => {
       fetchReportSupervisorID();
-      fetchSalonAll();
-    }, [fetchReportSupervisorID, fetchSalonAll])
+      // fetchSalonAll();
+    }, [fetchReportSupervisorID])
   );
+
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setSearchText("");
-    setSelectedItem(null);
-    setShowSearchBar(true);
-    switch (selectedOption) {
+    switch (option) {
       case "salones":
         setList(salonAll);
         break;
       default:
         setList([]);
     }
+    setModalSelect(true);
   };
-
-  const opciones = [
-    {
-      title: "salones",
-      icon: (
-        <MaterialCommunityIcons name="home-modern" size={24} color="black" />
-      ),
-      action: () => handleOptionSelect("salones"),
-    },
-  ];
-
 
   useEffect(() => {
     if (searchText === "" && selectedOption) {
@@ -104,26 +87,23 @@ export const ViewReportSup = () => {
     }
   }, [searchText, selectedOption]);
 
-  const handleSearchBarClear = () => {
-    setSearchText("");
-    setShowSearchBar(false); 
-    setSelectedOption(null); 
-    setSelectedItem(null); 
-    setList([]);
-  };
-  const handleItemPress = (item) => {
-    setSelectedItem(item); // Establecer el ítem seleccionado
-    setList([]);
+  const handleItemPress = (item, isSelected) => {
+  console.log("item : ",item + " is selected : ", isSelected)
+    if (isSelected) {
+      setTemporarySelection(item); // Si se selecciona, guarda el ítem
+    } else {
+      setTemporarySelection(null);
+    }
   };
 
   useEffect(() => {
     const fetchAdditionalData = async () => {
-      if (selectedItem) {
+      if (selectedItem && selectedOption) {
         try {
           let data;
           if (selectedOption === "salones") {
             data = await getReportSupervisorCedulaSalon(CEDULA, selectedItem.id);
-            console.log(data, "datos del reposrte supervisor cedula y salon");
+            console.log(data, "datos del reporte supervisor cedula y salon");
           }
           setAdditionalData(data);
         } catch (error) {
@@ -131,88 +111,166 @@ export const ViewReportSup = () => {
         }
       }
     };
-    
+
     fetchAdditionalData();
   }, [selectedItem, selectedOption]); // Dependencias para volver a ejecutar el efecto
-  
+
+  const handleCloseSelectOption = async () => {
+    setModalSelect(false);
+    setSearchText("");
+    setSelectedOption(null);
+    setSelectedItem(null);
+    setList([]);
+  };
+
+  const applyFilter = () => {
+    if (temporarySelection) {
+      setSelectedItem(temporarySelection);
+      setModalSelect(false);
+    }
+  };
   return (
-    <SafeAreaView style={styles.container}>
-      <View className="flex-row justify-end">
-        {showSearchBar && (
-          <View style={styles.searchArea}>
-            <SearchBar
-              platform="android"
-              containerStyle={styles.search}
-              loadingProps={{
-                size: "small",
-              }}
-              onChangeText={(t) => setSearchText(t)}
-              placeholder={`Buscar ${selectedOption}`}
-              placeholderTextColor={ColorItem.DeepFir}
-              cancelButtonTitle="Cancel"
-              value={searchText}
-              onCancel={handleSearchBarClear}
-              onClear={handleSearchBarClear}
-            />
-          </View>
+    <>
+      <SafeAreaView style={styles.container}>
+        <ChildFilter
+          selectedItem={selectedItem}
+          title="Salones "
+          action={() => handleOptionSelect("salones")}
+        />
+
+        {/* //informacion que se mostrara por default */}
+        {!selectedOption && (
+          <FlatList
+            data={reportdefault}
+            style={styles.list}
+            renderItem={({ item }) => <ListReportDefault data={item} />}
+            keyExtractor={(item) =>
+              `${item.reporte_id.toString()}-${item.clase_id.toString()}`
+            }
+            ListEmptyComponent={
+              <Text style={styles.noResultsText}>No hay resultados.</Text>
+            }
+          />
         )}
-        {showSearchBar ? "" : <PopupMenu opcions={opciones} />}
-      </View>
 
-      {/* //informacion que se mostrara por default */}
-      {!selectedOption && (
-        <FlatList
-          data={reportdefault}
-          style={styles.list}
-          renderItem={({ item }) => <ListReportDefault data={item} />}
-          keyExtractor={(item) => (`${item.reporte_id.toString()}-${item.clase_id.toString()}`)}
-          ListEmptyComponent={
-            <Text style={styles.noResultsText}>No hay resultados.</Text>
-          }
+        {/* //informacion que se mostrara segun el filtro seleccionado */}
+        {selectedItem && (
+          <>
+            {selectedOption === "salones" && additionalData && (
+              <>
+                <FlatList
+                  data={additionalData}
+                  style={styles.list}
+                  renderItem={({ item }) => <ListSelectItem data={item} />}
+                  keyExtractor={(item) =>
+                    `${item.clase.toString()}-${item.docente_id}`
+                  }
+                  ListEmptyComponent={
+                    <Text style={styles.noResultsText}>No hay resultados.</Text>
+                  }
+                />
+              </>
+            )}
+          </>
+        )}
+      </SafeAreaView>
+
+      <ModalComponente
+        modalStyle={{ height: "75%" }}
+        handleCloseModal={handleCloseSelectOption}
+        animationType="slide"
+        transparent={true}
+        modalVisible={modalSelect}
+        canCloseModal={true}
+      >
+        <View style={styles.searchArea}>
+          <SearchBar
+            platform="android"
+            containerStyle={styles.search}
+            loadingProps={{
+              size: "small",
+            }}
+            onChangeText={(t) => setSearchText(t)}
+            placeholder={`Buscar ${selectedOption}`}
+            placeholderTextColor={ColorItem.DeepFir}
+            cancelButtonTitle="Cancel"
+            value={searchText}
+          />
+        </View>
+        <Divider
+          style={{
+            paddingVertical: 5,
+          }}
+          width={1}
         />
-      )}
+        {/* //lista desplegable segun el filtro seleccionado*/}
+        <View
+          style={{
+            paddingVertical: 10,
+            paddingHorizontal: 15,
+          }}
+        >
 
-      {/* //lista desplegable segun el filtro seleccionado*/}
-      {selectedOption && !selectedItem && (
-        <FlatList
-          data={list}
-          style={styles.listFromSearchBar}
-          renderItem={({ item }) => (
-            <ListFilterReport
-              data={item}
-              selectedOption={selectedOption}
-              onPress={() => handleItemPress(item)}
-            />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          ListEmptyComponent={
-            <Text style={styles.noResultsText}>
-              No coinciden los resultados
-            </Text>
-          }
-        />
-      )}
-
-      {selectedItem && (
-        <>
-          {selectedOption === "salones" && additionalData && (
-            <>
-              <FlatList
-                data={additionalData}
-                style={styles.list}
-                renderItem={({ item }) => <ListSelectItem data={item} />}
-                keyExtractor={(item) => `${item.clase.toString()}-${item.docente_id}`}
-                ListEmptyComponent={
-                  <Text style={styles.noResultsText}>No hay resultados.</Text>
-                }
+          {selectedOption &&
+            // !selectedItem &&
+            list.map((item) => (
+              <ListFilterReport
+                data={item}
+                temporarySelection={temporarySelection}
+                key={item.id.toString()}
+                selectedOption={selectedOption}
+                onPress={handleItemPress}
               />
-            </>
-          )}
-        </>
-      )}
-    </SafeAreaView>
+            ))}
+
+          <Divider
+            style={{
+              paddingVertical: 5,
+            }}
+            width={1}
+          />
+          <View
+            style={{
+              paddingVertical: 15,
+              flexDirection: selectedItem ? "row" : "column",
+            }}
+          >
+            <View
+              style={{
+                width: selectedItem ? "50%" : "",
+                paddingHorizontal: 5,
+              }}
+            >
+              {selectedItem && (
+                <Reset_Filter
+                  backgroundColor={ColorItem.TarnishedSilver}
+                  title="Borrar filtros"
+                  colorText="#151515"
+                  onPress={handleCloseSelectOption}
+                />
+              )}
+            </View>
+
+            <View
+              style={{
+                width: selectedItem ? "50%" : "100%",
+                paddingHorizontal: 5,
+              }}
+            >
+              <Reset_Filter
+                backgroundColor={ColorItem.MediumGreen}
+                title="Filtrar"
+                colorText="white"
+                onPress={applyFilter}
+              />
+            </View>
+          </View>
+        </View>
+      </ModalComponente>
+    </>
   );
 };
+
 const styles = StyleSheet.create({
   item: {
     marginHorizontal: 8,
@@ -247,20 +305,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: ColorItem.TarnishedSilver,
     fontWeight: "bold",
-  },  searchArea: {
-    backgroundColor: "transparent",
-    width: "100%",
-    height: "100%",
-    flexDirection: "row",
+  },
+  searchArea: {
+    justifyContent: "center",
     alignItems: "center",
+
+    // flexDirection: "row",
+    // alignItems: "center",
   },
   search: {
-    borderBottomWidth: 1,
-    borderBottomColor: ColorItem.KellyGreen,
-    backgroundColor: "transparent",
-    marginRight: 30,
+    borderRadius: 10,
+    width: "100%",
+    backgroundColor: ColorItem.Zircon,
     flex: 1,
-    height: "100%",
     fontSize: 19,
   },
 });

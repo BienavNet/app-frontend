@@ -1,6 +1,6 @@
 import { Text,View } from "react-native";
-import { capitalizeFirstLetter } from "../../../../../src/utils/functiones/functions";
-import { styles } from "../../../../styles/StylesGlobal";
+import { capitalizeFirstLetter } from "../../../../../../src/utils/functiones/functions";
+import { styles } from "../../../../../styles/StylesGlobal";
 export const InfoHorario = ({ selectedItem }) => {
   return (
     <View className="bg-white shadow-2xl rounded-lg p-3 w-full">

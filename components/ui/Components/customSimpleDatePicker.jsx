@@ -1,34 +1,47 @@
-import { useState, useRef, useMemo } from "react";
-import {
-  TouchableWithoutFeedback,
-  View,
-  Text,
-  ScrollView,
-} from "react-native";
-import {ColorItem, styles} from "../../styles/StylesGlobal"
-
-
+import { useState, useRef, useMemo, useEffect } from "react";
+import { TouchableWithoutFeedback, View, Text, ScrollView } from "react-native";
+import { ColorItem, styles } from "../../styles/StylesGlobal";
 import moment from "moment";
-import "moment/locale/es"
+import "moment/locale/es";
 import Swiper from "react-native-swiper";
 import { NotRegistrationDate } from "../../share/noRegistration";
 import { ViewDatePicker } from "../(DIRECTOR)/horarios/component/viewDatePicker";
-
 // Configuracion moment para usar español 'es'
-moment.locale('es');
+moment.locale("es");
 export default function SimpleDatePicker({
   selectedDate,
   onDateChange,
   viewSelectDate,
-}) {
-  console.log("onDateChange", onDateChange)
-  console.log("selectDatePicker", selectedDate)
-  console.log("selectDatePicker selectedDate[0]", selectedDate[0])
-  const swiper = useRef();
-  const [value, setValue] = useState(selectedDate[0]);
+}) { console.log("selectedDate[0]", selectedDate[0]);
+  const [value, setValue] = useState(selectedDate[0]); // Para almacenar el valor final (la fecha activa)
+
+  // Extraemos solo la parte de la fecha sin la hora (sin la "T" y lo que sigue)
+  const newSelectedDate = selectedDate.map(f => new Date(f).toISOString().split("T")[0]);
+
+  const isToday = new Date().toISOString().split("T")[0]; // Obtenemos la fecha de hoy
+  console.log(isToday, "isToday");
+
+  // Encontramos si la fecha de hoy coincide con alguna en el array
+  const activeToday = newSelectedDate.find(date => date === "2024-09-25");
+  console.log("activeToday", activeToday);
+
+  // Actualizamos el valor `value` según si hay coincidencia o no
+  useEffect(() => {
+    if (activeToday) {
+      setValue(selectedDate[newSelectedDate.indexOf(activeToday)]);
+    } else {
+      // Si no, usamos la primera fecha de `selectedDate`
+      setValue(selectedDate[0]);
+    }
+  }, [activeToday, selectedDate]);
   
+  // selectedDate.some(m => m === new Date().toISOString())
+  // console.log("opcionActive", opcionActive);
+
+  const swiper = useRef();
+
   console.log(" set value", value);
-  const [week, setWeek] = useState(0);
+  const [week, setWeek] = useState(0); 
   console.log(" set week", week);
   const weeks = useMemo(() => {
     const month = moment(value).month(); // Obtener el mes de la fecha seleccionada
@@ -82,34 +95,49 @@ export default function SimpleDatePicker({
           {[-1, 0, 1].map((offset) => (
             <View style={styles.itemRow} key={offset}>
               {weeks.map((item, dateIndex) => {
-                const isActive =
-                  value.toDateString() === item.fecha.toDateString();
+                const today = new Date().toDateString(); // Fecha de hoy
+                const fecha = new Date(item.fecha).toDateString(); // Fecha del item
+
+                // La fecha de hoy solo es activa si está en selectedDate y no se ha seleccionado otra
+                const isTodayActive = selectedDate.some(
+                  (s) => new Date(s).toDateString() === today
+                );
+                const isActive = value.toDateString() === fecha || isTodayActive && fecha === today;
+                // const isActive = value.toDateString() === fecha || (isTodayActive && fecha === today);
+
                 return (
                   <TouchableWithoutFeedback
                     key={dateIndex}
-                    onPress={() => handleDateChange(item.fecha)}
+                    onPress={() => handleDateChange(item.fecha)} // Cambia la fecha seleccionada
                   >
                     <View
                       style={[
                         styles.item,
-                        isActive && {
-                          backgroundColor: ColorItem.KellyGreen,
-                          borderColor: ColorItem.KellyGreen,
+                        {
+                          backgroundColor: isActive
+                            ? ColorItem.KellyGreen
+                            : isTodayActive ? ColorItem.Luigi : "transparent", // Verde si es activo
+                          borderColor: isActive
+                            ? ColorItem.KellyGreen
+                            : "lightgray",
                         },
                       ]}
                     >
                       <Text
                         style={[
                           styles.itemWeekday,
-                          isActive && { color: "#fff" },
+                          { color: isActive ? "#fff" : "black" }, // Blanco si es activo
                         ]}
                       >
                         {item.dia}
                       </Text>
                       <Text
-                        style={[styles.itemDate, isActive && { color: "#fff" }]}
+                        style={[
+                          styles.itemDate,
+                          { color: isActive ? "#fff" : "black" }, // Blanco si es activo
+                        ]}
                       >
-                       {moment(item.fecha).locale('es').date()}
+                        {moment(item.fecha).locale("es").date()}
                       </Text>
                     </View>
                   </TouchableWithoutFeedback>
@@ -139,4 +167,3 @@ export default function SimpleDatePicker({
     </View>
   );
 }
-

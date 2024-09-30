@@ -1,10 +1,11 @@
 import { RefreshControl } from "react-native";
+import { ColorItem } from "../../../components/styles/StylesGlobal";
 
 export const refreshControl = (refreshing, onRefresh) => (
   <RefreshControl
     refreshing={refreshing}
-    colors={["#78e08f"]}
+    colors={[ColorItem.DeepFir]}
     onRefresh={onRefresh}
-    progressBackgroundColor="#1371C3"
+    progressBackgroundColor={ColorItem.Luigi}
   />
 );

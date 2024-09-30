@@ -23,16 +23,16 @@ export const getNotificationCedulaEstado = async (cedula, estado) => {
   }
 };
 
-export const getNotificationAll = async () => {
-  try {
-    const response = await axiosInstance.get(`/notificaciones/}`);
-    return response.data;
-  } catch (error) {
-    throw new Error(
-      error.response?.data?.message || "Error en la actualización"
-    );
-  }
-};
+// export const getNotificationAll = async () => {
+//   try {
+//     const response = await axiosInstance.get(`/notificaciones/}`);
+//     return response.data;
+//   } catch (error) {
+//     throw new Error(
+//       error.response?.data?.message || "Error en la actualización"
+//     );
+//   }
+// };
 
 // ✅
 export const updateNotificationId = async (id, estado) => {

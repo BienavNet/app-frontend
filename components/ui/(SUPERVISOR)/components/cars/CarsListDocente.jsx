@@ -1,7 +1,12 @@
-import { Octicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { getClaseSupervisor } from "../../../../../src/services/fetchData/fetchClases";
-import { useAuth } from "../../../../../src/hooks/useAuth";
 import { useCallback, useEffect, useState } from "react";
 import {
   capitalizeFirstLetter,
@@ -10,11 +15,13 @@ import {
 import { ColorItem } from "../../../../styles/StylesGlobal";
 import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
 import { useNavigation } from "expo-router";
+import { refreshControl } from "../../../../../src/utils/functiones/refresh";
+import { userData } from "../../../../../src/hooks/use/userData";
 
-export const CarListDocentes = () => {
+export const CarListDocentes = ({ scrollViewRef, handleScroll }) => {
+  const [refreshing, setRefreshing]= useState(false);
+  const { CEDULA } = userData();
   const navigation = useNavigation();
-  const { user } = useAuth();
-  const CEDULA = user.cedula;
   const [data, setData] = useState([]);
   const fechtDataSupervisorId = useCallback(async () => {
     try {
@@ -34,8 +41,21 @@ export const CarListDocentes = () => {
       await fechtDataSupervisorId();
     })();
   }, [fechtDataSupervisorId]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fechtDataSupervisorId();
+    setRefreshing(false);
+  }, [fechtDataSupervisorId]);
+
   return (
-    <>
+    <ScrollView
+      refreshControl={refreshControl(refreshing, onRefresh)}
+      scrollEventThrottle={16}
+      ref={scrollViewRef}
+      showsVerticalScrollIndicator={false}
+      onScroll={handleScroll}
+    >
       {data.map((item, index) => (
         <View key={item.id} style={styles.card}>
           <TouchableOpacity
@@ -68,21 +88,19 @@ export const CarListDocentes = () => {
                   {capitalizeFirstLetter(item.nombre_docente)}{" "}
                   {capitalizeFirstLetter(item.apellido_docente)}
                 </Text>
-                {
-  item.comentario && item.comentario.length > 0 ? (
-    <View>
-      <MaterialCommunityIcons
-        style={{
-          marginTop: 3,
-          marginHorizontal: 10,
-        }}
-        name="read"
-        size={22}
-        color="black"
-      />
-    </View>
-  ) : null
-}
+                {item.comentario && item.comentario.length > 0 ? (
+                  <View>
+                    <MaterialCommunityIcons
+                      style={{
+                        marginTop: 3,
+                        marginHorizontal: 10,
+                      }}
+                      name="read"
+                      size={22}
+                      color="black"
+                    />
+                  </View>
+                ) : null}
               </View>
               <View className="flex-row my-1 justify-around">
                 <View className="flex">
@@ -134,7 +152,7 @@ export const CarListDocentes = () => {
           </TouchableOpacity>
         </View>
       ))}
-    </>
+    </ScrollView>
   );
 };
 
@@ -142,7 +160,7 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 8,
     height: 100,
-    backgroundColor: "#B4B5B3",
+    backgroundColor: ColorItem.Zircon,
     marginVertical: 5,
     justifyContent: "center",
     alignItems: "center",

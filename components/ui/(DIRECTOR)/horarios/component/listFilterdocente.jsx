@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { ListItem } from "@rneui/themed";
 import {
@@ -8,6 +8,8 @@ import {
 } from "../../../../../src/utils/functiones/functions";
 import { BoxView } from "../../components/customBoxView";
 import { ColorItem } from "../../../../styles/StylesGlobal";
+import { stylesHorariosDirector } from "./styles";
+
 export const ListFilterHorarioDocente = ({ data, onPress }) => {
   const [expanded, setExpanded] = useState(false);
   return (
@@ -29,7 +31,7 @@ export const ListFilterHorarioDocente = ({ data, onPress }) => {
                     paddingRight: 30,
                   }}
                 >
-                  <ListItem.Title style={styles.itemP2}>
+                  <ListItem.Title style={stylesHorariosDirector.itemP2}>
                     {capitalizeFirstLetter(data.asignatura)}{" "}
                     {data.dia}
                   </ListItem.Title>
@@ -101,7 +103,7 @@ export const ListFilterHorarioDocente = ({ data, onPress }) => {
                 </ListItem.Title>
               </View>
               <View style={{}}>
-                <Text style={styles.itemP3}>
+                <Text style={stylesHorariosDirector.itemP3}>
                   {truncateText(data.numero_salon)}
                 </Text>
               </View>
@@ -131,7 +133,7 @@ export const ListFilterHorarioDocente = ({ data, onPress }) => {
                   width: "100%",
                 }}
               >
-                <Text style={styles.itemLeft}>{data.comentario}</Text>
+                <Text style={stylesHorariosDirector.itemLeft}>{data.comentario}</Text>
               </View>
             </View>
           </BoxView>
@@ -141,39 +143,3 @@ export const ListFilterHorarioDocente = ({ data, onPress }) => {
     </ListItem.Accordion>
   );
 };
-const styles = StyleSheet.create({
-  item: {
-    marginHorizontal: 8,
-    marginVertical: 8,
-    flex: 1,
-  },
-  itemP1: {
-    fontSize: 20,
-    color: ColorItem.TarnishedSilver,
-    marginBottom: 5,
-    fontWeight: "bold",
-  },
-  itemAsig: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#999999",
-    textAlign: "left",
-  },
-  itemP2: {
-    fontWeight: "bold",
-    fontSize: 18,
-    color: "#999999",
-    textAlign: "center",
-  },
-  itemP3: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#999999",
-    textAlign: "center",
-  },
-  itemLeft: {
-    fontSize: 16,
-    color: ColorItem.TarnishedSilver,
-    fontWeight: "bold",
-  },
-});

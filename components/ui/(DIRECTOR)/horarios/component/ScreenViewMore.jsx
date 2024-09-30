@@ -1,72 +1,195 @@
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { Agenda } from "react-native-calendars";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Agenda, LocaleConfig } from "react-native-calendars";
 import testIDs from "./testIDs";
-import { refreshControl } from "../../../../../src/utils/functiones/refresh";
 import { ColorItem } from "../../../../styles/StylesGlobal";
-import { useState, useCallback, useEffect } from "react";
+import moment from "moment";
+import { StatusCircle } from "../../reportes/components/StatusCircle";
+import {
+  capitalizeFirstLetter,
+  obtenerDiaNumero,
+} from "../../../../../src/utils/functiones/functions";
+import { useState } from "react";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-const renderInfoItem = (item, index) =>{
+
+LocaleConfig.locales["es"] = {
+  monthNames:[
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' 
+  ],
+  monthNamesShort:[
+    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+  ],
+  dayNames:[
+    'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
+  ],
+  dayNamesShort:[
+    'Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'
+  ]
+}
+LocaleConfig.defaultLocale = 'es';
+
+const RenderInfoItem = ({ item, index }) => {
+  // {"INTernet": "si", "capacidad": 23, "categoria": "salon", "dia": "Miercoles", "estado": "pendiente", "hora_fin": "12:30:00", "hora_inicio": "08:39:00", "keyunica": "2024-10-02", "numero_salon": 112, "tv": "no"}
+   const [isPressed, setIsPressed] = useState(false);
+
   console.log("renderInfoItem entrando:", item, index);
   return (
-    <TouchableOpacity style={styles.item}  key={item.keyunica} >
-   {/* <Text>Asignatura: {item.asignatura}</Text> */}
-          {/* <Text>Docente: {item.nombre}</Text> */}
-          <Text>Hora Inicio: {item.hora_inicio}</Text>
-          <Text>Hora Fin: {item.hora_fin}</Text>
-          <Text>Capacidad: {item.capacidad}</Text>
-          <Text>Estado : {item.estado}</Text>
-  </TouchableOpacity>
-  );
-}
+    <TouchableOpacity style={[
+      styles.item,{
+        backgroundColor: isPressed ? "lightgreen":"#fff"
+      }
+    ]} key={item.keyunica}
+    onPressIn={() => setIsPressed(true)}
+    onPressOut={() => setIsPressed(false)}
+    >
+      <View
+        style={{
+          justifyContent: "space-around",
+          flexDirection: "row",
+        }}
+      >
+        <Text style={styles.itemText}>{item.numero_salon}</Text>
+        <Text style={styles.itemText}>{capitalizeFirstLetter(item.categoria)}</Text>
+      </View>
 
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          width: "100%",
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <MaterialIcons name="access-time-filled" size={24} color="black" />
+          <Text style={styles.itemText}> {item.hora_inicio}</Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <MaterialIcons name="access-time" size={24} color="black" />
+          <Text style={styles.itemText}> {item.hora_fin}</Text>
+        </View>
+      </View>
+
+      <View
+        style={{
+          justifyContent: "space-around",
+          flexDirection: "row",
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          {item.INTernet === "si" ? (
+            <MaterialIcons name="wifi" size={24} color="black" />
+          ) : (
+            <MaterialIcons name="wifi-off" size={24} color="black" />
+          )}
+          <Text style={styles.itemText}> {capitalizeFirstLetter(item.INTernet)}</Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          {item.tv === "si" ? (
+            <Ionicons name="tv-sharp" size={24} color="black" />
+          ) : (
+            <MaterialIcons name="tv-off" size={24} color="black" />
+          )}
+          <Text style={styles.itemText}> {capitalizeFirstLetter(item.tv)}</Text>
+        </View>
+      </View>
+
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent:"space-around"
+        }}
+      >
+        <View style={{
+          flexDirection:"row"
+        }}>
+          <MaterialCommunityIcons
+            name="account-eye-outline"
+            size={24}
+            color="black"
+          />
+          <Text style={styles.itemText}>{item.capacidad}</Text>
+        </View>
+        <StatusCircle item={item.estado} />
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 function ScreenViewMore(props) {
- const {selectedDate} = props;
- const [refreshing, setRefreshing] = useState(false);
-
-   //tranformando los datos para Component AGENDA
-   const transformData  = ( selectedDate) =>{
+  const { selectedDate } = props;
+  console.log(selectedDate, "seleteDate, screenViewMore");
+  
+  const transformData = (selectedDate) => {
     const items = {};
 
-    //iteramos sobre los horarios del dia seleccionado
+
     selectedDate.horarios.forEach((horario) => {
-      const datekey = new Date(horario.fecha).toISOString().split('T')[0]  // obtener la fecha en formato YYYY-MM-DD
+      const diaNumero = obtenerDiaNumero(horario.dia);
+      console.log(diaNumero, "dia numero");
+      // setDiaActive(diaNumero);
+      const datekey = moment(horario.fecha).format("YYYY-MM-DD"); // obtener la fecha en formato YYYY-MM-DD
       console.log(datekey, "datakey de cada fecha");
-      if(!items[datekey]){
+      if (!items[datekey]) {
         items[datekey] = [];
       }
       items[datekey].push({
-        "keyunica": datekey,
-        "categoria": horario.categoria,
-        "numero_salon": horario.numero_salon,
-        "capacidad": horario.capacidad,
-        "dia": horario.dia,
-        "hora_fin": horario.hora_fin,
-        "hora_inicio": horario.hora_inicio,
-        "estado": horario.estado,
-        "INTernet": horario.INTernet,
-        "tv": horario.tv,
-      
-      }); //agreamos el horario a la fecha correspondiente
-    })
-    return items; //retorna un Array de fechas unicas
-   }
-   
-   const ITEMS = transformData(selectedDate)
-   console.log(ITEMS, "items selected data")
-   const PRIMERDIADELMESSELECCIONADO = Object.keys(ITEMS)[0];
-   const [selected, setSelecte] = useState(PRIMERDIADELMESSELECCIONADO);
-   console.log(PRIMERDIADELMESSELECCIONADO, "PRIMERDIADELMESSELECCIONADO")
-   const [filteredItems, setFilteredItems] = useState({});
+        keyunica: datekey,
+        categoria: horario.categoria,
+        numero_salon: horario.numero_salon,
+        capacidad: horario.capacidad,
+        dia: horario.dia,
+        hora_fin: horario.hora_fin,
+        hora_inicio: horario.hora_inicio,
+        estado: horario.estado,
+        INTernet: horario.INTernet,
+        tv: horario.tv,
+      });
+    });
+    return items;
+  };
 
-  //  useEffect(() => {
-  //    // Filtrar items por la fecha seleccionada
-  //    if (items[selectedDate]) {
-  //      setFilteredItems({ [selectedDate]: items[selectedDate]});
-  //    } else {
-  //      setFilteredItems({});
-  //    }
-  //  }, [selectedDate, items]);
+  const ITEMS = transformData(selectedDate);
+  console.log(ITEMS, "items selected data");
+  const PRIMERDIADELMESSELECCIONADO = Object.keys(ITEMS)[0];
+
+  const markedDates = Object.keys(ITEMS).reduce((acc, date) => {
+    const diaDeLaSemana = moment(date).day();
+    console.log(diaDeLaSemana, "diaDeLaSemana");
+    if (diaDeLaSemana !== 0) {
+      acc[date] = { disabled: true, disableTouchEvent: true };
+    } else {
+      acc[date] = { selected: true, selectedColor: ColorItem.KellyGreen };
+    }
+    return acc;
+  }, {});
+
+  console.log("marKeDates", markedDates);
+
 
   const renderEmptyDate = () => {
     return (
@@ -75,42 +198,32 @@ function ScreenViewMore(props) {
       </View>
     );
   };
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    console.log("onRefresh true");
-    setRefreshing(false);
-  }, []);
-  // en selected ira la fecha del primer dia del mes, es decir si le toca todos los lunes, el selected comenzara seleccionado en el primer lunes de cada mes
-
-
   return (
     <SafeAreaView style={styles.container}>
       <Agenda
-      items={ITEMS}
-      refreshControl={refreshControl(refreshControl, onRefresh)}
-       theme={{
-        backgroundColor: '#ffffff',
-        calendarBackground: '#ffffff',
-        textSectionTitleColor: '#b6c1cd',
-        selectedDayBackgroundColor: ColorItem.KellyGreen,
-        selectedDayTextColor: '#ffffff',
-        todayTextColor: ColorItem.KellyGreen,
-        dayTextColor: '#2d4150',
-        textDisabledColor:ColorItem.OceanCrest
-       }}
-        horizontal={false} 
-        keyExtractor={(item) => item.keyunica}
+      displayLoadingIndicator={true}
+        markingType="period"
+        items={ITEMS}
+        theme={{
+          backgroundColor: "#ffffff",
+          calendarBackground: "#ffffff",
+          textSectionTitleColor: "#b6c1cd",
+          selectedDayBackgroundColor: ColorItem.KellyGreen,
+          selectedDayTextColor: "red",
+          todayTextColor: ColorItem.OceanCrest,
+          todayBackgroundColor: ColorItem.KellyGreen,
+          dayTextColor: "#2d4150",
+          textDisabledColor: ColorItem.OceanCrest,
+          monthTextColor: "#000",
+        }}
+        keyExtractor={(item, index) => `ID-${item.keyunica}-DATA-${index}`}
         renderEmptyDate={renderEmptyDate}
         testID={testIDs.agenda.CONTAINER}
         selected={PRIMERDIADELMESSELECCIONADO}
-
         renderItem={(item, isFirst) => {
-          console.log("item renderItem: ",item, "isFirst: ",isFirst)
-          return (
-            renderInfoItem(item, isFirst)
-          )
+          return <RenderInfoItem item={item} index={isFirst} />;
         }}
+        maxDate="2025-01-01"
         minDate="2024-01-01"
       />
     </SafeAreaView>
@@ -123,23 +236,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   item: {
-    backgroundColor: "lightgreen",
     flex: 1,
     borderRadius: 5,
-    padding: 10,
+    padding: 8,
     marginRight: 10,
-    marginTop: 25,
-    paddingBottom: 20,
+    marginTop: 15,
+    paddingBottom: 8,
   },
   itemText: {
     color: "black",
     fontSize: 16,
   },
   emptyDate: {
-        height: 15,
-        flex: 1,
-        paddingTop: 30,
-      },
+    height: 15,
+    flex: 1,
+    paddingTop: 30,
+  },
+
 });
 
 export default ScreenViewMore;

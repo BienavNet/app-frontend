@@ -1,6 +1,5 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
-import { useAuth } from "../../../src/hooks/useAuth";
 import { CustomDrawerContent } from "./customDrawerLogout";
 import HeaderLeft from "../headerhomeLeft";
 import HeaderRigth from "../headerhomeRigth";
@@ -9,14 +8,15 @@ import { Redirect } from "expo-router";
 import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
 import { ColorItem } from "../../styles/StylesGlobal";
 import NotificationStackScreen from "../../ui/(DIRECTOR)/notifications/screenNotifications";
+import { userData } from "../../../src/hooks/use/userData";
 
 export const DrawerHome = ({ drawerScreens }) => {
   const Drawer = createDrawerNavigator();
-  const { user } = useAuth();
-  const ROL = user.rol;
-  if (!user) {
-    return <Redirect href="/" />;
-  }
+  const { ROL } = userData();
+  // const ROL = user.rol;
+  // if (!user) {
+  //   return <Redirect href="/" />;
+  // }
 
   return (
     <Drawer.Navigator
@@ -33,7 +33,7 @@ export const DrawerHome = ({ drawerScreens }) => {
         headerRight: () => {
           return route.name === "Home" ? (
             <HeaderRigth
-              rol={capitalizeFirstLetter(user.rol)}
+              rol={capitalizeFirstLetter(ROL)}
               navigation={navigation}
             />
           ) : null;

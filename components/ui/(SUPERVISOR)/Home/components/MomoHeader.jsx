@@ -1,6 +1,5 @@
 import {
   Animated,
-  ScrollView,
   StyleSheet,
   View,
   Platform,
@@ -9,75 +8,30 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import { useEffect, useRef, useState } from "react";
-import { useAuth } from "../../../../../src/hooks/useAuth";
+import { useRef, useState } from "react";
 import { ColorItem } from "../../../../styles/StylesGlobal";
 import { Ionicons } from "@expo/vector-icons";
-import { socket } from "../../../../../src/utils/socket";
-import playNotificationSound, {
-  capitalizeFirstLetter,
-} from "../../../../../src/utils/functiones/functions";
+import { capitalizeFirstLetter } from "../../../../../src/utils/functiones/functions";
 import { Badge } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { ButtonLogoutS } from "./buttonLogout";
 import { InfoSup } from "./infSup";
-import { useSocket } from "../../../../../src/hooks/useSocket";
+import { CarListDocentes } from "../../components/cars/CarsListDocente";
+import { useSocket } from "../../../../../src/hooks/use/useSocket";
+import { userData } from "../../../../../src/hooks/use/userData";
 
 const Header_Max_Height = 118;
 const Header_Min_Height = 57;
 const Scroll_Distance = Header_Max_Height - Header_Min_Height;
 
-export const ScrollViewScreen = ({ children }) => {
-  const {totalUnreadNotification} = useSocket();
-  console.log("total", totalUnreadNotification)
-  const { user } = useAuth();
+export const ScrollViewScreen = () => {
+  const { CORREO } = userData()
+  const { totalUnreadNotification } = useSocket();
+  console.log("total", totalUnreadNotification);
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef(null);
-  const CORREO = user.user;
   const navigation = useNavigation();
-  // const [totalUnreadNotification, setTotalUnreadNotification] = useState(0);
-  // console.log("setTotalUnreadNotification", totalUnreadNotification);
-  // const [sound, setSound] = useState(null);
   const [displayedInfo, setDisplayedInfo] = useState(null);
-
-  // const handleNewNotification = (data) => {
-  //   if (data > totalUnreadNotification) {
-  //     playNotificationSound(setSound);
-  //     setTotalUnreadNotification(data);
-  //   } else if (data < totalUnreadNotification) {
-  //     setTotalUnreadNotification(data);
-  //   } else {
-  //     console.log("No hay nuevas notificaciones");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const handleNotification = (data) => {
-  //     console.log(data, "handleNotification");
-  //     handleNewNotification(data);
-  //   };
-  //   const handleDefaulNotification = (data) => {
-  //     console.log(data, "handleDefaulNotification");
-  //     setTotalUnreadNotification(data);
-  //   };
-
-  //   if (socket) {
-  //     socket.on("send-notification-to-user", handleNotification);
-  //     socket.on("count-notification", handleDefaulNotification);
-  //   }
-
-  //   return () => {
-  //     if (socket) {
-  //       socket.off("send-notification-to-user", handleNotification); // Limpiar el listener cuando el componente se desmonte
-  //       socket.off("count-notification", handleDefaulNotification);
-  //     }
-  //     if (sound) {
-  //       sound.unloadAsync();
-  //     }
-  //   };
-  // }, [sound,totalUnreadNotification]);
-
-
   const animatedHeaderHeight = scrollOffsetY.interpolate({
     inputRange: [0, Scroll_Distance],
     outputRange: [Header_Max_Height, Header_Min_Height],
@@ -89,6 +43,7 @@ export const ScrollViewScreen = ({ children }) => {
     outputRange: [ColorItem.MediumGreen, ColorItem.KellyGreen],
     extrapolate: "clamp",
   });
+
 
   const handleScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
@@ -117,7 +72,6 @@ export const ScrollViewScreen = ({ children }) => {
       },
     }
   );
-
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
@@ -135,8 +89,8 @@ export const ScrollViewScreen = ({ children }) => {
       >
         <View style={styles.upperHeader}>
           <InfoSup
-          displayedInfo={displayedInfo}
-          scrollOffsetY={scrollOffsetY}
+            displayedInfo={displayedInfo}
+            scrollOffsetY={scrollOffsetY}
           />
           <TouchableOpacity
             onPress={() => navigation.navigate("NotificationStack")}
@@ -158,14 +112,10 @@ export const ScrollViewScreen = ({ children }) => {
           <ButtonLogoutS />
         </View>
       </Animated.View>
-      <ScrollView
-        scrollEventThrottle={16}
-        ref={scrollViewRef}
-        showsVerticalScrollIndicator={false}
-        onScroll={handleScroll}
-      >
-        {children}
-      </ScrollView>
+        <CarListDocentes 
+        handleScroll={handleScroll}
+        scrollViewRef={scrollViewRef}
+        />
     </View>
   );
 };
@@ -181,12 +131,10 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   upperHeader: {
-    // backgroundColor: "red",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 13,
     height: Header_Min_Height,
-    // paddingTop: 4,
   },
   searchInput: {
     width: "100%",

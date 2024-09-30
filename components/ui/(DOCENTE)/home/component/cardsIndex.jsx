@@ -1,12 +1,11 @@
 import { Text, View } from "react-native";
 import { Card } from "@rneui/themed";
 import { capitalizeFirstLetter } from "../../../../../src/utils/functiones/functions";
-import { useAuth } from "../../../../../src/hooks/useAuth";
+import { userData } from "../../../../../src/hooks/use/userData";
 
 export const CardInformationCuenta = () => {
-  const { user } = useAuth();
-  const NOMBRE = user.nombre;
-  const Correo = user.user;
+  const { NOMBRE, CORREO } = userData();
+
   return (
     <Card>
       <Card.Title>Informacion de la cuenta</Card.Title>
@@ -30,7 +29,7 @@ export const CardInformationCuenta = () => {
             fontSize: 15,
           }}
         >
-          {Correo}
+          {CORREO}
         </Text>
       </View>
     </Card>

@@ -1,8 +1,7 @@
-import { ScrollView, Alert, Modal } from "react-native";
+import { ScrollView, Alert } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Loading from "../../share/loading";
@@ -11,14 +10,10 @@ import {
   DeleteClasesOne,
   getClassesByHorarioID,
 } from "../../../src/services/fetchData/fetchClases";
-import SimpleDatePicker from "./customSimpleDatePicker";
-import ScreenViewMore from "../(DIRECTOR)/horarios/component/ScreenViewMore";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { NotRegistration } from "../../share/noRegistration";
 import { ViewHorario } from "../(DIRECTOR)/horarios/component/viewHorario";
-// import { DeleteConfirmation } from "../../share/deletePress";
-import { SearchView } from "../(DIRECTOR)/horarios/component/searchMore&viewValue";
-import { InfoHorario } from "../(DIRECTOR)/horarios/component/infoHorario";
+import { ScreenDetailHour } from "../(DIRECTOR)/horarios/screenDetailhorario";
 
 export const ListItemComponentHorario = ({
   getDataAll,
@@ -37,7 +32,7 @@ export const ListItemComponentHorario = ({
   console.log("setSelectedItem ------------", selectedItem);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [viewmoreModalVisible, setViewMoreModalVisible] = useState(false);
+
   const fetchItems = useCallback(async () => {
     setLoading(true);
     try {
@@ -133,23 +128,18 @@ export const ListItemComponentHorario = ({
     setRefreshing(false);
   }, [fetchItems]);
 
-  const handleOpenSecondModal = () => {
-    setViewMoreModalVisible(true);
-  };
-
-  const handleCloseSecondModal = () => {
-    setViewMoreModalVisible(false);
-  };
   const handleDateChange = (date) => {
     setValue(date);
   };
 
-const handleDateSelected = (selectedItem) => {
-  return selectedItem?.horarios.map((horario) => new Date(horario.fecha)).filter((horario) => {
-    const currentMonth = new Date().getMonth();
-    return horario.getMonth() === currentMonth;
-  })
-}
+  const handleDateSelected = (selectedItem) => {
+    return selectedItem?.horarios
+      .map((horario) => new Date(horario.fecha))
+      .filter((horario) => {
+        const currentMonth = new Date().getMonth();
+        return horario.getMonth() === currentMonth;
+      });
+  };
 
   return (
     <>
@@ -206,45 +196,17 @@ const handleDateSelected = (selectedItem) => {
             </ListItem.Swipeable>
           ))
         )}
-        <ModalComponente
-          transparent={true}
-          modalStyle={{ height: "99%" }}
-          animationType={"slider"}
-          modalVisible={modalVisible}
+
+        <ScreenDetailHour
+          handleDateChange={handleDateChange}
+          handleDateSelected={handleDateSelected}
+          value={value}
+          selectedItem={selectedItem}
+          loading={loading}
           handleCloseModal={handleCloseModal}
-        >
-          {loading ? (
-            <Loading />
-          ) : selectedItem ? (
-            <>
-              <InfoHorario selectedItem={selectedItem} />
-              <SearchView
-                value={value}
-                handleOpenSecondModal={handleOpenSecondModal}
-              />
-              <SimpleDatePicker
-                onDateChange={handleDateChange}
-                selectedDate={handleDateSelected(selectedItem)}
-                viewSelectDate={selectedItem?.horarios.find((horario) =>new Date(horario.fecha).toDateString() === value.toDateString())}
-              />
-            </>
-          ) : (
-            <NotRegistration />
-          )}
-        </ModalComponente>
+          modalVisible={modalVisible}
+        />
       </ScrollView>
-      <Modal
-            animationType="slide" // fade none slider
-            transparent={false} // true o false
-            visible={viewmoreModalVisible}
-        // transparent={true}
-        // modalStyle={{ height: "98%" }}
-        // animationType={"slider"}
-        // modalVisible={viewmoreModalVisible}
-        // handleCloseModal={handleCloseSecondModal}
-      >
-        <ScreenViewMore  selectedDate={selectedItem}/>
-      </Modal>a
     </>
   );
 };

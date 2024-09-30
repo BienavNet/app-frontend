@@ -4,7 +4,6 @@ import {
   CustomInputCheckBox,
 } from "../../share/inputs/customInput";
 import { loging } from "../../../src/utils/schemas/login&registerSchema";
-import { useAuth } from "../../../src/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
@@ -14,6 +13,7 @@ import useToastMessage from "../../share/ToasNotification";
 import { useEffect, useState } from "react";
 import { Buttonlogin } from "../../share/button/buttonLogin";
 import { ColorItem } from "../../styles/StylesGlobal";
+import { useAuth } from "../../../src/hooks/use/useAuth";
 
 export const FormLogin = () => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
@@ -75,6 +75,7 @@ export const FormLogin = () => {
       }
     }
   }, [isAuthenticated, user]);
+  
   return (
     <View className="flex items-left mx-4 space-y-2">
       <CustomInput

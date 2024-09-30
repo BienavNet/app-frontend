@@ -1,6 +1,6 @@
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { TouchableOpacity , Alert} from "react-native";
-import { useAuth } from "../../../../../src/hooks/useAuth";
+import { useAuth } from "../../../../../src/hooks/use/useAuth";
 
 export const ButtonLogoutS = () => {
   const { logout } = useAuth();

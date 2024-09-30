@@ -10,6 +10,7 @@ import { useFocusEffect } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
 import { DateChip } from "../../(DIRECTOR)/reportes/components/DateChip";
 import { ColorItem } from "../../../styles/StylesGlobal";
+import { useNotificationCedulaEstado } from "../../../../src/hooks/customHooks";
 
 const handleEditNotification = async (id) => {
   try {
@@ -21,21 +22,23 @@ const handleEditNotification = async (id) => {
 
 export const ContentNofitications = ({ cedula, estado = "todas" }) => {
   const navigation = useNavigation();
-  const [notificationall, setNotificationAll] = useState([]);
-  const fetchNotificationsAll = useCallback(async () => {
-    try {
-      const res = await getNotificationCedulaEstado(cedula, estado);
-      setNotificationAll(res || []);
-    } catch (error) {
-      throw Error("Error fetching notifications:", error);
-    }
-  }, [estado]);
+  const notificationall = useNotificationCedulaEstado(cedula, estado)
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchNotificationsAll();
-    }, [fetchNotificationsAll])
-  );
+  // const [notificationall, setNotificationAll] = useState([]);
+  // const fetchNotificationsAll = useCallback(async () => {
+  //   try {
+  //     const res = await getNotificationCedulaEstado(cedula, estado);
+  //     setNotificationAll(res || []);
+  //   } catch (error) {
+  //     throw Error("Error fetching notifications:", error);
+  //   }
+  // }, [estado]);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetchNotificationsAll();
+  //   }, [fetchNotificationsAll])
+  // );
 
   const handleUpdateStatus = (item) => {
     const NOLEIDA = "no leida";

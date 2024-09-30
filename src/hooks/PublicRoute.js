@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../hooks/useAuth";
 import { useRouter } from "expo-router";
+import { useAuth } from "./use/useAuth";
 export const PublicRoute = (props) => {
   const { children } = props;
   const auth = useAuth();

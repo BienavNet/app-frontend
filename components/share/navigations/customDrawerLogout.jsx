@@ -6,7 +6,6 @@ import {
   StyleSheet,
   ImageBackground,
 } from "react-native";
-import { useAuth } from "../../../src/hooks/useAuth";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -14,6 +13,8 @@ import {
 import { Divider } from "@rneui/base";
 import { ColorItem } from "../../styles/StylesGlobal";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import { userData } from "../../../src/hooks/use/userData";
+import { useAuth } from "../../../src/hooks/use/useAuth";
 
 const ButtonLogout = ({ title = "Cerrar Sesión", onPress }) => {
   return (
@@ -45,7 +46,7 @@ const DrawerContent = ({ user }) => {
 
 export const CustomDrawerContent = (props) => {
   const { logout, user } = useAuth();
-  const ROL = user.rol;
+  const { ROL } = userData();
 
   const handleLogout = () => {
     Alert.alert(

@@ -23,12 +23,13 @@ import { getSalon } from "../../../../src/services/fetchData/fetchSalon";
 import { getClasesAll } from "../../../../src/services/fetchData/fetchClases";
 import { ListFilterSalones } from "./components/listFilterSalon";
 import { ListFilterClases } from "./components/listFilterClases";
+import { useClasesAll, useReporteAll, useSalonAll } from "../../../../src/hooks/customHooks";
 
 export const ReportView_Filter = () => {
   const [searchText, setSearchText] = useState("");
-  const [reportAll, setReportAll] = useState([]);
-  const [classAll, setClassAll] = useState([]);
-  const [salonAll, setSalonAll] = useState([]);
+  const reportAll = useReporteAll();
+  const classAll = useClasesAll();
+  const salonAll = useSalonAll();
 
   const [selectedItem, setSelectedItem] = useState([]);
   const [list, setList] = useState([]); // list con la información de los datos filtrados
@@ -37,40 +38,40 @@ export const ReportView_Filter = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [additionalData, setAdditionalData] = useState([]);
 
-  const fetchReportAll = useCallback(async () => {
-    try {
-      const res = await getReportAll();
-      setReportAll(res);
-    } catch (error) {
-      throw Error(error);
-    }
-  }, []);
+  // const fetchReportAll = useCallback(async () => {
+  //   try {
+  //     const res = await getReportAll();
+  //     setReportAll(res);
+  //   } catch (error) {
+  //     throw Error(error);
+  //   }
+  // }, []);
 
-  const fetchClassAll = useCallback(async () => {
-    try {
-      const res = await getClasesAll();
-      setClassAll(res);
-    } catch (error) {
-      throw Error(error);
-    }
-  }, []);
+  // const fetchClassAll = useCallback(async () => {
+  //   try {
+  //     const res = await getClasesAll();
+  //     setClassAll(res);
+  //   } catch (error) {
+  //     throw Error(error);
+  //   }
+  // }, []);
 
-  const fetchSalonALL = useCallback(async () => {
-    try {
-      const res = await getSalon();
-      setSalonAll(res);
-    } catch (error) {
-      throw Error(error);
-    }
-  }, []);
+  // const fetchSalonALL = useCallback(async () => {
+  //   try {
+  //     const res = await getSalon();
+  //     setSalonAll(res);
+  //   } catch (error) {
+  //     throw Error(error);
+  //   }
+  // }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchReportAll();
-      fetchSalonALL();
-      fetchClassAll();
-    }, [fetchReportAll, fetchSalonALL, fetchClassAll])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     // fetchReportAll();
+  //     // fetchSalonALL();
+  //     fetchClassAll();
+  //   }, [fetchClassAll])
+  // );
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);

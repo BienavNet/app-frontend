@@ -10,6 +10,7 @@ import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { getDocenteAll } from "../../../../src/services/fetchData/fetchDocente";
 import { getHorarioAll } from "../../../../src/services/fetchData/fetchHorarios";
 import { useFocusEffect } from "@react-navigation/native";
+import { ScreenDetailHour } from "./screenDetailhorario";
 
 export const IndexHorario = () => {
   const [searchText, setSearchText] = useState("");
@@ -21,12 +22,12 @@ export const IndexHorario = () => {
   console.log("selectedOption indexhorario", selectedOption);
   const [horarioAll, setHorarioAll] = useState([]);
   const [docenteall, setDocenteAll] = useState([]);
-  // const [selectedOption, setSelectedOption] = useState(null);
+  console.log("horarioAll horarioAll", horarioAll);
   const [list, setList] = useState([]);
   console.log("list de la opcion seleccionada", list);
   // const handleOrderClick = () => {
   //   console.log("Ordenar por...");
-  // };
+  // };77
 
   const fetchDocenteAll = useCallback(async () => {
     try {
@@ -52,7 +53,6 @@ export const IndexHorario = () => {
       fetchHorarioALL();
     }, [fetchDocenteAll, fetchHorarioALL])
   );
-
 
   const opciones = [
     {
@@ -86,7 +86,7 @@ export const IndexHorario = () => {
         setList([]);
     }
   };
-  
+
   const handleSearchBarClear = () => {
     setSearchText("");
     setShowSearchBar(false);
@@ -138,7 +138,7 @@ export const IndexHorario = () => {
     {
       name: "FormScreen",
       component: RegisterHorario,
-      title: "Registrar Clase",
+      title: "Registrar Horario",
     },
   ];
   return <CustomStack initialRouteName="ListScreen" screens={screens} />;

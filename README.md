@@ -153,4 +153,6 @@ install y uso del webscoket
 //Expo LinearGradient 
 > npx expo install expo-linear-gradient
 
-npm i lodash.isempty
+> npm i lodash.isempty
+
+> npx expo install react-native-reanimated-carousel

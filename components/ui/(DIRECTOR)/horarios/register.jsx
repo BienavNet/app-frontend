@@ -8,7 +8,6 @@ import {
 } from "../../../../src/services/fetchData/fetchHorarios";
 import {
   getDocenteAll,
-  getDocenteOne,
 } from "../../../../src/services/fetchData/fetchDocente";
 import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -24,7 +23,6 @@ import Loading from "../../../share/loading";
 import { HeaderTitle } from "../../../share/titulos/headerTitle";
 import { SubmitButton } from "../../../share/button/submitButton";
 import useToastMessage from "../../../share/ToasNotification";
-import { CustomInput } from "../../../share/inputs/customInput";
 export const RegisterHorario = ({ navigation, route }) => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const [docente, setDocente] = useState([]);
@@ -239,9 +237,7 @@ export const RegisterHorario = ({ navigation, route }) => {
                         {
                           text: "Cancelar",
                           style: "cancel",
-                          onPress: () => {
-                           
-                          },
+                          onPress: () => {},
                         },
                         {
                           text: "Sí",

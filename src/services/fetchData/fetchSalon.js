@@ -12,7 +12,6 @@ export const getCategorySalon = async () => {
 export const getSalon = async () => {
     try {
         const response = await axiosInstance.get(`/salon/`);
-        console.log(response.data, "response de los datos del all salon");
         return response.data;
     } catch (error) {
         throw new Error(error.response ? error.response.data.message : error.message);

@@ -17,6 +17,7 @@ import { capitalizeFirstLetter } from "../../../../src/utils/functiones/function
 import { CustomPiker } from "../../../share/inputs/customPicker";
 import { CustomSwitch } from "../../../share/inputs/customSwitchSN";
 import Loading from "../../../share/loading";
+import { useCategoriaxSalon } from "../../../../src/hooks/customHooks";
 
 export const UpdateSalon = ({ navigation, route }) => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
@@ -31,26 +32,26 @@ export const UpdateSalon = ({ navigation, route }) => {
   });
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [category, setCategory] = useState([]);
-  const fetchCategory = useCallback(async () => {
-    try {
-      const res = await getCategorySalon();
-      console.log(res, "Asignatura response");
-      setCategory(res);
-    } catch (error) {
-      showToast({
-        message: STATUS_MESSAGES[APP_STATUS.ERROR],
-        type: "danger",
-        id: APP_STATUS.ERROR,
-      });
-    }
-  }, []);
+  const category = useCategoriaxSalon();
+  // const fetchCategory = useCallback(async () => {
+  //   try {
+  //     const res = await getCategorySalon();
+  //     console.log(res, "Asignatura response");
+  //     setCategory(res);
+  //   } catch (error) {
+  //     showToast({
+  //       message: STATUS_MESSAGES[APP_STATUS.ERROR],
+  //       type: "danger",
+  //       id: APP_STATUS.ERROR,
+  //     });
+  //   }
+  // }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchCategory();
-    }, [fetchCategory])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetchCategory();
+  //   }, [fetchCategory])
+  // );
 
   useEffect(() => {
     if (route.params && route.params.id) {

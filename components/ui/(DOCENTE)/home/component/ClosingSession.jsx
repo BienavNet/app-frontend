@@ -1,9 +1,9 @@
 import { ListItem } from "@react-native-material/core";
 import { Alert, View } from "react-native";
-import { useAuth } from "../../../../../src/hooks/useAuth";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { ColorItem } from "../../../../styles/StylesGlobal";
+import { useAuth } from "../../../../../src/hooks/use/useAuth";
 export const LogoutSession = () => {
   const { logout } = useAuth();
 

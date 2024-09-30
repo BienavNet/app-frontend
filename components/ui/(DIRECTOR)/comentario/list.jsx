@@ -27,44 +27,45 @@ import {
 import { ListSelectItem } from "./components/listSelect";
 import { ListFilterComentarioDocente } from "./components/listFilterDocente";
 import { ListFilterComentarioSalon } from "./components/listFilterSalon";
+import { useDocenteAll, useSalonAll } from "../../../../src/hooks/customHooks";
 
 export const ListComentario = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedItem, setSelectedItem] = useState([]);
-  const [salonAll, setSalonAll] = useState([]);
-  const [docenteall, setDocenteAll] = useState([]);
+  const salonAll = useSalonAll();
+  const docenteall = useDocenteAll();
   const [additionalData, setAdditionalData] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [list, setList] = useState([]);
+  
   const handleOrderClick = () => {
     console.log("Ordenar por...");
   };
 
-  const fetchDocenteAll = useCallback(async () => {
-    try {
-      const res = await getDocenteAll();
-      setDocenteAll(res);
-    } catch (error) {
-      throw Error(error);
-    }
-  }, []);
+  // const fetchDocenteAll = useCallback(async () => {
+  //   try {
+  //     const res = await getDocenteAll();
+  //     setDocenteAll(res);
+  //   } catch (error) {
+  //     throw Error(error);
+  //   }
+  // }, []);
 
-  const fetchSalonALL = useCallback(async () => {
-    try {
-      const res = await getSalon();
-      setSalonAll(res);
-    } catch (error) {
-      throw Error(error);
-    }
-  }, []);
+  // const fetchSalonALL = useCallback(async () => {
+  //   try {
+  //     const res = await getSalon();
+  //     setSalonAll(res);
+  //   } catch (error) {
+  //     throw Error(error);
+  //   }
+  // }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchSalonALL();
-      fetchDocenteAll();
-    }, [fetchSalonALL, fetchDocenteAll])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetchDocenteAll();
+  //   }, [fetchDocenteAll])
+  // );
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
