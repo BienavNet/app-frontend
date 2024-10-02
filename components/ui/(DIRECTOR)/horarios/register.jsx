@@ -6,11 +6,7 @@ import {
   registerHorario,
   updateHorario,
 } from "../../../../src/services/fetchData/fetchHorarios";
-import {
-  getDocenteAll,
-} from "../../../../src/services/fetchData/fetchDocente";
-import { useCallback, useEffect, useState } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import {  useEffect, useState } from "react";
 import {
   horarioSchema,
   horarioEditSchema,
@@ -23,19 +19,27 @@ import Loading from "../../../share/loading";
 import { HeaderTitle } from "../../../share/titulos/headerTitle";
 import { SubmitButton } from "../../../share/button/submitButton";
 import useToastMessage from "../../../share/ToasNotification";
+import { useDocenteAll } from "../../../../src/hooks/customHooks";
 export const RegisterHorario = ({ navigation, route }) => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
-  const [docente, setDocente] = useState([]);
+  const mapDocente = useDocenteAll();
+
+  const docente = mapDocente.map((item) => ({
+    id: item.docente_id.toString(),
+    label: `${item.nombre} ${item.apellido}`,
+  }));
+
+  const asignatura = asignaturajson.map((item) => ({ 
+    id: item.asignatura,
+    label: item.asignatura,
+  }))
+
   const [horarioId, setHorarioId] = useState(null);
-  // const [selectedDocenteId, setSelectedDocenteId] = useState(null);
-  console.log("id del horario registrado", horarioId);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [initialValues, setInitialValues] = useState({});
-  // const [placelholdereditdocente, setPlacelHoldereditDocente] = useState("");
-  // const [placelholdereditasigantura, setPlacelHoldereditAsignatura] =
-  useState("");
+
   const {
     handleSubmit,
     control,
@@ -49,24 +53,8 @@ export const RegisterHorario = ({ navigation, route }) => {
     setHorarioId(null);
   };
 
-  const fetchDocentes = useCallback(async () => {
-    const res = await getDocenteAll();
-    const mapDoc = res.map((index) => ({
-      id: index.docente_id.toString(),
-      label: `${index.nombre} ${index.apellido}`,
-    }));
-    setDocente(mapDoc);
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchDocentes();
-    }, [fetchDocentes])
-  );
-
   useEffect(() => {
     if (route.params && route.params.id) {
-      console.log(`${route.params.id} - fetching route.params.id`);
       setEditing(true);
       showToast({
         message: STATUS_MESSAGES[APP_STATUS.LOADING],
@@ -76,9 +64,7 @@ export const RegisterHorario = ({ navigation, route }) => {
       navigation.setOptions({ headerTitle: "Actualizar horario" });
       (async () => {
         const response = await getHorarioOne(route.params.id);
-        console.log(response, "getHorarioOne response");
         const value = response.find((doc) => doc.id === route.params.id);
-        console.log(value, "getHorarioOne response");
         if (value) {
           setInitialValues({
             docente: value.docente_id,
@@ -100,7 +86,6 @@ export const RegisterHorario = ({ navigation, route }) => {
   }, [route.params]);
 
   const onsubmit = async (data) => {
-    console.log("data updated", data);
     const { docente, asignatura } = data;
     setLoading(true);
     try {
@@ -123,7 +108,6 @@ export const RegisterHorario = ({ navigation, route }) => {
           },
         });
       } else {
-        console.log("entro para ser editado");
         await updateHorario(route.params.id, data);
         showToast({
           message: STATUS_MESSAGES[APP_STATUS.UPDATING],
@@ -164,7 +148,7 @@ export const RegisterHorario = ({ navigation, route }) => {
       <HeaderTitle
         editing={editing}
         updateText="Actualizar Horario"
-        registerText="Registrar Horario"
+        registerText="Registrar un horario"
       />
       <ScrollView className="pt-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex items-left mx-4 h-full">
@@ -172,7 +156,6 @@ export const RegisterHorario = ({ navigation, route }) => {
             <View key="registerin">
               <View className="w-[85%] self-center py-5">
                 <CustomFlatList
-                  verticalOffset={170}
                   name="docente"
                   control={control}
                   errors={errors.docente}
@@ -182,15 +165,11 @@ export const RegisterHorario = ({ navigation, route }) => {
               </View>
               <View className="w-[85%] self-center pt-5 pb-8">
                 <CustomFlatList
-                  verticalOffset={260}
                   name="asignatura"
                   placeholder="Seleccione una asignatura"
                   control={control}
                   errors={errors.asignatura}
-                  data={asignaturajson.map((a) => ({
-                    id: a.asignatura,
-                    label: a.asignatura,
-                  }))}
+                  data={asignatura}
                 />
               </View>
             </View>
@@ -198,7 +177,6 @@ export const RegisterHorario = ({ navigation, route }) => {
             <View key="updaitng">
               <View className="w-[85%] self-center py-5">
                 <CustomFlatList
-                  verticalOffset={170}
                   name="docente"
                   control={control}
                   data={docente}
@@ -206,7 +184,6 @@ export const RegisterHorario = ({ navigation, route }) => {
               </View>
               <View className="w-[85%] self-center pt-5 pb-8">
                 <CustomFlatList
-                  verticalOffset={260}
                   name="asignatura"
                   control={control}
                   data={asignaturajson.map((a) => ({

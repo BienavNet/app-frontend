@@ -3,35 +3,34 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  FlatList,
-  Modal,
   TouchableWithoutFeedback,
-  Platform,
 } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { capitalizeFirstLetter, truncateText } from "../../../src/utils/functiones/functions";
+import {
+  capitalizeFirstLetter,
+  truncateText,
+} from "../../../src/utils/functiones/functions";
+import { ModalComponente } from "../../ui/Components/customModal";
+import { ColorItem } from "../../styles/StylesGlobal";
 
 export default function DropdownModal({
+  name,
   value,
   data,
   onChange,
   placeholder,
-  transparent,
-  verticalOffset = 0
 }) {
   console.log("datos del value", value);
   const [expanded, setExpanded] = useState(false);
   const [valuee, setValue] = useState("");
   const buttonRef = useRef(null);
-  const [top, setTop] = useState(0);
   useEffect(() => {
     if (value !== undefined) {
-      const selected = data.find(item => item.id === value.toString());
+      const selected = data.find((item) => item.id === value.toString());
       if (selected) {
         setValue(selected.label);
-      }
-      else{
+      } else {
         setValue(value);
       }
     }
@@ -39,7 +38,8 @@ export default function DropdownModal({
 
   const toggleExpanded = useCallback(() => setExpanded(!expanded), [expanded]);
 
-  const onSelect = useCallback((item) => {
+  const onSelect = useCallback(
+    (item) => {
       onChange(item.id);
       setValue(item.label);
       setExpanded(false);
@@ -47,89 +47,64 @@ export default function DropdownModal({
     [onChange]
   );
   return (
-    <View
-      ref={buttonRef}
-      onLayout={(event) => {
-        const layout = event.nativeEvent.layout;
-        const topOffset = layout.y;
-        const heightOfComponent = layout.height;
-        const finalValue =topOffset + heightOfComponent + (Platform.OS === "android" ? verticalOffset: 3);
+    <>
+      <View ref={buttonRef}>
+        <TouchableOpacity
+          style={styles.button}
+          activeOpacity={0.8}
+          onPress={toggleExpanded}
+        >
+          <Text style={styles.text}>{capitalizeFirstLetter(truncateText(valuee, 20)) || placeholder}</Text>
+          <AntDesign name={expanded ? "caretup" : "caretdown"} />
+        </TouchableOpacity>
+      </View>
 
-      setTop(finalValue);
-      }}
-    >
-      <TouchableOpacity
-        style={styles.button}
-        activeOpacity={0.8}
-        onPress={toggleExpanded}
-      >
-        <Text style={styles.text}>{truncateText(valuee) || placeholder}</Text>
-        <AntDesign name={expanded ? "caretup" : "caretdown"} />
-      </TouchableOpacity>
       {expanded ? (
-        <Modal
-          animationType="none"
-          visible={expanded}
-          transparent={transparent}
+        <ModalComponente
+        title={`Seleccione ${name}`}
+          modalStyle={{
+            height: "80%",
+          }}
+          transparent={true}
+          modalVisible={expanded}
+          animationType="slide"
+          handleCloseModal={toggleExpanded}
+          canCloseModal={true}
         >
           <TouchableWithoutFeedback onPress={() => setExpanded(false)}>
-            <View style={[styles.backdrop]}>
-              <View
-                style={[
-                  styles.options,
-                  {
-                    top,
-                  },
-                ]}
-              >
-                <FlatList
-                  keyExtractor={(item) => item.id.toString()}
-                  data={data}
-                  renderItem={({ item }) => {
-                    console.log("item  ---->", item);
-                    return (
-                      <TouchableOpacity
-                        activeOpacity={0.8}
-                        style={styles.optionItem}
-                        onPress={() => onSelect(item)}
-                      >
-                        <Text className="text-black ml-1 text-base pl-2">
-                          {item.label}
-                        </Text>
-                      </TouchableOpacity>
-                    );
+            <View style={[styles.options]}>
+              {data.map((item) => (
+                <View
+                  key={item.id.toString()}
+                  style={{
+                    padding: 5,
+                    borderBlockColor: "green",
                   }}
-                  ItemSeparatorComponent={() => (
-                    <View style={styles.separator} />
-                  )}
-                />
-              </View>
+                >
+                  <TouchableOpacity
+                    activeOpacity={0.3}
+                    style={styles.optionItem}
+                    onPress={() => onSelect(item)}
+                  >
+                    <Text className="text-black text-lg text-left py-2">
+                      {capitalizeFirstLetter(item.label)}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
             </View>
           </TouchableWithoutFeedback>
-        </Modal>
+        </ModalComponente>
       ) : null}
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-  },
-  separator: {
-    // backgroundColor: "#ffffff",
-    height: 5,
-  },
   options: {
-    position: "absolute",
-    backgroundColor: "#d5d5d5",
     width: "100%",
-    padding: 10,
-    borderRadius: 4,
-    maxHeight: 250,
+    height: "100%",
+    paddingVertical: 20,
   },
   text: {
     fontSize: 18,
@@ -142,13 +117,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     alignItems: "center",
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     borderRadius: 4,
     borderWidth: 1,
     borderColor: "black",
   },
   optionItem: {
-    height: 40,
+    padding: 8,
+    backgroundColor: "#fff1",
+    alignItems: "flex-start",
+    borderRadius: 4,
     justifyContent: "center",
+    borderBottomColor: ColorItem.TarnishedSilver,
+    borderBottomWidth: 1,
   },
 });

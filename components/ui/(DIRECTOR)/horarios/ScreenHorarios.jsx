@@ -4,55 +4,22 @@ import CustomStack from "../../Components/customStack";
 import Buttonright from "../../../share/button/buttonRightStack";
 import { IconAddCircle } from "../../../../assets/icons/IconsGlobal";
 import { View } from "react-native";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { PopupMenu } from "../../Components/popupMenu";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
-import { getDocenteAll } from "../../../../src/services/fetchData/fetchDocente";
-import { getHorarioAll } from "../../../../src/services/fetchData/fetchHorarios";
-import { useFocusEffect } from "@react-navigation/native";
-import { ScreenDetailHour } from "./screenDetailhorario";
+import {
+  useDocenteAll,
+  useHorarioAll,
+} from "../../../../src/hooks/customHooks";
 
 export const IndexHorario = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedItem, setSelectedItem] = useState([]);
-  console.log("selectedItem selectedItem", selectedItem);
   const [showSearchBar, setShowSearchBar] = useState(false);
-
   const [selectedOption, setSelectedOption] = useState(null);
-  console.log("selectedOption indexhorario", selectedOption);
-  const [horarioAll, setHorarioAll] = useState([]);
-  const [docenteall, setDocenteAll] = useState([]);
-  console.log("horarioAll horarioAll", horarioAll);
+  const horarioAll = useHorarioAll();
+  const docenteall = useDocenteAll();
   const [list, setList] = useState([]);
-  console.log("list de la opcion seleccionada", list);
-  // const handleOrderClick = () => {
-  //   console.log("Ordenar por...");
-  // };77
-
-  const fetchDocenteAll = useCallback(async () => {
-    try {
-      const res = await getDocenteAll();
-      setDocenteAll(res);
-    } catch (error) {
-      throw Error(error);
-    }
-  }, []);
-
-  const fetchHorarioALL = useCallback(async () => {
-    try {
-      const res = await getHorarioAll();
-      setHorarioAll(res);
-    } catch (error) {
-      throw Error(error);
-    }
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchDocenteAll();
-      fetchHorarioALL();
-    }, [fetchDocenteAll, fetchHorarioALL])
-  );
 
   const opciones = [
     {
@@ -68,13 +35,10 @@ export const IndexHorario = () => {
   ];
 
   const handleOptionSelect = (option) => {
-    console.log("optiones selected <<<<<<<<", option);
-
     setSelectedOption(option);
     setSearchText("");
     setSelectedItem(null);
     setShowSearchBar(true);
-    console.log("optiones selectedOption >>>>>>>>>", selectedOption);
     switch (option) {
       case "docente":
         setList(docenteall);

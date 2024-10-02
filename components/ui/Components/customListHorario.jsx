@@ -14,6 +14,7 @@ import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { NotRegistration } from "../../share/noRegistration";
 import { ViewHorario } from "../(DIRECTOR)/horarios/component/viewHorario";
 import { ScreenDetailHour } from "../(DIRECTOR)/horarios/screenDetailhorario";
+import moment, { Today } from "../../../src/utils/InstanceMoment";
 
 export const ListItemComponentHorario = ({
   getDataAll,
@@ -21,15 +22,17 @@ export const ListItemComponentHorario = ({
   deleteData,
   deleteDataAsociated,
   navigateToFormScreen,
-  itemIcon = "account",
   modalTitle = "Info",
 }) => {
+  const [modalVisible, setModalVisible] = useState(false); // primer modal
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
+
   const [selectedItem, setSelectedItem] = useState(null);
-  const [value, setValue] = useState(new Date());
-  console.log("setSelectedItem ------------", selectedItem);
+  const today = Today()
+  console.log("ismoment today", moment.isMoment(today));
+  const [value, setValue] = useState(today);
+
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -56,9 +59,7 @@ export const ListItemComponentHorario = ({
     try {
       setModalVisible(true);
       const res = await getDataOne(id);
-      console.log(res, "response res de handleInfoPress");
       const itemselected = res.find((value) => value.id === id);
-      console.log(itemselected, "item selected");
       if (itemselected) {
         setSelectedItem(itemselected);
       } else {
@@ -70,11 +71,6 @@ export const ListItemComponentHorario = ({
       setModalVisible(false);
       throw new Error("Error fetching item:", error);
     }
-  };
-
-  const handleCloseModal = () => {
-    setModalVisible(false);
-    setSelectedItem(null);
   };
 
   const handleDeletePress = (itemId) => {
@@ -133,13 +129,23 @@ export const ListItemComponentHorario = ({
   };
 
   const handleDateSelected = (selectedItem) => {
-    return selectedItem?.horarios
-      .map((horario) => new Date(horario.fecha))
-      .filter((horario) => {
-        const currentMonth = new Date().getMonth();
-        return horario.getMonth() === currentMonth;
+    console.log('handleDateSelected', selectedItem);
+    console.log('handleDateSelected isMoment', moment.isMoment(selectedItem));
+  
+    const allHorariosSelected = selectedItem?.horarios
+      .map((horarios) => {
+        const fecha = moment(horarios.fecha);
+        console.log('fecha allHorariosSelected', fecha);
+        return fecha;
+      })
+      .filter((horarios) => {
+        const currentMonth = moment().month(); // Obtiene el mes actual usando moment
+        return horarios.month() === currentMonth; // Solo compara el mes
       });
+  
+    return allHorariosSelected;
   };
+  
 
   return (
     <>
@@ -202,11 +208,23 @@ export const ListItemComponentHorario = ({
           handleDateSelected={handleDateSelected}
           value={value}
           selectedItem={selectedItem}
-          loading={loading}
-          handleCloseModal={handleCloseModal}
+          setSelectedItem={setSelectedItem}
+          setModalVisible={setModalVisible}
           modalVisible={modalVisible}
         />
       </ScrollView>
     </>
   );
 };
+  // return selectedItem?.horarios.map((horario) => {
+    //   return moment(horario.fecha).isSame(value, 'day'); // Compara día, mes y año
+    // });
+    // return selectedHorario ? moment(selectedHorario.fecha) : null;
+    // const currentMonth = moment(value).month();
+
+    // return selectedItem?.horarios
+    //   .map((horario) => moment(horario.fecha))
+    //   .filter((horario) => {
+    //     const currentMonth = moment().getMonth();
+    //     return horario.getMonth() === currentMonth;
+    //   });

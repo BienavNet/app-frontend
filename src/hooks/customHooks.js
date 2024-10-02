@@ -77,7 +77,7 @@ export const useSupervisorCedula = (CEDULA) => {
 // fetch Salones
 export const useSalonAll = () => {
   const [salones, setSalonAll] = useState([]);
-  const fetchSalonAll = useCallback(async () => {
+  const fetchSalonAll = useCallback( async () => {
     try {
       const res = await getSalon();
       setSalonAll(res);

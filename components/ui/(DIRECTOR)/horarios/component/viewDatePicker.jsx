@@ -1,5 +1,8 @@
-import { Text,View } from "react-native";
-import { capitalizeFirstLetter, formatHourHHMMAMPM } from "../../../../../src/utils/functiones/functions";
+import { Text, View } from "react-native";
+import {
+  capitalizeFirstLetter,
+  formatHourHHMMAMPM,
+} from "../../../../../src/utils/functiones/functions";
 import { Divider } from "@rneui/themed";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { styles } from "../../../../styles/StylesGlobal";
@@ -57,7 +60,9 @@ export const ViewDatePicker = ({ viewSelectDate }) => {
       >
         <View style={{ width: "50%" }}>
           <Text style={[styles.Title1]}>Categoría</Text>
-          <Text style={[styles.text]}>{capitalizeFirstLetter(viewSelectDate.categoria)}</Text>
+          <Text style={[styles.text]}>
+            {capitalizeFirstLetter(viewSelectDate.categoria)}
+          </Text>
         </View>
         <Divider orientation="vertical" width={1} />
         <View style={{ width: "50%" }}>

@@ -105,7 +105,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   subtitle: {
-    paddingVertical: 12,
+    paddingVertical: 7,
     fontSize: 17,
     fontWeight: "600",
     color: "#999999",
@@ -130,7 +130,8 @@ export const styles = StyleSheet.create({
   /** Item */
   item: {
     flex: 1,
-    height: 50,
+    width: 80,
+    height: 60,
     marginHorizontal: 4,
     paddingVertical: 6,
     paddingHorizontal: 4,
@@ -139,7 +140,6 @@ export const styles = StyleSheet.create({
     borderColor: "#e3e3e3",
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "white",
   },
   itemRow: {
     flexDirection: "row",

@@ -19,13 +19,12 @@ import {
   updateClase,
   getClassesByHorarioID,
 } from "../../../../../src/services/fetchData/fetchClases";
-import { useCallback, useEffect, useState } from "react";
-import { getSalon } from "../../../../../src/services/fetchData/fetchSalon";
-import { getSupervisor } from "../../../../../src/services/fetchData/fetchSupervisor";
+import { useEffect, useState } from "react";
 import { generateClassDates } from "../../../../../src/utils/functiones/functions";
 import Loading from "../../../../share/loading";
 import { SubmitButton } from "../../../../share/button/submitButton";
 import useToastMessage from "../../../../share/ToasNotification";
+import { useSalonAll, useSupervisorAll } from "../../../../../src/hooks/customHooks";
 export const RegisterDetailHorario = ({
   navigation,
   route,
@@ -46,30 +45,9 @@ export const RegisterDetailHorario = ({
   const [isFirstAssignment, setIsFirstAssignment] = useState(true);
   const [horainicio, setHoraInicio] = useState(new Date());
   const [horafin, setHoraFin] = useState(new Date());
-  const [salones, setSalones] = useState([]);
-  const [supervisors, setSupervisors] = useState([]);
-  console.log("supervisors state", supervisors);
+  const salones = useSalonAll();
+  const supervisors = useSupervisorAll();
   const [initialValues, setInitialValues] = useState({});
-
-  const fetchSupervisors = useCallback(async () => {
-    try {
-      const res = await getSupervisor();
-      setSupervisors(res);
-    } catch (error) {
-      throw new Error("Error fetching supervisors:", error.message);
-    }
-  }, []);
-
-  const fetchSalones = useCallback(async () => {
-    try {
-      const res = await getSalon();
-      setSalones(res);
-    } catch (error) {
-      throw new Error(
-        error.response ? error.response.data.message : error.message
-      );
-    }
-  }, []);
 
   const countClassesForSupervisors = async () => {
     if (supervisors.length === 0) {
@@ -94,6 +72,7 @@ export const RegisterDetailHorario = ({
       throw new Error("Error fetching classes:", error.message);
     }
   };
+
   const getRandomSupervisor = (supervisors) => {
     if (supervisors.length === 0) return null;
     const randomIndex = Math.floor(Math.random() * supervisors.length);
@@ -169,19 +148,6 @@ export const RegisterDetailHorario = ({
     }
   }, [route.params]);
   const isDisabled = editing && !isDirty;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await fetchSalones();
-        await fetchSupervisors();
-      } catch (error) {
-        throw new Error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [fetchSalones, fetchSupervisors]);
 
   useEffect(() => {
     if (supervisors.length > 0) {

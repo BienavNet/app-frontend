@@ -5,21 +5,26 @@ import { SearchView } from "./component/searchMore&viewValue";
 import { NotRegistration } from "../../../share/noRegistration";
 import { ModalComponente } from "../../Components/customModal";
 import { useState } from "react";
-import { Modal, View, Text, TouchableOpacity } from "react-native";
+import { Modal, View, TouchableOpacity } from "react-native";
 import ScreenViewMore from "./component/ScreenViewMore";
 import { MaterialIcons } from "@expo/vector-icons";
 import useToastMessage from "../../../share/ToasNotification";
+import moment from "../../../../src/utils/InstanceMoment";
+
 export const ScreenDetailHour = ({
-  loading,
   selectedItem,
   value,
   handleDateSelected,
   handleDateChange,
+  setSelectedItem, 
   modalVisible,
-  handleCloseModal,
+  setModalVisible
 }) => {
-  const [viewmoreModalVisible, setViewMoreModalVisible] = useState(false);
+  console.log("ScreenDetailHour value ---->", value);
+
+  const [viewmoreModalVisible, setViewMoreModalVisible] = useState(false); // segunda modal
   const { showToast, APP_STATUS } = useToastMessage();
+
   const handleOpenSecondModal = () => {
     return showToast({
       message: "Cargando datos.... en espera......",
@@ -27,6 +32,11 @@ export const ScreenDetailHour = ({
       id: APP_STATUS.LOADING,
       onClose:() => setViewMoreModalVisible(true)
     });
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setSelectedItem(null);
   };
 
   const handleCloseSecondModal = () => {
@@ -42,28 +52,26 @@ export const ScreenDetailHour = ({
           modalVisible={modalVisible}
           handleCloseModal={handleCloseModal}
         >
-          {loading ? (
-            <Loading />
-          ) : selectedItem ? (
+          {selectedItem ?(
             <>
               <InfoHorario selectedItem={selectedItem} />
-              <SearchView
-                value={value}
-                handleOpenSecondModal={handleOpenSecondModal}
-              />
+              <SearchView value={value} handleOpenSecondModal={handleOpenSecondModal}/>
+             
               <SimpleDatePicker
                 onDateChange={handleDateChange}
                 selectedDate={handleDateSelected(selectedItem)}
-                viewSelectDate={selectedItem?.horarios.find(
-                  (horario) =>
-                    new Date(horario.fecha).toDateString() ===
-                    value.toDateString()
-                )}
+                viewSelectDate={selectedItem?.horarios.find((horario) =>  moment(horario.fecha).isSame(value, 'day'))}
               />
             </>
-          ) : (
+          ): (
             <NotRegistration />
-          )}
+          )
+        }
+          {/* {loading ? (
+            <Loading />
+          ) :  : (
+            <NotRegistration />
+          )} */}
         </ModalComponente>
       </>
 
