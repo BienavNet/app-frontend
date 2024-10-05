@@ -12,19 +12,20 @@ import {
   truncateText,
 } from "../../../src/utils/functiones/functions";
 import { ModalComponente } from "../../ui/Components/customModal";
-import { ColorItem } from "../../styles/StylesGlobal";
+import {styles } from "../../styles/StylesGlobal";
 
 export default function DropdownModal({
-  name,
+  name = "",
   value,
   data,
   onChange,
   placeholder,
 }) {
-  console.log("datos del value", value);
+  
   const [expanded, setExpanded] = useState(false);
   const [valuee, setValue] = useState("");
   const buttonRef = useRef(null);
+
   useEffect(() => {
     if (value !== undefined) {
       const selected = data.find((item) => item.id === value.toString());
@@ -50,11 +51,11 @@ export default function DropdownModal({
     <>
       <View ref={buttonRef}>
         <TouchableOpacity
-          style={styles.button}
+          style={styless.button}
           activeOpacity={0.8}
           onPress={toggleExpanded}
         >
-          <Text style={styles.text}>{capitalizeFirstLetter(truncateText(valuee, 20)) || placeholder}</Text>
+          <Text style={styless.text}>{capitalizeFirstLetter(truncateText(valuee, 20)) || placeholder}</Text>
           <AntDesign name={expanded ? "caretup" : "caretdown"} />
         </TouchableOpacity>
       </View>
@@ -72,13 +73,12 @@ export default function DropdownModal({
           canCloseModal={true}
         >
           <TouchableWithoutFeedback onPress={() => setExpanded(false)}>
-            <View style={[styles.options]}>
+            <View style={[styless.options]}>
               {data.map((item) => (
                 <View
                   key={item.id.toString()}
                   style={{
                     padding: 5,
-                    borderBlockColor: "green",
                   }}
                 >
                   <TouchableOpacity
@@ -100,7 +100,7 @@ export default function DropdownModal({
   );
 }
 
-const styles = StyleSheet.create({
+const styless = StyleSheet.create({
   options: {
     width: "100%",
     height: "100%",
@@ -122,13 +122,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "black",
   },
-  optionItem: {
-    padding: 8,
-    backgroundColor: "#fff1",
-    alignItems: "flex-start",
-    borderRadius: 4,
-    justifyContent: "center",
-    borderBottomColor: ColorItem.TarnishedSilver,
-    borderBottomWidth: 1,
-  },
+
 });

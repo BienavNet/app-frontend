@@ -4,6 +4,7 @@ import {
   truncateText,
 } from "../../../../../src/utils/functiones/functions";
 import { stylesHorariosDirector } from "./styles";
+import { styles } from "../../../../styles/StylesGlobal";
 export const ListItemSelectHorario = ({ data, onPress, selectedOption }) => {
   return (
     <TouchableOpacity onPress={onPress} style={stylesHorariosDirector.item}>

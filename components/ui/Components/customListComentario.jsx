@@ -175,6 +175,7 @@ export const ListItemComentario = ({
         modalStyle={{ height: "99%" }}
         animationType={"slider"}
         modalVisible={modalVisible}
+        title="Datos del Comentario"
         handleCloseModal={handleCloseModal}
       >
         {loading ? (

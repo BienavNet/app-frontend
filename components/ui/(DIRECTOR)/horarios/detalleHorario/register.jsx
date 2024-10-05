@@ -378,11 +378,6 @@ export const RegisterDetailHorario = ({
                   verticalOffset={324}
                   name="salon"
                   control={control}
-                  // placeholder={`${
-                  //   salones.length === 0
-                  //     ? "Sin registros de salones..."
-                  //     : "Seleccione Salon"
-                  // }`}
                   data={salones.map((status) => ({
                     id: status.id,
                     label: status.numero_salon,

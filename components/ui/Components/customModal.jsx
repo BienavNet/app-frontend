@@ -8,7 +8,8 @@ export const ModalComponente = ({
   children,
   modalStyle = {},
   canCloseModal = true,
-  title = ""
+  title = "",
+  childrenStatic = ""
 }) => {
   return (
     <Modal
@@ -49,12 +50,17 @@ export const ModalComponente = ({
               </TouchableOpacity>
             )}
           </View>
-          <Text style={{
-    paddingLeft:8,
-    color:"black",
-    fontWeight:"bold",
-    fontSize:20
-   }}>{title}</Text>
+          <Text
+            style={{
+              paddingLeft: 8,
+              color: "black",
+              fontWeight: "bold",
+              fontSize: 20,
+            }}
+          >
+            {title}
+          </Text>
+          <View>{childrenStatic}</View>
           <ScrollView className="h-full">
             <View className="w-[100%]">{children}</View>
           </ScrollView>

@@ -1,5 +1,5 @@
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import { ColorItem } from "../../../../styles/StylesGlobal";
+import { TouchableOpacity, View, Text } from "react-native";
+import { ColorItem, styles } from "../../../../styles/StylesGlobal";
 import {
   capitalizeFirstLetter,
   truncateText,
@@ -7,10 +7,14 @@ import {
 
 export const ListSelectItem = ({ data, onPress, selectedOption }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.item}>
+    <TouchableOpacity 
+    onPress={onPress}
+    activeOpacity={0.3}
+    style={styles.optionItem}
+    >
       <View style={styles.itemInfo}>
         {selectedOption === "docente" && (
-          <Text style={styles.itemP2}>
+          <Text className="text-black text-lg text-left py-2">
             {capitalizeFirstLetter(data.nombre)}{" "}
             {capitalizeFirstLetter(data.apellido)}
           </Text>
@@ -20,10 +24,10 @@ export const ListSelectItem = ({ data, onPress, selectedOption }) => {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              overflow: "hidden",
+              // overflow: "hidden",
             }}
           >
-            <Text style={styles.itemP2}>
+          <Text className="text-black text-lg text-left py-2">
               {data.numero_salon} {"-"} {truncateText(data.nombre, 13)}
             </Text>
           </View>
@@ -32,26 +36,3 @@ export const ListSelectItem = ({ data, onPress, selectedOption }) => {
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  item: {
-    flexDirection: "row",
-    marginLeft: 20,
-    marginRight: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: ColorItem.DeepFir,
-    paddingTop: 15,
-    paddingBottom: 15,
-  },
-  itemInfo: {
-    marginLeft: 20,
-  },
-  itemP1: {
-    fontSize: 16,
-    color: "black",
-  },
-  itemP2: {
-    fontSize: 18,
-    color: "black",
-  },
-});

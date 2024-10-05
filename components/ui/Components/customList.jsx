@@ -19,6 +19,7 @@ export const ListItemComponent = ({
 }) => {
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
+  console.log(items, "items", setItems, "setItems");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   console.log(selectedItem, "setSelectedItem");
@@ -41,7 +42,7 @@ export const ListItemComponent = ({
       const res = await getDataOne(cedula);
       console.log(res, "response res de handleInfoPress");
       const itemselected = res.find((value) => value.cedula === cedula);
-      console.log(itemselected, "item selected");
+      console.log(itemselected, "<--- item selected");
       if (itemselected) {
         setSelectedItem(itemselected);
       } else {
@@ -153,9 +154,14 @@ export const ListItemComponent = ({
       )}
       <ModalComponente
         transparent={true}
+        modalStyle={{
+        height:"70%"
+        }}
         animationType={"slider"}
         modalVisible={modalVisible}
         handleCloseModal={handleCloseModal}
+        canCloseModal={true}
+        title={`Datos del ${modalTitle}`}
       >
         {selectedItem ? (
           <InfoDS selectedItem={selectedItem} />

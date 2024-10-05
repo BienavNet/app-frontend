@@ -50,6 +50,12 @@ export const stylesColors = StyleSheet.create({
 });
 
 export const styles = StyleSheet.create({
+  searchArea: {
+    backgroundColor: "transparent",
+    width: "100%",
+    paddingHorizontal:15,
+  },
+  
   Title11: {
     fontSize: 18,
     fontWeight: "bold",
@@ -207,10 +213,19 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   itemInfo: {
-    marginLeft: 20,
+   padding:5,
   },
   textinfo: {
     fontSize: 18,
     color: "black",
+  },
+  optionItem: {
+    padding: 8,
+    backgroundColor: "transparent",
+    alignItems: "flex-start",
+    borderRadius: 4,
+    justifyContent: "center",
+    borderBottomColor: ColorItem.TarnishedSilver,
+    borderBottomWidth: 1,
   },
 });

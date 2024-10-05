@@ -4,22 +4,12 @@ import {
   getComentarioOne,
 } from "../../../../src/services/fetchData/fetchComentario";
 import { ListItemComentario } from "../../Components/customListComentario";
-import {
-  FlatList,
-  TouchableOpacity,
-  View,
-  Text,
-  StyleSheet,
-} from "react-native";
+import { FlatList, View, Text } from "react-native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { ColorItem } from "../../../styles/StylesGlobal";
+import { styles } from "../../../styles/StylesGlobal";
 import { PopupMenu } from "../../Components/popupMenu";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { SearchBar } from "@rneui/themed";
-import { useCallback, useState, useEffect } from "react";
-import { useFocusEffect } from "@react-navigation/native";
-import { getSalon } from "../../../../src/services/fetchData/fetchSalon";
-import { getDocenteAll } from "../../../../src/services/fetchData/fetchDocente";
+import { useState, useEffect } from "react";
 import {
   getComentarioDocenteDocente,
   getComentarioSalonOne,
@@ -28,7 +18,13 @@ import { ListSelectItem } from "./components/listSelect";
 import { ListFilterComentarioDocente } from "./components/listFilterDocente";
 import { ListFilterComentarioSalon } from "./components/listFilterSalon";
 import { useDocenteAll, useSalonAll } from "../../../../src/hooks/customHooks";
-
+import { ModalComponente } from "../../Components/customModal";
+import { CustomSeachBar } from "./components/seachBar";
+import {
+  ChildFilter,
+  ChildFilterOutline,
+} from "../../(SUPERVISOR)/components/chid/chidFilter";
+import { ListItem } from "@react-native-material/core";
 export const ListComentario = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -36,43 +32,16 @@ export const ListComentario = () => {
   const salonAll = useSalonAll();
   const docenteall = useDocenteAll();
   const [additionalData, setAdditionalData] = useState([]);
+  console.log(additionalData, "setAdditionalData");
   const [selectedOption, setSelectedOption] = useState(null);
   const [list, setList] = useState([]);
-  
-  const handleOrderClick = () => {
-    console.log("Ordenar por...");
-  };
-
-  // const fetchDocenteAll = useCallback(async () => {
-  //   try {
-  //     const res = await getDocenteAll();
-  //     setDocenteAll(res);
-  //   } catch (error) {
-  //     throw Error(error);
-  //   }
-  // }, []);
-
-  // const fetchSalonALL = useCallback(async () => {
-  //   try {
-  //     const res = await getSalon();
-  //     setSalonAll(res);
-  //   } catch (error) {
-  //     throw Error(error);
-  //   }
-  // }, []);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     fetchDocenteAll();
-  //   }, [fetchDocenteAll])
-  // );
+  const [showModal, setShowModal] = useState(false);
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setSearchText("");
     setSelectedItem(null);
     setShowSearchBar(true);
-
     switch (selectedOption) {
       case "docente":
         setList(docenteall);
@@ -83,6 +52,7 @@ export const ListComentario = () => {
       default:
         setList([]);
     }
+    setShowModal(true);
   };
 
   useEffect(() => {
@@ -128,10 +98,12 @@ export const ListComentario = () => {
     setSelectedOption(null);
     setSelectedItem(null);
     setList([]);
+    setShowModal(false);
   };
   const handleItemPress = (item) => {
     setSelectedItem(item);
     setList([]);
+    setShowModal(false);
   };
   useEffect(() => {
     const fetchAdditionalData = async () => {
@@ -145,7 +117,7 @@ export const ListComentario = () => {
           }
           setAdditionalData(data);
         } catch (error) {
-          throw Error("Error fetching additional data:", error);
+          setAdditionalData([]);
         }
       }
     };
@@ -159,55 +131,19 @@ export const ListComentario = () => {
           justifyContent: "flex-end",
         }}
       >
-        {showSearchBar && (
-          <View style={styles.searchArea}>
-            <SearchBar
-              platform="android"
-              containerStyle={styles.search}
-              inputContainerStyle={{ backgroundColor: "#fff" }}
-              onChangeText={(t) => setSearchText(t)}
-              placeholder={`Buscar ${selectedOption}`}
-              placeholderTextColor={ColorItem.DeepFir}
-              value={searchText}
-              onCancel={handleSearchBarClear}
-              onClear={handleSearchBarClear}
-            />
-            <TouchableOpacity
-              onPress={handleOrderClick}
-              style={styles.orderButton}
-            >
-              <MaterialCommunityIcons
-                name="order-alphabetical-ascending"
-                size={24}
-                color={ColorItem.DeepFir}
-              />
-            </TouchableOpacity>
-          </View>
+        {selectedItem && (
+        <>
+          {selectedOption && additionalData &&(
+ <ChildFilterOutline
+ title={selectedOption}
+ selectedItem={selectedItem}
+ action={handleSearchBarClear}
+/>
+          )}
+          </>
         )}
-        {showSearchBar ? "" : <PopupMenu opcions={opciones} />}
+        <PopupMenu opcions={opciones} />
       </View>
-      <>
-        {selectedOption && !selectedItem && (
-          <FlatList
-            data={list}
-            renderItem={({ item }) => (
-              <ListSelectItem
-                onPress={() => handleItemPress(item)}
-                data={item}
-                selectedOption={selectedOption}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-            ListEmptyComponent={
-              <Text
-              //  style={styles.noResultsText}
-              >
-                No coinciden los resultados
-              </Text>
-            }
-          />
-        )}
-      </>
 
       {selectedItem && (
         <>
@@ -215,10 +151,29 @@ export const ListComentario = () => {
             <FlatList
               data={additionalData}
               style={styles.list}
-              renderItem={({ item }) => <ListFilterComentarioDocente data={item} />}
+              renderItem={({ item }) => (
+                <ListFilterComentarioDocente data={item} />
+              )}
               keyExtractor={(item) => item.id.toString()}
               ListEmptyComponent={
-                <Text style={styles.noResultsText}>No hay resultados.</Text>
+                <View
+                  style={{
+                    width: "100%",
+                    paddingVertical: 10,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "red",
+                      padding: 10,
+                      fontSize:16,
+                      fontWeight: "semibold",
+                      textAlign: "center",
+                    }}
+                  >
+                    No hay resultados para el filtro seleccionado.
+                  </Text>
+                </View>
               }
             />
           )}
@@ -227,10 +182,29 @@ export const ListComentario = () => {
             <FlatList
               data={additionalData}
               style={styles.list}
-              renderItem={({ item }) => <ListFilterComentarioSalon data={item} />}
+              renderItem={({ item }) => (
+                <ListFilterComentarioSalon data={item} />
+              )}
               keyExtractor={(item) => item.id.toString()}
               ListEmptyComponent={
-                <Text style={styles.noResultsText}>No hay resultados.</Text>
+                <View
+                  style={{
+                    width: "100%",
+                    paddingVertical: 10,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "red",
+                      padding: 10,
+                      fontSize:16,
+                      fontWeight: "semibold",
+                      textAlign: "center",
+                    }}
+                  >
+                    No hay resultados para el filtro seleccionado.
+                  </Text>
+                </View>
               }
             />
           )}
@@ -245,28 +219,58 @@ export const ListComentario = () => {
           modalTitle="Comentarios"
         />
       )}
+
+      {showSearchBar && (
+        <ModalComponente
+          handleCloseModal={handleSearchBarClear}
+          modalStyle={{ height: "90%" }}
+          canCloseModal={true}
+          title={`Seleccione un ${selectedOption}`}
+          modalVisible={showModal}
+          animationType="slide"
+          transparent={false}
+          childrenStatic={
+            <CustomSeachBar
+              handleSearchBarClear={handleSearchBarClear}
+              searchText={searchText}
+              selectedOption={selectedOption}
+              setSearchText={setSearchText}
+            />
+          }
+        >
+          {selectedOption &&
+            !selectedItem &&
+            (Array.isArray(list) && list.length > 0 ? (
+              list.map((item, index) => (
+                <ListSelectItem
+                  key={item.id || index}
+                  onPress={() => handleItemPress(item)}
+                  data={item}
+                  selectedOption={selectedOption}
+                />
+              ))
+            ) : (
+              <View
+                  style={{
+                    width: "100%",
+                    paddingVertical: 10,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "red",
+                      padding: 10,
+                      fontSize:16,
+                      fontWeight: "semibold",
+                      textAlign: "center",
+                    }}
+                  >
+                    No hay resultados para el filtro seleccionado.
+                  </Text>
+                </View>
+            ))}
+        </ModalComponente>
+      )}
     </>
   );
 };
-const styles = StyleSheet.create({
-  searchArea: {
-    backgroundColor: "transparent",
-    width: "100%",
-    height: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  search: {
-    borderBottomWidth: 1,
-    borderBottomColor: ColorItem.KellyGreen,
-    backgroundColor: "transparent",
-    marginRight: 30,
-    flex: 1,
-    height: "100%",
-    fontSize: 19,
-  },
-  orderButton: {
-    width: 32,
-    marginRight: 20,
-  },
-});

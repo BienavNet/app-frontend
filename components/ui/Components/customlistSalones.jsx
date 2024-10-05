@@ -52,7 +52,7 @@ export const ListItemSalones = ({
       if (itemselected) {
         setSelectedItem(itemselected);
       } else {
-        console.error("Docente no encontrado");
+        console.error("Salon no encontrado");
         setSelectedItem(null);
       }
     } catch (error) {
@@ -119,6 +119,7 @@ export const ListItemSalones = ({
         transparent={true}
         animationType={"slider"}
         modalVisible={modalVisible}
+        title="Datos del salon"
         handleCloseModal={handleCloseModal}
       >
         {selectedItem ? (

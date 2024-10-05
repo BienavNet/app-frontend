@@ -29,11 +29,7 @@ export const ListHorario = ({
   list,horarioAll,docenteall
   
 }) => {
-  console.log("list horario", list);
-
   const [additionalData, setAdditionalData] = useState([]);
-  console.log("additionalData horario", additionalData);
-
   useEffect(() => {
     if (searchText === "" && selectedOption) {
       handleOptionSelect(selectedOption);
@@ -67,7 +63,6 @@ export const ListHorario = ({
           let data;
           if (selectedOption === "docente") {
             data = await getDetailHorarioDocente(selectedItem.cedula);
-            console.log("data horario", data);
             setAdditionalData(data);
           } 
           // else if (selectedOption === "horario") {
@@ -123,7 +118,6 @@ export const ListHorario = ({
             keyExtractor={(item) => item.id}
             ListEmptyComponent={
               <Text
-              //  style={styles.noResultsText}
               >
                 No coinciden los resultados
               </Text>
@@ -190,9 +184,5 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "80%",
     fontSize: 19,
-  },
-  orderButton: {
-    width: 32,
-    marginRight: 20,
   },
 });

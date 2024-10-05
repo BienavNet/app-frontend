@@ -96,8 +96,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: 10,
     position: "absolute",
-    top: 120,
-    right: 20,
+    top: 102,
+    right: 10,
   },
   ButtonPopupMenu: {
     flexDirection: "row",
