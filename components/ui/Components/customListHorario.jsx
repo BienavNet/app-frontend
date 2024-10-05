@@ -129,18 +129,14 @@ export const ListItemComponentHorario = ({
   };
 
   const handleDateSelected = (selectedItem) => {
-    console.log('handleDateSelected', selectedItem);
-    console.log('handleDateSelected isMoment', moment.isMoment(selectedItem));
-  
     const allHorariosSelected = selectedItem?.horarios
       .map((horarios) => {
         const fecha = moment(horarios.fecha);
-        console.log('fecha allHorariosSelected', fecha);
         return fecha;
       })
       .filter((horarios) => {
-        const currentMonth = moment().month(); // Obtiene el mes actual usando moment
-        return horarios.month() === currentMonth; // Solo compara el mes
+        const currentMonth = moment().month(); // Se obtiene el mes actual usando moment
+        return horarios.month() === currentMonth; // Solo comparamos el mes
       });
   
     return allHorariosSelected;

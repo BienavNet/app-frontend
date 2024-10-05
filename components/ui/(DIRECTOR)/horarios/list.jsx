@@ -99,8 +99,6 @@ export const ListHorario = ({
             onCancel={handleSearchBarClear}
             onClear={handleSearchBarClear}
           />
-
-          {/* terminar componente de cancelar searchBar */}
         </View>
       )}
     
@@ -127,7 +125,6 @@ export const ListHorario = ({
     
       {selectedItem && (
         <>
-        {console.log("options", selectedOption, additionalData)}
           {selectedOption === "docente" && additionalData && (
             <>
               <FlatList

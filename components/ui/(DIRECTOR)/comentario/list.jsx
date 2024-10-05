@@ -142,7 +142,10 @@ export const ListComentario = () => {
           )}
           </>
         )}
-        <PopupMenu opcions={opciones} />
+        <PopupMenu 
+        rightM={10}
+        topM={100}
+        opcions={opciones} />
       </View>
 
       {selectedItem && (

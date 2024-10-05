@@ -89,7 +89,9 @@ export const IndexHorario = () => {
                 justifyContent: "flex-end",
               }}
             >
-              {showSearchBar ? "" : <PopupMenu opcions={opciones} />}
+              {showSearchBar ? "" : <PopupMenu 
+              rightM={50}
+              opcions={opciones} />}
             </View>
 
             <View>

@@ -10,7 +10,6 @@ const renderScene = SceneMap({
   second: ReportView_Filter,
 });
 
-
 export default function TabViewTop() {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);

@@ -12,7 +12,8 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ColorItem } from "../../styles/StylesGlobal";
 import { useRef, useState } from "react";
 
-export const PopupMenu = ({ opcions, onSelect }) => {
+export const PopupMenu = ({ opcions, onSelect, topM =102, rightM = 10}) => {
+  console.log(`Pop top ${ topM} y right ${ rightM}`);
   const [visible, setVisible] = useState(false);
   const scale = useRef(new Animated.Value(0)).current;
 
@@ -30,7 +31,6 @@ export const PopupMenu = ({ opcions, onSelect }) => {
     if (onSelect) {
       onSelect(id);
     }
-
     resizeBox(0);
   };
   return (
@@ -45,6 +45,9 @@ export const PopupMenu = ({ opcions, onSelect }) => {
             style={[
               styles.popupMenu,
               {
+                position: "absolute",
+                top:topM,
+                right:rightM,
                 opacity: scale.interpolate({
                   inputRange: [0, 1],
                   outputRange: [0, 1],
@@ -90,14 +93,13 @@ export const PopupMenu = ({ opcions, onSelect }) => {
 
 const styles = StyleSheet.create({
   popupMenu: {
-    borderRadius: 8,
+    borderTopLeftRadius:8,
+    borderBottomLeftRadius:8,
+    borderBottomRightRadius:8,
     borderColor: ColorItem.DeepFir,
     borderWidth: 1,
     backgroundColor: "#fff",
-    paddingHorizontal: 10,
-    position: "absolute",
-    top: 102,
-    right: 10,
+    paddingHorizontal: 10
   },
   ButtonPopupMenu: {
     flexDirection: "row",

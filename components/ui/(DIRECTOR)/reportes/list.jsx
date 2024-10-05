@@ -30,48 +30,11 @@ export const ReportView_Filter = () => {
   const reportAll = useReporteAll();
   const classAll = useClasesAll();
   const salonAll = useSalonAll();
-
   const [selectedItem, setSelectedItem] = useState([]);
   const [list, setList] = useState([]); // list con la información de los datos filtrados
-
   const [selectedOption, setSelectedOption] = useState(null);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [additionalData, setAdditionalData] = useState([]);
-
-  // const fetchReportAll = useCallback(async () => {
-  //   try {
-  //     const res = await getReportAll();
-  //     setReportAll(res);
-  //   } catch (error) {
-  //     throw Error(error);
-  //   }
-  // }, []);
-
-  // const fetchClassAll = useCallback(async () => {
-  //   try {
-  //     const res = await getClasesAll();
-  //     setClassAll(res);
-  //   } catch (error) {
-  //     throw Error(error);
-  //   }
-  // }, []);
-
-  // const fetchSalonALL = useCallback(async () => {
-  //   try {
-  //     const res = await getSalon();
-  //     setSalonAll(res);
-  //   } catch (error) {
-  //     throw Error(error);
-  //   }
-  // }, []);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     // fetchReportAll();
-  //     // fetchSalonALL();
-  //     fetchClassAll();
-  //   }, [fetchClassAll])
-  // );
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -149,7 +112,6 @@ export const ReportView_Filter = () => {
         a.horario > b.horario ? 1 : b.horario > a.horario ? -1 : 0
       );
     }
-
     setList(newList);
   };
 
@@ -218,7 +180,10 @@ export const ReportView_Filter = () => {
             </TouchableOpacity>
           </View>
         )}
-        {showSearchBar ? "" : <PopupMenu opcions={opciones} />}
+        {showSearchBar ? "" :
+         <PopupMenu 
+        topM={150}
+        opcions={opciones} />}
       </View>
 
       {/* //informacion que se mostrara por default */}
