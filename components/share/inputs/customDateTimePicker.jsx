@@ -7,7 +7,7 @@ import {
   formatHourHHMM,
   formatHourHHMMTime,
 } from "../../../src/utils/functiones/functions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export const CustomTimePicker = ({
   name,
   control,
@@ -20,9 +20,18 @@ export const CustomTimePicker = ({
   onTimeSelected,
   title,
 }) => {
+  console.log("initialize value: " + initialValue)
   const [showPicker, setShowPicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState(initialValue || new Date());
   const [titleSelected, setTitleSelected] = useState(title);
+  useEffect(() => {
+    if (initialValue) {
+      const newTime = new Date(initialValue); // Convierte el valor inicial en un objeto Date
+      setSelectedTime(newTime); // Actualiza el tiempo seleccionado
+      setTitleSelected(formatHourHHMMTime(newTime)); // Actualiza el título mostrado en el botón
+    }
+  }, [initialValue]);
+
 
   const handlePress = () => {
     setShowPicker(true);
@@ -36,14 +45,9 @@ export const CustomTimePicker = ({
     const time = newTime || selectedTime;
     setShowPicker(false);
     if (time instanceof Date && !isNaN(time.getTime())) {
-      console.log(time, "time");
       const formattedTime = formatHourHHMM(time); // HH:mm
       const formattedTimeTime = formatHourHHMMTime(time); // HH:mm AM/PM
-
       setSelectedTime(time); // Mantiene el objeto Date en el estado
-      console.log(formattedTime, "formattedTime");
-      console.log(formattedTimeTime, "formattedTimeTime");
-      console.log(onTimeSelected(formattedTime), "onTimeSelected");
       setTitleSelected(formattedTimeTime); // Actualiza el título mostrado en el botón
       onTimeSelected(formattedTime); // Retorna el tiempo formateado al padre
       onChange(formattedTime);

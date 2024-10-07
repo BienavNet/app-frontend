@@ -16,6 +16,7 @@ import { ColorItem } from "../../../styles/StylesGlobal";
 import { ListItemSelectHorario } from "./component/listSelect";
 import { ListFilterHorarioDocente } from "./component/listFilterdocente";
 import { ListFilterHorario2 } from "./component/listFilterHorario";
+import { ModalComponente } from "../../Components/customModal";
 export const ListHorario = ({
   showSearchBar,
   searchText,
@@ -26,8 +27,9 @@ export const ListHorario = ({
   setSelectedItem,
   handleSearchBarClear,
   handleOptionSelect,
-  list,horarioAll,docenteall
-  
+  list,
+  horarioAll,
+  docenteall,
 }) => {
   const [additionalData, setAdditionalData] = useState([]);
   useEffect(() => {
@@ -64,17 +66,13 @@ export const ListHorario = ({
           if (selectedOption === "docente") {
             data = await getDetailHorarioDocente(selectedItem.cedula);
             setAdditionalData(data);
-          } 
-          // else if (selectedOption === "horario") {
-          //   data = await getDetailHorario2(selectedItem.id);
-          // }
-          if (data) { // Solo actualiza si data tiene contenido
+          } else if (selectedOption === "horario") {
+            data = await getDetailHorario2(selectedItem.id);
+          }
+          if (data) {
             setAdditionalData(data);
-            console.log("entro a data");
           } else {
-
-            setAdditionalData([]); // Si no hay datos, asegúrate de limpiar el estado
-            console.log("entro a sin data");
+            setAdditionalData([]);
           }
         } catch (error) {
           throw Error("Error fetching additional data:", error);
@@ -85,44 +83,59 @@ export const ListHorario = ({
   }, [selectedItem, selectedOption]);
   return (
     <>
-      {showSearchBar && (
-        <View style={styles.searchArea}>
-          <SearchBar
-            platform="android"
-            containerStyle={styles.search}
-            inputContainerStyle={{ backgroundColor: "#fff" }}
-            onChangeText={(t) => setSearchText(t)}
-            placeholder={`Buscar ${selectedOption}`}
-            placeholderTextColor={ColorItem.DeepFir}
-            cancelButtonTitle="Cancel"
-            value={searchText}
-            onCancel={handleSearchBarClear}
-            onClear={handleSearchBarClear}
-          />
-        </View>
+      {!selectedOption && (
+        <ListItemComponentHorario
+          deleteDataAsociated={DeleteDetailHorarioOne}
+          getDataAll={getHorarioAll}
+          getDataOne={getHorarioOne}
+          deleteData={DeleteHorarioOne}
+          modalTitle="Horario"
+        />
       )}
-    
-        {selectedOption && !selectedItem && (
-          <FlatList
-            data={list}
-            // style={styles.listFromSearchBar}
-            renderItem={({ item }) => (
-              <ListItemSelectHorario
-                onPress={() => handleItemPress(item)}
-                data={item}
-                selectedOption={selectedOption}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-            ListEmptyComponent={
-              <Text
-              >
-                No coinciden los resultados
-              </Text>
-            }
-          />
-        )}
-    
+
+      {showSearchBar && (
+        <ModalComponente
+          modalStyle={{
+            height: "90%",
+          }}
+          
+          transparent={true}
+          canCloseModal={true}
+          handleCloseModal={handleSearchBarClear}
+        >
+          <View style={styles.searchArea}>
+            <SearchBar
+              platform="android"
+              containerStyle={styles.search}
+              inputContainerStyle={{ backgroundColor: "#fff" }}
+              onChangeText={(t) => setSearchText(t)}
+              placeholder={`Buscar ${selectedOption}`}
+              placeholderTextColor={ColorItem.DeepFir}
+              cancelButtonTitle="Cancel"
+              value={searchText}
+              onCancel={handleSearchBarClear}
+              onClear={handleSearchBarClear}
+            />
+          </View>
+        </ModalComponente>
+      )}
+
+      {selectedOption && !selectedItem && (
+        <FlatList
+          data={list}
+          // style={styles.listFromSearchBar}
+          renderItem={({ item }) => (
+            <ListItemSelectHorario
+              onPress={() => handleItemPress(item)}
+              data={item}
+              selectedOption={selectedOption}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={<Text>No coinciden los resultados</Text>}
+        />
+      )}
+
       {selectedItem && (
         <>
           {selectedOption === "docente" && additionalData && (
@@ -152,16 +165,6 @@ export const ListHorario = ({
             />
           )}
         </>
-      )}
-
-      {!selectedOption && (
-        <ListItemComponentHorario
-          deleteDataAsociated={DeleteDetailHorarioOne}
-          getDataAll={getHorarioAll}
-          getDataOne={getHorarioOne}
-          deleteData={DeleteHorarioOne}
-          modalTitle="Horario"
-        />
       )}
     </>
   );

@@ -36,18 +36,29 @@ export const RegisterDetailHorario = ({
   const {
     handleSubmit,
     control,
-    reset,
+    reset,watch,
     formState: { errors, isDirty },
   } = useForm({
     resolver: yupResolver(detailHorarioRegister),
   });
+  const supervisors = useSupervisorAll();
   const [loading, setLoading] = useState(false);
   const [isFirstAssignment, setIsFirstAssignment] = useState(true);
   const [horainicio, setHoraInicio] = useState(new Date());
   const [horafin, setHoraFin] = useState(new Date());
-  const salones = useSalonAll();
-  const supervisors = useSupervisorAll();
-  const [initialValues, setInitialValues] = useState({});
+  const mapSalones = useSalonAll();
+  console.log(mapSalones, "<------- map salones");
+
+  const salones = mapSalones.map((item) => ({
+    id: item.id.toString(),
+    label: `${item.numero_salon} ${item.nombre} `,
+  }));
+
+  console.log("todos los dias", diasArray)
+  const dias = diasArray.map((d) => ({
+    id: d,
+    label: d,
+  }))
 
   const countClassesForSupervisors = async () => {
     if (supervisors.length === 0) {
@@ -107,8 +118,6 @@ export const RegisterDetailHorario = ({
   };
   useEffect(() => {
     if (route.params && route.params.id) {
-      console.log("id params de detalle horario" + route.params.id);
-      console.log("editin type: " + editing);
       if (editing) {
         (async () => {
           showToast({
@@ -116,26 +125,13 @@ export const RegisterDetailHorario = ({
             type: "warning",
             id: APP_STATUS.LOADING,
           });
-          console.log(
-            "id params antes de entrar a getDetailHorarioOne" + route.params.id
-          );
           const response = await getDetailHorarioOne(route.params.id);
-          console.log(response, "getDetailHorarioOne response");
-
-          const value = response.find((doc) => doc.id === route.params.id);
+          const value = response.find((doc) => doc.horario === route.params.id);
           console.log(value, "getDetailHorarioOne value");
 
-          const res = await getClassesByHorarioID(route.params.id);
-          console.log(res, "getClassesByHorarioID value");
           if (value) {
-            setInitialValues({
-              // salon: value.salon,
-              dia: value.dia,
-              hora_inicio: value.hora_inicio,
-              hora_fin: value.hora_fin,
-            });
             reset({
-              // salon: value.salon,
+              salon: value.salon,
               dia: value.dia,
               hora_inicio: value.hora_inicio,
               hora_fin: value.hora_fin,
@@ -316,11 +312,9 @@ export const RegisterDetailHorario = ({
                       ? "Sin registros de salones..."
                       : "Seleccione Salon"
                   }`}
-                  data={salones.map((status) => ({
-                    id: status.id,
-                    label: status.numero_salon,
-                    value: status.nombre,
-                  }))}
+                  data={salones}
+
+                  // "INTernet": "si", "capacidad": 23, "categoria_salon": 342342234, "id": 1, "nombre": "sala de programacion", "numero_salon": 112, "tv": "no"
                 />
               </View>
               <View className="flex-row justify-items-stretch pt-8 pb-7">
@@ -330,8 +324,8 @@ export const RegisterDetailHorario = ({
                     control={control}
                     errors={errors.hora_inicio}
                     title="Hora inicio"
-                    testID="hora_inicio"
                     initialValue={horainicio}
+                    testID="hora_inicio"
                     mode="time"
                     display="clock"
                     is24Hour={true}
@@ -364,25 +358,17 @@ export const RegisterDetailHorario = ({
               <View className="self-center w-[85%]">
                 <CustomPiker
                   name="dia"
-                  placeholder="Seleccione"
+                  placeholder="seleccione dia"
                   control={control}
-                  data={diasArray.map((d) => ({
-                    id: d,
-                    label: d,
-                    value: d,
-                  }))}
+                  data={dias}
                 />
               </View>
               <View className="self-center w-[85%] pb-1 pt-5">
                 <CustomFlatList
-                  verticalOffset={324}
                   name="salon"
+                    placeholder="seleccione salon"
                   control={control}
-                  data={salones.map((status) => ({
-                    id: status.id,
-                    label: status.numero_salon,
-                    value: status.nombre,
-                  }))}
+                  data={salones}
                 />
               </View>
 
@@ -393,8 +379,8 @@ export const RegisterDetailHorario = ({
                     control={control}
                     title="Hora inicio"
                     testID="hora_inicio"
-                    // initialValue={horainicio}
                     mode="time"
+                    initialValue={watch('hora_inicio')}
                     display="clock"
                     is24Hour={true}
                     onTimeSelected={(formattedTime) => {
@@ -409,7 +395,7 @@ export const RegisterDetailHorario = ({
                     control={control}
                     title="Hora Fin"
                     testID="hora_fin"
-                    // initialValue={horafin}
+                    initialValue={watch('hora_fin')}
                     mode="time"
                     display="clock"
                     is24Hour={true}

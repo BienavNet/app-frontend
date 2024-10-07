@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -6,10 +6,10 @@ import { ModalComponente } from "./customModal";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Loading from "../../share/loading";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
-import { NotRegistration } from "../../share/noRegistration";
 import { InfoSalones } from "../(DIRECTOR)/salones/components/InfoSalones";
 import { ViewSalones } from "../(DIRECTOR)/salones/components/viewSalones";
 import CustomTouchableOpacity from "./customTouchableOpacity";
+import { NotRegistration } from "./unregistered/noRegistration";
 
 export const ListItemSalones = ({
   getDataAll,

@@ -64,6 +64,8 @@ export function getFirstLetter(word) {
   }
   return "";
 }
+
+// pasamos un objeto Date si deseas obtener la hora en formato de 12 horas con AM/PM
 export const formatHourHHMMTime = (currentTime) => {
   const hours = currentTime.getHours();
   const minutes = currentTime.getMinutes();
@@ -72,13 +74,6 @@ export const formatHourHHMMTime = (currentTime) => {
     .padStart(2, "0")} ${hours < 12 ? "AM" : "PM"}`;
 };
 
-export const formatHourHHMM = (currentTime) => {
-  const hours = currentTime.getHours();
-  const minutes = currentTime.getMinutes();
-  return `${hours.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")}`;
-};
 
 export const truncateText = (text, maxLegth = 7) => {
   if (text.length > 15) {
@@ -119,7 +114,6 @@ export const getFutureDatesDisabled = (minDate) => {
 
   return marked;
 };
-
 
 // devuelve el numero del dia, {lunes:1, martes:2 , etc}
 export const obtenerDiaNumero = (dia) => {

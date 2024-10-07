@@ -2,8 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { TouchableWithoutFeedback, View, Text, ScrollView } from "react-native";
 import { ColorItem, styles } from "../../styles/StylesGlobal";
 import  moment, { Today } from "../../../src/utils/InstanceMoment";
-import { NotRegistrationDate } from "../../share/noRegistration";
 import { ViewDatePicker } from "../(DIRECTOR)/horarios/component/viewDatePicker";
+import { NotRegistrationDate } from "./unregistered/noRegistration";
 export default function SimpleDatePicker({
   selectedDate,
   onDateChange,

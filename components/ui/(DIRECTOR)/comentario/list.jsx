@@ -20,11 +20,9 @@ import { ListFilterComentarioSalon } from "./components/listFilterSalon";
 import { useDocenteAll, useSalonAll } from "../../../../src/hooks/customHooks";
 import { ModalComponente } from "../../Components/customModal";
 import { CustomSeachBar } from "./components/seachBar";
-import {
-  ChildFilter,
-  ChildFilterOutline,
-} from "../../(SUPERVISOR)/components/chid/chidFilter";
-import { ListItem } from "@react-native-material/core";
+import { ChildFilterOutline } from "../../(SUPERVISOR)/components/chid/chidFilter";
+import { NofilterSelected } from "../../Components/unregistered/noRegistration";
+
 export const ListComentario = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -32,7 +30,6 @@ export const ListComentario = () => {
   const salonAll = useSalonAll();
   const docenteall = useDocenteAll();
   const [additionalData, setAdditionalData] = useState([]);
-  console.log(additionalData, "setAdditionalData");
   const [selectedOption, setSelectedOption] = useState(null);
   const [list, setList] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -132,20 +129,17 @@ export const ListComentario = () => {
         }}
       >
         {selectedItem && (
-        <>
-          {selectedOption && additionalData &&(
- <ChildFilterOutline
- title={selectedOption}
- selectedItem={selectedItem}
- action={handleSearchBarClear}
-/>
-          )}
+          <>
+            {selectedOption && additionalData && (
+              <ChildFilterOutline
+                title={selectedOption}
+                selectedItem={selectedItem}
+                action={handleSearchBarClear}
+              />
+            )}
           </>
         )}
-        <PopupMenu 
-        rightM={10}
-        topM={100}
-        opcions={opciones} />
+        <PopupMenu rightM={10} topM={100} opcions={opciones} />
       </View>
 
       {selectedItem && (
@@ -158,26 +152,7 @@ export const ListComentario = () => {
                 <ListFilterComentarioDocente data={item} />
               )}
               keyExtractor={(item) => item.id.toString()}
-              ListEmptyComponent={
-                <View
-                  style={{
-                    width: "100%",
-                    paddingVertical: 10,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "red",
-                      padding: 10,
-                      fontSize:16,
-                      fontWeight: "semibold",
-                      textAlign: "center",
-                    }}
-                  >
-                    No hay resultados para el filtro seleccionado.
-                  </Text>
-                </View>
-              }
+              ListEmptyComponent={<NofilterSelected />}
             />
           )}
 
@@ -189,26 +164,7 @@ export const ListComentario = () => {
                 <ListFilterComentarioSalon data={item} />
               )}
               keyExtractor={(item) => item.id.toString()}
-              ListEmptyComponent={
-                <View
-                  style={{
-                    width: "100%",
-                    paddingVertical: 10,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "red",
-                      padding: 10,
-                      fontSize:16,
-                      fontWeight: "semibold",
-                      textAlign: "center",
-                    }}
-                  >
-                    No hay resultados para el filtro seleccionado.
-                  </Text>
-                </View>
-              }
+              ListEmptyComponent={<NofilterSelected />}
             />
           )}
         </>
@@ -253,24 +209,7 @@ export const ListComentario = () => {
                 />
               ))
             ) : (
-              <View
-                  style={{
-                    width: "100%",
-                    paddingVertical: 10,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "red",
-                      padding: 10,
-                      fontSize:16,
-                      fontWeight: "semibold",
-                      textAlign: "center",
-                    }}
-                  >
-                    No hay resultados para el filtro seleccionado.
-                  </Text>
-                </View>
+              <NofilterSelected />
             ))}
         </ModalComponente>
       )}

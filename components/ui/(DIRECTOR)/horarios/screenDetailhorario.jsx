@@ -1,8 +1,6 @@
-import Loading from "../../../share/loading";
 import SimpleDatePicker from "../../Components/customSimpleDatePicker";
 import { InfoHorario } from "./component/info/infoHorario";
 import { SearchView } from "./component/searchMore&viewValue";
-import { NotRegistration } from "../../../share/noRegistration";
 import { ModalComponente } from "../../Components/customModal";
 import { useState } from "react";
 import { Modal, View, TouchableOpacity } from "react-native";
@@ -10,6 +8,7 @@ import ScreenViewMore from "./component/ScreenViewMore";
 import { MaterialIcons } from "@expo/vector-icons";
 import useToastMessage from "../../../share/ToasNotification";
 import moment from "../../../../src/utils/InstanceMoment";
+import { NotRegistration } from "../../Components/unregistered/noRegistration";
 
 export const ScreenDetailHour = ({
   selectedItem,
@@ -20,8 +19,6 @@ export const ScreenDetailHour = ({
   modalVisible,
   setModalVisible
 }) => {
-  console.log("ScreenDetailHour value ---->", value);
-
   const [viewmoreModalVisible, setViewMoreModalVisible] = useState(false); // segunda modal
   const { showToast, APP_STATUS } = useToastMessage();
 

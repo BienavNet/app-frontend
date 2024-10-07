@@ -20,6 +20,7 @@ import { HeaderTitle } from "../../../share/titulos/headerTitle";
 import { SubmitButton } from "../../../share/button/submitButton";
 import useToastMessage from "../../../share/ToasNotification";
 import { useDocenteAll } from "../../../../src/hooks/customHooks";
+import { object } from "yup";
 export const RegisterHorario = ({ navigation, route }) => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const mapDocente = useDocenteAll();
@@ -39,7 +40,8 @@ export const RegisterHorario = ({ navigation, route }) => {
   const [editing, setEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [initialValues, setInitialValues] = useState({});
-
+  console.log(initialValues, "<... initialValues");
+  
   const {
     handleSubmit,
     control,

@@ -7,7 +7,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Loading from "../../share/loading";
-import { NotRegistration } from "../../share/noRegistration";
+import { NotRegistration } from "./unregistered/noRegistration";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { styles } from "../../styles/StylesGlobal";
 import {

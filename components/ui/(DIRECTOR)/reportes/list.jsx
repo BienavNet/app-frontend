@@ -1,29 +1,25 @@
-import { useState, useEffect, useCallback } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { useState, useEffect } from "react";
+import { SafeAreaView, View, FlatList } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ListItem from "./listaitem";
-import { ColorItem } from "../../../styles/StylesGlobal";
-import { SearchBar } from "@rneui/themed";
+import { styles } from "../../../styles/StylesGlobal";
 import { PopupMenu } from "../../Components/popupMenu";
 import {
-  getReportAll,
   getReportClase2,
   getReportSalon2,
 } from "../../../../src/services/fetchData/fetchReporte";
-import { useFocusEffect } from "@react-navigation/native";
 import { ListViewDefault } from "./ListDefault";
-import { getSalon } from "../../../../src/services/fetchData/fetchSalon";
-import { getClasesAll } from "../../../../src/services/fetchData/fetchClases";
 import { ListFilterSalones } from "./components/listFilterSalon";
 import { ListFilterClases } from "./components/listFilterClases";
-import { useClasesAll, useReporteAll, useSalonAll } from "../../../../src/hooks/customHooks";
+import {
+  useClasesAll,
+  useReporteAll,
+  useSalonAll,
+} from "../../../../src/hooks/customHooks";
+import { ModalComponente } from "../../Components/customModal";
+import { ChildFilterOutline } from "../../(SUPERVISOR)/components/chid/chidFilter";
+import { CustomSeachBar } from "../comentario/components/seachBar";
+import { NofilterSelected } from "../../Components/unregistered/noRegistration";
 
 export const ReportView_Filter = () => {
   const [searchText, setSearchText] = useState("");
@@ -34,6 +30,7 @@ export const ReportView_Filter = () => {
   const [list, setList] = useState([]); // list con la información de los datos filtrados
   const [selectedOption, setSelectedOption] = useState(null);
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const [showmodal, setShowModal] = useState(false);
   const [additionalData, setAdditionalData] = useState([]);
 
   const handleOptionSelect = (option) => {
@@ -41,7 +38,6 @@ export const ReportView_Filter = () => {
     setSearchText("");
     setSelectedItem(null);
     setShowSearchBar(true);
-
     switch (selectedOption) {
       case "salones":
         setList(salonAll);
@@ -52,6 +48,7 @@ export const ReportView_Filter = () => {
       default:
         setList([]);
     }
+    setShowModal(true);
   };
 
   useEffect(() => {
@@ -101,32 +98,18 @@ export const ReportView_Filter = () => {
     },
   ];
 
-  const handleOrderClick = () => {
-    let newList = [...list];
-    if (selectedOption === "salones") {
-      newList.sort((a, b) =>
-        a.nombre > b.nombre ? 1 : b.nombre > a.nombre ? -1 : 0
-      );
-    } else if (selectedOption === "clases") {
-      newList.sort((a, b) =>
-        a.horario > b.horario ? 1 : b.horario > a.horario ? -1 : 0
-      );
-    }
-    setList(newList);
-  };
-
   const handleSearchBarClear = () => {
     setSearchText("");
-    setShowSearchBar(false); // Ocultar el SearchBar cuando se presiona la "X"
-    setSelectedOption(null); // Resetear la opción seleccionada
-    setSelectedItem(null); // Asegurarse de que no haya un ítem seleccionado
-    setList([]); // Limpiar la lista
+    setShowSearchBar(false);
+    setSelectedOption(null);
+    setSelectedItem(null);
+    setList([]);
+    setShowModal(false);
   };
   const handleItemPress = (item) => {
-    setSelectedItem(item); // Establecer el ítem seleccionado
-    // setSearchText("");
+    setSelectedItem(item);
     setList([]);
-    // setShowSearchBar(false); // Ocultar el SearchBar
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -141,189 +124,99 @@ export const ReportView_Filter = () => {
           }
           setAdditionalData(data);
         } catch (error) {
+          setAdditionalData([]);
           throw Error("Error fetching additional data:", error);
         }
       }
     };
 
     fetchAdditionalData();
-  }, [selectedItem, selectedOption]); // Dependencias para volver a ejecutar el efecto
+  }, [selectedItem, selectedOption]);
 
   return (
     <SafeAreaView style={styles.container}>
       <View className="flex-row justify-end">
-        {showSearchBar && (
-          <View style={styles.searchArea}>
-            <SearchBar
-              platform="android"
-              containerStyle={styles.search}
-              loadingProps={{
-                size: "small",
-              }}
-              onChangeText={(t) => setSearchText(t)}
-              placeholder={`Buscar ${selectedOption}`}
-              placeholderTextColor={ColorItem.DeepFir}
-              cancelButtonTitle="Cancel"
-              value={searchText}
-              onCancel={handleSearchBarClear}
-              onClear={handleSearchBarClear}
-            />
-            <TouchableOpacity
-              onPress={handleOrderClick}
-              style={styles.orderButton}
-            >
-              <MaterialCommunityIcons
-                name="order-alphabetical-ascending"
-                size={32}
-                color={ColorItem.DeepFir}
+        {selectedItem && (
+          <>
+            {selectedOption && additionalData && (
+              <ChildFilterOutline
+                title={selectedOption}
+                selectedItem={selectedItem}
+                action={handleSearchBarClear}
               />
-            </TouchableOpacity>
-          </View>
+            )}
+          </>
         )}
-        {showSearchBar ? "" :
-         <PopupMenu 
-        topM={150}
-        opcions={opciones} />}
+
+        {showSearchBar && (
+          <ModalComponente
+            modalStyle={{
+              height: "80%",
+            }}
+            modalVisible={showmodal}
+            canCloseModal={true}
+            title={`Seleccione ${selectedOption}`}
+            animationType="slide"
+            transparent={true}
+            handleCloseModal={handleSearchBarClear}
+            childrenStatic={
+              <CustomSeachBar
+                handleSearchBarClear={handleSearchBarClear}
+                searchText={searchText}
+                selectedOption={selectedOption}
+                setSearchText={setSearchText}
+              />
+            }
+          >
+            {/* //lista desplegable segun el filtro seleccionado*/}
+            {selectedOption &&
+              !selectedItem &&
+              (Array.isArray(list) && list.length > 0 ? (
+                list.map((item, index) => (
+                  <ListItem
+                    key={item.id}
+                    onPress={() => handleItemPress(item)}
+                    data={item}
+                    selectedOption={selectedOption}
+                  />
+                ))
+              ) : (
+                <NofilterSelected />
+              ))}
+          </ModalComponente>
+        )}
+        {showSearchBar ? "" : <PopupMenu topM={150} opcions={opciones} />}
       </View>
 
       {/* //informacion que se mostrara por default */}
       {!selectedOption && (
         <FlatList
           data={reportAll}
-          style={styles.list}
+          // style={styles.list}
           renderItem={({ item }) => <ListViewDefault data={item} />}
           keyExtractor={(item) => item.reporte_id.toString()}
-          ListEmptyComponent={
-            <Text style={styles.noResultsText}>No hay resultados.</Text>
-          }
-        />
-      )}
-
-      {/* //lista desplegable segun el filtro seleccionado*/}
-      {selectedOption && !selectedItem && (
-        <FlatList
-          data={list}
-          style={styles.listFromSearchBar}
-          renderItem={({ item }) => (
-            <ListItem
-              onPress={() => handleItemPress(item)}
-              data={item}
-              selectedOption={selectedOption}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-          ListEmptyComponent={
-            <Text style={styles.noResultsText}>
-              No coinciden los resultados
-            </Text>
-          }
+          ListEmptyComponent={<NofilterSelected />}
         />
       )}
 
       {selectedItem && (
         <>
           {selectedOption === "salones" && additionalData && (
-            <>
-              <FlatList
-                data={additionalData}
-                style={styles.list}
-                renderItem={({ item }) => <ListFilterSalones data={item} />}
-                keyExtractor={(item) => item.id.toString()}
-                ListEmptyComponent={
-                  <Text style={styles.noResultsText}>No hay resultados.</Text>
-                }
-              />
-              {/* {additionalData.length > 0 ? (
-
-                // additionalData.map((item, index) => (
-                //   <ListFilterSalones
-                //   data={item}
-
-                //   />
-                //   // <BoxView key={index}>
-                //   //   <View
-                //   //     style={{
-                //   //       marginTop: 5,
-                //   //       marginHorizontal: 8,
-                //   //       justifyContent: "space-between",
-                //   //       flexDirection: "row",
-                //   //     }}
-                //   //   >
-                //   //     <Text style={styles.detailsText}>
-                //   //       {capitalizeFirstLetter(item.nombre)}{" "}
-                //   //       {capitalizeFirstLetter(item.apellido)}
-                //   //     </Text>
-                //   //     <DateChip
-                //   //       item={new Date(item.fecha).toLocaleDateString()}
-                //   //     />
-                //   //   </View>
-
-                //   //   <View style={{ flexDirection: "row", marginHorizontal: 8 }}>
-                //   //     <Text style={styles.detailsText}>
-                //   //       {truncateText(item.asignatura, 15)}
-                //   //     </Text>
-                //   //   </View>
-
-                //   //   <View
-                //   //     style={{
-                //   //       marginBottom: 5,
-                //   //       marginHorizontal: 8,
-                //   //       justifyContent: "space-between",
-                //   //       flexDirection: "row",
-                //   //     }}
-                //   //   >
-                //   //     <View
-                //   //       style={{
-                //   //         width: "80%",
-                //   //         flexDirection: "row",
-                //   //       }}
-                //   //     >
-                //   //       <FontAwesome
-                //   //         style={{
-                //   //           marginTop: 2,
-                //   //           marginHorizontal: 10,
-                //   //         }}
-                //   //         name="commenting"
-                //   //         size={20}
-                //   //         color={ColorItem.TarnishedSilver}
-                //   //       />
-                //   //       <TooltipText
-                //   //         text={item.comentario}
-                //   //         truncateLength={15}
-                //   //       />
-                //   //     </View>
-                //   //     <View
-                //   //       style={{
-                //   //         width: "20%",
-                //   //       }}
-                //   //     >
-                //   //       <StatusCircle item={item.estado} />
-                //   //     </View>
-                //   //   </View>
-                //   // </BoxView>
-                // ))
-              ) : (
-                <BoxView>
-                  <Text style={styles.noResultsText}>
-                    No hay datos adicionales
-                  </Text>
-                </BoxView>
-              )} */}
-            </>
-          )}
-          {console.log(
-            "additional data verifique si es doblete -------------> ",
-            additionalData
+            <FlatList
+              data={additionalData}
+              // style={styles.list}
+              renderItem={({ item }) => <ListFilterSalones data={item} />}
+              keyExtractor={(item) => item.id.toString()}
+              ListEmptyComponent={<NofilterSelected />}
+            />
           )}
           {selectedOption === "clases" && additionalData && (
             <FlatList
               data={additionalData}
-              style={styles.list}
+              // style={styles.list}
               renderItem={({ item }) => <ListFilterClases data={item} />}
               keyExtractor={(item) => item.id.toString()}
-              ListEmptyComponent={
-                <Text style={styles.noResultsText}>No hay resultados.</Text>
-              }
+              ListEmptyComponent={<NofilterSelected />}
             />
           )}
         </>
@@ -331,58 +224,3 @@ export const ReportView_Filter = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  searchArea: {
-    backgroundColor: "transparent",
-    width: "100%",
-    height: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  search: {
-    borderBottomWidth: 1,
-    borderBottomColor: ColorItem.KellyGreen,
-    backgroundColor: "transparent",
-    marginRight: 30,
-    flex: 1,
-    height: "100%",
-    fontSize: 19,
-  },
-  orderButton: {
-    width: 32,
-    marginRight: 20,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-
-  optionButton: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#DDD",
-  },
-  optionText: {
-    fontSize: 18,
-    color: "#333",
-  },
-  listFromSearchBar: {
-    maxHeight: 300,
-    marginTop: 5,
-    marginHorizontal: 20,
-    Width: "40%",
-    backgroundColor: "#f8f8f8",
-    borderRadius: 5,
-  },
-  noResultsText: {
-    padding: 10,
-    textAlign: "center",
-    fontSize: 16,
-    color: "black",
-  },
-});

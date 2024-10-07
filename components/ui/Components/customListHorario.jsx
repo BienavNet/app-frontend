@@ -11,10 +11,10 @@ import {
   getClassesByHorarioID,
 } from "../../../src/services/fetchData/fetchClases";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
-import { NotRegistration } from "../../share/noRegistration";
 import { ViewHorario } from "../(DIRECTOR)/horarios/component/viewHorario";
 import { ScreenDetailHour } from "../(DIRECTOR)/horarios/screenDetailhorario";
 import moment, { Today } from "../../../src/utils/InstanceMoment";
+import { NotRegistration } from "./unregistered/noRegistration";
 
 export const ListItemComponentHorario = ({
   getDataAll,
@@ -212,15 +212,3 @@ export const ListItemComponentHorario = ({
     </>
   );
 };
-  // return selectedItem?.horarios.map((horario) => {
-    //   return moment(horario.fecha).isSame(value, 'day'); // Compara día, mes y año
-    // });
-    // return selectedHorario ? moment(selectedHorario.fecha) : null;
-    // const currentMonth = moment(value).month();
-
-    // return selectedItem?.horarios
-    //   .map((horario) => moment(horario.fecha))
-    //   .filter((horario) => {
-    //     const currentMonth = moment().getMonth();
-    //     return horario.getMonth() === currentMonth;
-    //   });

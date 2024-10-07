@@ -7,7 +7,7 @@ import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { InfoDS } from "../(DIRECTOR)/components/info";
 import { ViewDS } from "../(DIRECTOR)/components/view";
-import { NotRegistration } from "../../share/noRegistration";
+import { NotRegistration } from "./unregistered/noRegistration";
 
 export const ListItemComponent = ({
   getDataAll,

@@ -1,5 +1,5 @@
 import { TouchableOpacity, View, Text } from "react-native";
-import { ColorItem, styles } from "../../../../styles/StylesGlobal";
+import { styles } from "../../../../styles/StylesGlobal";
 import {
   capitalizeFirstLetter,
   truncateText,
@@ -7,10 +7,10 @@ import {
 
 export const ListSelectItem = ({ data, onPress, selectedOption }) => {
   return (
-    <TouchableOpacity 
-    onPress={onPress}
-    activeOpacity={0.3}
-    style={styles.optionItem}
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.3}
+      style={styles.optionItem}
     >
       <View style={styles.itemInfo}>
         {selectedOption === "docente" && (
@@ -27,7 +27,7 @@ export const ListSelectItem = ({ data, onPress, selectedOption }) => {
               // overflow: "hidden",
             }}
           >
-          <Text className="text-black text-lg text-left py-2">
+            <Text className="text-black text-lg text-left py-2">
               {data.numero_salon} {"-"} {truncateText(data.nombre, 13)}
             </Text>
           </View>
