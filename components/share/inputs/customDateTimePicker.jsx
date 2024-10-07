@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { Button } from "@react-native-material/core";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Controller } from "react-hook-form";
@@ -22,13 +22,18 @@ export const CustomTimePicker = ({
 }) => {
   console.log("initialize value: " + initialValue)
   const [showPicker, setShowPicker] = useState(false);
-  const [selectedTime, setSelectedTime] = useState(initialValue || new Date());
-  const [titleSelected, setTitleSelected] = useState(title);
+  const [selectedTime, setSelectedTime] = useState(new Date());
+  const [titleSelected, setTitleSelected] = useState(title);  
+
   useEffect(() => {
     if (initialValue) {
-      const newTime = new Date(initialValue); // Convierte el valor inicial en un objeto Date
-      setSelectedTime(newTime); // Actualiza el tiempo seleccionado
-      setTitleSelected(formatHourHHMMTime(newTime)); // Actualiza el título mostrado en el botón
+      const timeParts = initialValue.split(":");
+      if (timeParts.length === 3) {
+        const newTime = new Date();
+        newTime.setHours(parseInt(timeParts[0]), parseInt(timeParts[1]), parseInt(timeParts[2]));
+        setSelectedTime(newTime);
+        setTitleSelected(formatHourHHMMTime(newTime));
+      }
     }
   }, [initialValue]);
 
@@ -52,6 +57,7 @@ export const CustomTimePicker = ({
       onTimeSelected(formattedTime); // Retorna el tiempo formateado al padre
       onChange(formattedTime);
     }
+    setShowPicker(false);
   };
 
   return (
@@ -62,11 +68,7 @@ export const CustomTimePicker = ({
         <>
           <Button
             style={{
-              justifyContent: "center",
-              alignItems: "center",
-              height: 44,
               borderRadius: 8,
-              width: "90%",
             }}
             tintColor={errors ? "#ffffff" : "black"}
             leading={() => (

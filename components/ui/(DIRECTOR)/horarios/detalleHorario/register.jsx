@@ -7,7 +7,6 @@ import { CustomTimePicker } from "../../../../share/inputs/customDateTimePicker"
 import { diasArray } from "../../../../../src/utils/schemas/horarioSchema";
 import { CustomFlatList } from "../../../../share/inputs/customFlatList";
 import { CustomPiker } from "../../../../share/inputs/customPicker";
-import status from "./json/status.json";
 import {
   getDetailHorarioOne,
   registerDetailHorario,
@@ -17,14 +16,16 @@ import {
   registerClase,
   getClasesAll,
   updateClase,
-  getClassesByHorarioID,
 } from "../../../../../src/services/fetchData/fetchClases";
 import { useEffect, useState } from "react";
 import { generateClassDates } from "../../../../../src/utils/functiones/functions";
 import Loading from "../../../../share/loading";
 import { SubmitButton } from "../../../../share/button/submitButton";
 import useToastMessage from "../../../../share/ToasNotification";
-import { useSalonAll, useSupervisorAll } from "../../../../../src/hooks/customHooks";
+import {
+  useSalonAll,
+  useSupervisorAll,
+} from "../../../../../src/hooks/customHooks";
 export const RegisterDetailHorario = ({
   navigation,
   route,
@@ -36,7 +37,8 @@ export const RegisterDetailHorario = ({
   const {
     handleSubmit,
     control,
-    reset,watch,
+    reset,
+    watch,
     formState: { errors, isDirty },
   } = useForm({
     resolver: yupResolver(detailHorarioRegister),
@@ -47,18 +49,16 @@ export const RegisterDetailHorario = ({
   const [horainicio, setHoraInicio] = useState(new Date());
   const [horafin, setHoraFin] = useState(new Date());
   const mapSalones = useSalonAll();
-  console.log(mapSalones, "<------- map salones");
 
   const salones = mapSalones.map((item) => ({
     id: item.id.toString(),
     label: `${item.numero_salon} ${item.nombre} `,
   }));
 
-  console.log("todos los dias", diasArray)
   const dias = diasArray.map((d) => ({
     id: d,
     label: d,
-  }))
+  }));
 
   const countClassesForSupervisors = async () => {
     if (supervisors.length === 0) {
@@ -116,6 +116,7 @@ export const RegisterDetailHorario = ({
       ? selectedSupervisor.supervisor_id
       : getRandomSupervisor(supervisors);
   };
+
   useEffect(() => {
     if (route.params && route.params.id) {
       if (editing) {
@@ -127,7 +128,6 @@ export const RegisterDetailHorario = ({
           });
           const response = await getDetailHorarioOne(route.params.id);
           const value = response.find((doc) => doc.horario === route.params.id);
-          console.log(value, "getDetailHorarioOne value");
 
           if (value) {
             reset({
@@ -161,6 +161,8 @@ export const RegisterDetailHorario = ({
   const onsubmit = async (data) => {
     const { salon, dia, hora_inicio, hora_fin } = data;
     let horario = idhorario;
+    const ESTADO = "pendiente";
+    const TOTAL_MESES = 6;
     try {
       showToast({
         message: STATUS_MESSAGES[APP_STATUS.REGISTERING],
@@ -171,7 +173,7 @@ export const RegisterDetailHorario = ({
         await registerDetailHorario(horario, dia, hora_inicio, hora_fin);
         const startDate = new Date(); // Fecha de inicio
         const endDate = new Date(startDate); // Fecha de final
-        endDate.setMonth(endDate.getMonth() + 6);
+        endDate.setMonth(endDate.getMonth() + TOTAL_MESES);
         const classCounts = await countClassesForSupervisors();
         if (!classCounts) throw new Error("Error counting classes");
         showToast({
@@ -179,7 +181,7 @@ export const RegisterDetailHorario = ({
           type: "warning",
           id: APP_STATUS.LOADED_SUCCESSFULLY,
         });
-        const ESTADO = "pendiente";
+
         const classesToRegister = await Promise.all(
           generateClassDates(dia, startDate, endDate).map(async (clase) => {
             const supervisorID = await assignSupervisors();
@@ -196,7 +198,6 @@ export const RegisterDetailHorario = ({
         );
         try {
           Alert.alert("Successfull", "Registro exitoso ✔︎ ✔︎");
-
           await Promise.all(
             classesToRegister.map((clase) =>
               registerClase(
@@ -225,10 +226,12 @@ export const RegisterDetailHorario = ({
           type: "danger",
           id: APP_STATUS.LOADING,
         });
+
+        console.log("Loading... dia, hora_inicio, ");
         const updateDetail = updateDetailHorario(route.params.id, {
-          dia,
-          hora_inicio,
-          hora_fin,
+          dia:dia,
+          hora_inicio:hora_inicio,
+          hora_fin:hora_fin,
         });
 
         const updateClasses = Promise.all(
@@ -236,7 +239,7 @@ export const RegisterDetailHorario = ({
             .map(async (clase) => {
               return {
                 salon,
-                estado: "pendiente",
+                estado: ESTADO,
                 ...clase,
               };
             })
@@ -278,10 +281,11 @@ export const RegisterDetailHorario = ({
   return (
     <>
       <HeaderTitle
-        registerText="Registrar Detalle Horario"
-        updateText="Actualizar Detalle Horario"
+        registerText="Registrar detalles del horario"
+        updateText="Actualizar detalles del horario"
         editing={editing}
       />
+
       <ScrollView className="pt-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex pb-5 h-full">
           {loading ? (
@@ -294,11 +298,7 @@ export const RegisterDetailHorario = ({
                   control={control}
                   placeholder="Seleccione dia"
                   errors={errors.dia}
-                  data={diasArray.map((d) => ({
-                    id: d,
-                    label: d,
-                    value: d,
-                  }))}
+                  data={dias}
                 />
               </View>
               <View className="self-center w-[85%] pb-1 pt-5">
@@ -313,8 +313,6 @@ export const RegisterDetailHorario = ({
                       : "Seleccione Salon"
                   }`}
                   data={salones}
-
-                  // "INTernet": "si", "capacidad": 23, "categoria_salon": 342342234, "id": 1, "nombre": "sala de programacion", "numero_salon": 112, "tv": "no"
                 />
               </View>
               <View className="flex-row justify-items-stretch pt-8 pb-7">
@@ -366,21 +364,25 @@ export const RegisterDetailHorario = ({
               <View className="self-center w-[85%] pb-1 pt-5">
                 <CustomFlatList
                   name="salon"
-                    placeholder="seleccione salon"
+                  placeholder="seleccione salon"
                   control={control}
                   data={salones}
                 />
               </View>
 
-              <View className="flex-row justify-items-stretch pt-8 pb-7">
+{console.log(`watch hora inicio: ${watch('hora_inicio')} + ${watch('hora_fin')}`)}
+              <View className="flex-row" style={{
+                marginHorizontal:10,
+                marginVertical:25,
+              }}>
                 <View className="w-1/2 items-center">
                   <CustomTimePicker
                     name="hora_inicio"
                     control={control}
-                    title="Hora inicio"
+                     title="Hora inicio"
                     testID="hora_inicio"
                     mode="time"
-                    initialValue={watch('hora_inicio')}
+                    initialValue={watch("hora_inicio")}
                     display="clock"
                     is24Hour={true}
                     onTimeSelected={(formattedTime) => {
@@ -395,7 +397,7 @@ export const RegisterDetailHorario = ({
                     control={control}
                     title="Hora Fin"
                     testID="hora_fin"
-                    initialValue={watch('hora_fin')}
+                    initialValue={watch("hora_fin")}
                     mode="time"
                     display="clock"
                     is24Hour={true}

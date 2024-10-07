@@ -18,11 +18,9 @@ export const formatHourHHMMAMPM = (timeString) => {
   const [hours, minutes] = timeString.split(":");
   const date = new Date();
   date.setHours(hours, minutes);
-
   const formattedHours = date.getHours() % 12 || 12;
   const formattedMinutes = date.getMinutes().toString().padStart(2, "0");
   const period = date.getHours() < 12 ? "AM" : "PM";
-
   return `${formattedHours}:${formattedMinutes} ${period}`;
 };
 
@@ -74,6 +72,13 @@ export const formatHourHHMMTime = (currentTime) => {
     .padStart(2, "0")} ${hours < 12 ? "AM" : "PM"}`;
 };
 
+export const formatHourHHMM = (currentTime) => {
+  const hours = currentTime.getHours();
+  const minutes = currentTime.getMinutes();
+  return `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}`;
+};
 
 export const truncateText = (text, maxLegth = 7) => {
   if (text.length > 15) {

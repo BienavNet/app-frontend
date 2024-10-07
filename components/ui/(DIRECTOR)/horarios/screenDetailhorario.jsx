@@ -64,11 +64,6 @@ export const ScreenDetailHour = ({
             <NotRegistration />
           )
         }
-          {/* {loading ? (
-            <Loading />
-          ) :  : (
-            <NotRegistration />
-          )} */}
         </ModalComponente>
       </>
 
@@ -77,7 +72,7 @@ export const ScreenDetailHour = ({
           animationType="slide" // fade none slider
           transparent={false} // true o false
           visible={viewmoreModalVisible}
-          modalStyle={{ height: "98%" }}
+          modalStyle={{ height: "90%" }}
           modalVisible={viewmoreModalVisible}
           handleCloseModal={handleCloseSecondModal}
           onRequestClose={() => {

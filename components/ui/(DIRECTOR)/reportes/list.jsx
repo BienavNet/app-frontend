@@ -125,7 +125,6 @@ export const ReportView_Filter = () => {
           setAdditionalData(data);
         } catch (error) {
           setAdditionalData([]);
-          throw Error("Error fetching additional data:", error);
         }
       }
     };
@@ -192,7 +191,6 @@ export const ReportView_Filter = () => {
       {!selectedOption && (
         <FlatList
           data={reportAll}
-          // style={styles.list}
           renderItem={({ item }) => <ListViewDefault data={item} />}
           keyExtractor={(item) => item.reporte_id.toString()}
           ListEmptyComponent={<NofilterSelected />}
@@ -204,7 +202,6 @@ export const ReportView_Filter = () => {
           {selectedOption === "salones" && additionalData && (
             <FlatList
               data={additionalData}
-              // style={styles.list}
               renderItem={({ item }) => <ListFilterSalones data={item} />}
               keyExtractor={(item) => item.id.toString()}
               ListEmptyComponent={<NofilterSelected />}

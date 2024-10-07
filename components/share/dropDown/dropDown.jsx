@@ -8,13 +8,9 @@ export default function Dropdown({
   value,
   error,
 }) {
-
-  // const selectedItem = data.find(item => item.id === value);
-  // const selectedLabel = selectedItem ? selectedItem.label : placeholder;
-
   return (
     <View style={{ marginVertical: 10}}>
-        <ScrollView className="">
+        <ScrollView>
         <View
           style={{
             borderWidth: 1,
