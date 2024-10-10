@@ -17,22 +17,8 @@ export const TabsHome = ({
 }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const Tab = createBottomTabNavigator();
-  const { ROl, ID } = userData();
-  // const { user } = useAuth();
-  // if (!user) return <Redirect href="/" />;
-  // const userId = user.id;
-  // const rol = user.rol;
-  // useEffect(() => {
-  initSockets(ID, ROl);
-
-  //   return () => {
-  //     if (socket) {
-  //       socket.disconnect();
-  //       console.log("Socket desconectado");
-  //     }
-  //   };
-  // }, [userId, rol]);
-
+  // const {ID, ROL } = userData();
+  // initSockets(ID, ROL);
   useFocusEffect(
     useCallback(() => {
       const handleKeyboardShow = () => setKeyboardVisible(true);

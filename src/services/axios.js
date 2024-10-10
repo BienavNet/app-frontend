@@ -21,25 +21,6 @@ axiosInstance.interceptors.response.use(
       console.log("General Error:", error.message);
     }
     return Promise.reject(error);
-    // const router = useRouter();
-    // const { response } = error;
-    // if (response) {
-    //   // if (response.status === 401 || response.status === 403) {
-    //   //   console.log("status code: " + response.status)
-    //   //   console.log("data code: " + response.data)
-    //   //   await AsyncStorage.removeItem("access_token");
-    //   //   delete axiosInstance.defaults.headers.common["Authorization"];
-    //   //   router.replace("/");
-    //   //   return Promise.reject(new Error("Token expired or unauthorized."));
-    //   // } else {
-    //   //   throw new Error(`Response Error: ${response.status}`);
-    //   // }
-    // } else if (error.request) {
-    //   throw new Error("Request Error:", error.request);
-    // } else {
-    //   throw new Error("General Error:", error.message);
-    // }
   }
 );
-
 export default axiosInstance;

@@ -5,6 +5,7 @@ import {
 } from "../../../../../src/utils/functiones/functions";
 
 export const ViewHorario = ({ item }) => {
+  console.log([item], "item view horario press");
   return (
     <>
       <Text className="font-extrabold text-lg">

@@ -63,3 +63,28 @@ export const detailHorarioRegister = yup.object({
       }
     ),
 });
+
+export const EditingdetailHorarioRegister = yup.object({
+  salon: yup
+    .number()
+    .typeError("Salon debe ser válido")
+    .integer("Salon debe ser valido"),
+  dia: yup
+    .string()
+    .oneOf(diasArray, "El día seleccionado no es válido"),
+  hora_inicio: yup
+    .string()
+    .matches(/^\d{2}:\d{2}$/, "La hora de inicio debe tener el formato HH:mm"),
+  hora_fin: yup
+    .string()
+    .matches(/^\d{2}:\d{2}$/, "La hora de fin debe tener el formato HH:mm")
+    .test(
+      "is-warnignClock",
+      "La hora de fin debe ser mayor que la hora de inicio",
+      function (value) {
+        const { hora_inicio } = this.parent;
+        return hora_inicio && value && value > hora_inicio;
+      }
+    ),
+});
+

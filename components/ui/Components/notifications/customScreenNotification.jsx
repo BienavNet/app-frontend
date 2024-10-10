@@ -1,20 +1,16 @@
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { Avatar } from "@rneui/themed";
-import { useCallback, useState } from "react";
-import {
-  getNotificationCedulaEstado,
-  updateNotificationId,
-} from "../../../../src/services/fetchData/fetchNotification";
-import { useFocusEffect } from "expo-router";
+import { updateNotificationId } from "../../../../src/services/fetchData/fetchNotification";
 import { useNavigation } from "@react-navigation/native";
 import { DateChip } from "../../(DIRECTOR)/reportes/components/DateChip";
 import { ColorItem } from "../../../styles/StylesGlobal";
 import { useNotificationCedulaEstado } from "../../../../src/hooks/customHooks";
 
 const handleEditNotification = async (id) => {
+  const LEIDA = "leida";
   try {
-    await updateNotificationId(id, "leida");
+    await updateNotificationId(id, LEIDA);
   } catch (error) {
     throw Error(error);
   }
@@ -22,32 +18,13 @@ const handleEditNotification = async (id) => {
 
 export const ContentNofitications = ({ cedula, estado = "todas" }) => {
   const navigation = useNavigation();
-  const notificationall = useNotificationCedulaEstado(cedula, estado)
-
-  // const [notificationall, setNotificationAll] = useState([]);
-  // const fetchNotificationsAll = useCallback(async () => {
-  //   try {
-  //     const res = await getNotificationCedulaEstado(cedula, estado);
-  //     setNotificationAll(res || []);
-  //   } catch (error) {
-  //     throw Error("Error fetching notifications:", error);
-  //   }
-  // }, [estado]);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     fetchNotificationsAll();
-  //   }, [fetchNotificationsAll])
-  // );
+  const notificationall = useNotificationCedulaEstado(cedula, estado);
 
   const handleUpdateStatus = (item) => {
     const NOLEIDA = "no leida";
-    const LEIDA = "leida";
+
     if (item.estado === NOLEIDA) {
       handleEditNotification(item.id);
-      setNotificationAll((prev) =>
-        prev.map((n) => (n.id === item.id ? { ...n, estado: LEIDA } : n))
-      );
     }
   };
   const handlePressNotification = (item) => {

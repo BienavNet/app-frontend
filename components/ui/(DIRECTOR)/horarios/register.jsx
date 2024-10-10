@@ -6,7 +6,7 @@ import {
   registerHorario,
   updateHorario,
 } from "../../../../src/services/fetchData/fetchHorarios";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   horarioSchema,
   horarioEditSchema,
@@ -20,7 +20,7 @@ import { HeaderTitle } from "../../../share/titulos/headerTitle";
 import { SubmitButton } from "../../../share/button/submitButton";
 import useToastMessage from "../../../share/ToasNotification";
 import { useDocenteAll } from "../../../../src/hooks/customHooks";
-import { object } from "yup";
+
 export const RegisterHorario = ({ navigation, route }) => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const mapDocente = useDocenteAll();
@@ -30,18 +30,17 @@ export const RegisterHorario = ({ navigation, route }) => {
     label: `${item.nombre} ${item.apellido}`,
   }));
 
-  const asignatura = asignaturajson.map((item) => ({ 
+  const asignatura = asignaturajson.map((item) => ({
     id: item.asignatura,
     label: item.asignatura,
-  }))
+  }));
 
   const [horarioId, setHorarioId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [initialValues, setInitialValues] = useState({});
-  console.log(initialValues, "<... initialValues");
-  
+
   const {
     handleSubmit,
     control,
@@ -154,89 +153,96 @@ export const RegisterHorario = ({ navigation, route }) => {
       />
       <ScrollView className="pt-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex items-left mx-4 h-full">
-          {!editing ? (
-            <View key="registerin">
-              <View className="w-[85%] self-center py-5">
-                <CustomFlatList
-                  name="docente"
-                  control={control}
-                  errors={errors.docente}
-                  data={docente}
-                  placeholder="Seleccione un docente"
-                />
-              </View>
-              <View className="w-[85%] self-center pt-5 pb-8">
-                <CustomFlatList
-                  name="asignatura"
-                  placeholder="Seleccione una asignatura"
-                  control={control}
-                  errors={errors.asignatura}
-                  data={asignatura}
-                />
-              </View>
-            </View>
-          ) : (
-            <View key="updaitng">
-              <View className="w-[85%] self-center py-5">
-                <CustomFlatList
-                  name="docente"
-                  control={control}
-                  data={docente}
-                />
-              </View>
-              <View className="w-[85%] self-center pt-5 pb-8">
-                <CustomFlatList
-                  name="asignatura"
-                  control={control}
-                  data={asignaturajson.map((a) => ({
-                    id: a.asignatura,
-                    label: a.asignatura,
-                  }))}
-                />
-              </View>
-            </View>
-          )}
+          {!loading && (
+            <>
+              {!editing ? (
+                <View key="registerin">
+                  <View className="w-[85%] self-center py-5">
+                    <CustomFlatList
+                      name="docente"
+                      control={control}
+                      errors={errors.docente}
+                      data={docente}
+                      placeholder="Seleccione un docente"
+                    />
+                  </View>
+                  <View className="w-[85%] self-center pt-5 pb-8">
+                    <CustomFlatList
+                      name="asignatura"
+                      placeholder="Seleccione una asignatura"
+                      control={control}
+                      errors={errors.asignatura}
+                      data={asignatura}
+                    />
+                  </View>
+                </View>
+              ) : (
+                <View key="updaitng">
+                  <View className="w-[85%] self-center py-5">
+                    <CustomFlatList
+                      name="docente"
+                      control={control}
+                      data={docente}
+                    />
+                  </View>
+                  <View className="w-[85%] self-center pt-5 pb-8">
+                    <CustomFlatList
+                      name="asignatura"
+                      control={control}
+                      data={asignaturajson.map((a) => ({
+                        id: a.asignatura,
+                        label: a.asignatura,
+                      }))}
+                    />
+                  </View>
+                </View>
+              )}
 
-          <View className="flex-row justify-center w-full">
-            <View className={editing ? "w-[40%]" : "w-[85%]"}>
-              <SubmitButton
-                onPress={handleSubmit(onsubmit)}
-                editing={editing}
-                isDisabled={isDisabled}
-              />
-            </View>
-            {editing && (
-              <View className="w-[40%] pt-3 self-center">
-                <TouchableOpacity
-                  onPress={() => {
-                    Alert.alert(
-                      "¿Deseas editar los detalles de este horario?",
-                      "Dale 'SI' para ir a mas detalle del horario",
-                      [
-                        {
-                          text: "Cancelar",
-                          style: "cancel",
-                          onPress: () => {},
-                        },
-                        {
-                          text: "Sí",
-                          onPress: async () => {
-                            setShowModal(true);
-                          },
-                        },
-                      ],
-                      { cancelable: false }
-                    );
-                  }}
-                  className={"w-11/12 self-center p-3 rounded-lg bg-blue-600"}
-                >
-                  <Text className="text-white text-center font-bold text-xl">
-                    Ir a detalle
-                  </Text>
-                </TouchableOpacity>
+              <View className="flex-row justify-center w-full">
+                <View className={editing ? "w-[40%]" : "w-[85%]"}>
+                  <SubmitButton
+                    onPress={handleSubmit(onsubmit)}
+                    editing={editing}
+                    isDisabled={isDisabled}
+                  />
+                </View>
+
+                {editing && (
+                  <View className="w-[40%] pt-3 self-center">
+                    <TouchableOpacity
+                      onPress={() => {
+                        Alert.alert(
+                          "¿Deseas editar los detalles de este horario?",
+                          "Dale 'SI' para ir a mas detalle del horario",
+                          [
+                            {
+                              text: "Cancelar",
+                              style: "cancel",
+                              onPress: () => {},
+                            },
+                            {
+                              text: "Sí",
+                              onPress: async () => {
+                                setShowModal(true);
+                              },
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                      }}
+                      className={
+                        "w-11/12 self-center p-3 rounded-lg bg-blue-600"
+                      }
+                    >
+                      <Text className="text-white text-center font-bold text-xl">
+                        Ir a detalle
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
-            )}
-          </View>
+            </>
+          )}
           {loading && <Loading />}
         </View>
       </ScrollView>

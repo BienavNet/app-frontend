@@ -15,8 +15,10 @@ import { ViewHorario } from "../(DIRECTOR)/horarios/component/viewHorario";
 import { ScreenDetailHour } from "../(DIRECTOR)/horarios/screenDetailhorario";
 import moment, { Today } from "../../../src/utils/InstanceMoment";
 import { NotRegistration } from "./unregistered/noRegistration";
+import { ColorItem } from "../../styles/StylesGlobal";
 
 export const ListItemComponentHorario = ({
+  filteredData,
   getDataAll,
   getDataOne,
   deleteData,
@@ -24,29 +26,36 @@ export const ListItemComponentHorario = ({
   navigateToFormScreen,
   modalTitle = "Info",
 }) => {
+  console.log("fiterredData >>>>>>>>>><XXXXX", filteredData);
   const [modalVisible, setModalVisible] = useState(false); // primer modal
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
-
+  console.log(
+    items,
+    ">>>>>>>>><<<<<<<<WWWW items por default de la list horario"
+  );
   const [selectedItem, setSelectedItem] = useState(null);
-  const today = Today()
-  console.log("ismoment today", moment.isMoment(today));
+  const today = Today();
   const [value, setValue] = useState(today);
-
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getDataAll();
+      if (filteredData.length > 0) {
+        setItems(filteredData);
+      }
+      else{
+        const res = await getDataAll();
       setItems(res);
+      }
     } catch (error) {
       throw new Error("Error fetching items:", error);
     } finally {
       setLoading(false);
     }
-  }, [getDataAll]);
+  }, [getDataAll, filteredData]);
 
   useFocusEffect(
     useCallback(() => {
@@ -138,10 +147,9 @@ export const ListItemComponentHorario = ({
         const currentMonth = moment().month(); // Se obtiene el mes actual usando moment
         return horarios.month() === currentMonth; // Solo comparamos el mes
       });
-  
+
     return allHorariosSelected;
   };
-  
 
   return (
     <>
@@ -153,6 +161,11 @@ export const ListItemComponentHorario = ({
         ) : (
           items.map((item, index) => (
             <ListItem.Swipeable
+            containerStyle={{
+              backgroundColor:filteredData.length > 0 ? ColorItem.OceanCrest : "white"
+            }}
+
+
               key={`${item.id}-${index}`}
               leftContent={(reset) => (
                 <Button
@@ -178,7 +191,9 @@ export const ListItemComponentHorario = ({
               )}
             >
               <Ionicons name="calendar" size={25} color="black" />
-              <ListItem.Content>
+              <ListItem.Content
+              
+              >
                 <ListItem.Title>
                   <TouchableOpacity
                     className="flex-row"

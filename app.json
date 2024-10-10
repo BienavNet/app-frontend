@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "app-frontend",
-    "slug": "app-frontend",
+    "slug": "gestionandcontrolclassroom",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,7 +19,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.POST_NOTIFICATIONS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -27,6 +30,12 @@
     "plugins": [
       "expo-router",
       "expo-av"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "6fe3448b-301d-4394-80c4-17b0c498ae9e"
+      }
+    },
+    "owner": "carsaca25"
   }
 }

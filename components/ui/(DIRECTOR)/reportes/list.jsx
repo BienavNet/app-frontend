@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { SafeAreaView, View, FlatList } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ListItem from "./listaitem";
 import { styles } from "../../../styles/StylesGlobal";
 import { PopupMenu } from "../../Components/popupMenu";
@@ -20,6 +19,7 @@ import { ModalComponente } from "../../Components/customModal";
 import { ChildFilterOutline } from "../../(SUPERVISOR)/components/chid/chidFilter";
 import { CustomSeachBar } from "../comentario/components/seachBar";
 import { NofilterSelected } from "../../Components/unregistered/noRegistration";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export const ReportView_Filter = () => {
   const [searchText, setSearchText] = useState("");
@@ -77,26 +77,6 @@ export const ReportView_Filter = () => {
     }
   }, [searchText, selectedOption]);
 
-  const opciones = [
-    {
-      title: "clases",
-      icon: (
-        <MaterialCommunityIcons
-          name="google-classroom"
-          size={24}
-          color="black"
-        />
-      ),
-      action: () => handleOptionSelect("clases"),
-    },
-    {
-      title: "salones",
-      icon: (
-        <MaterialCommunityIcons name="home-modern" size={24} color="black" />
-      ),
-      action: () => handleOptionSelect("salones"),
-    },
-  ];
 
   const handleSearchBarClear = () => {
     setSearchText("");
@@ -131,6 +111,26 @@ export const ReportView_Filter = () => {
 
     fetchAdditionalData();
   }, [selectedItem, selectedOption]);
+  const filClassRoom = [
+    {
+      title: "clases",
+      icon: (
+        <MaterialCommunityIcons
+          name="google-classroom"
+          size={24}
+          color="black"
+        />
+      ),
+      action: () => handleOptionSelect("clases"),
+    },
+    {
+      title: "salones",
+      icon: (
+        <MaterialCommunityIcons name="home-modern" size={24} color="black" />
+      ),
+      action: () => handleOptionSelect("salones"),
+    },
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -184,7 +184,7 @@ export const ReportView_Filter = () => {
               ))}
           </ModalComponente>
         )}
-        {showSearchBar ? "" : <PopupMenu topM={150} opcions={opciones} />}
+        {showSearchBar ? "" : <PopupMenu topM={150} opcions={filClassRoom} />}
       </View>
 
       {/* //informacion que se mostrara por default */}

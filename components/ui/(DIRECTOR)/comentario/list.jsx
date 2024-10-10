@@ -4,11 +4,9 @@ import {
   getComentarioOne,
 } from "../../../../src/services/fetchData/fetchComentario";
 import { ListItemComentario } from "../../Components/customListComentario";
-import { FlatList, View, Text } from "react-native";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { FlatList, View } from "react-native";
 import { styles } from "../../../styles/StylesGlobal";
 import { PopupMenu } from "../../Components/popupMenu";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import {
   getComentarioDocenteDocente,
@@ -74,20 +72,7 @@ export const ListComentario = () => {
     }
   }, [searchText, selectedOption]);
 
-  const opciones = [
-    {
-      title: "docente",
-      icon: <FontAwesome5 name="user-circle" size={24} color="black" />,
-      action: () => handleOptionSelect("docente"),
-    },
-    {
-      title: "salon",
-      icon: (
-        <MaterialCommunityIcons name="home-modern" size={24} color="black" />
-      ),
-      action: () => handleOptionSelect("salon"),
-    },
-  ];
+
 
   const handleSearchBarClear = () => {
     setSearchText("");
@@ -112,7 +97,7 @@ export const ListComentario = () => {
           } else if (selectedOption === "salon") {
             data = await getComentarioSalonOne(selectedItem.id);
           }
-          setAdditionalData(data);
+          setAdditionalData(data || []);
         } catch (error) {
           setAdditionalData([]);
         }
@@ -120,6 +105,20 @@ export const ListComentario = () => {
     };
     fetchAdditionalData();
   }, [selectedItem, selectedOption]);
+  const filDocenClass = [
+    {
+      title: "docente",
+      icon: <FontAwesome5 name="user-circle" size={24} color="black" />,
+      action: () => handleOptionSelect("docente"),
+    },
+    {
+      title: "salon",
+      icon: (
+        <MaterialCommunityIcons name="home-modern" size={24} color="black" />
+      ),
+      action: () => handleOptionSelect("salon"),
+    },
+  ];
   return (
     <>
       <View
@@ -139,7 +138,7 @@ export const ListComentario = () => {
             )}
           </>
         )}
-        <PopupMenu rightM={10} topM={100} opcions={opciones} />
+        <PopupMenu rightM={10} topM={100} opcions={filDocenClass} />
       </View>
 
       {selectedItem && (

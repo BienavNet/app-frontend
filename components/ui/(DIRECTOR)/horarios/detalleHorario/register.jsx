@@ -2,7 +2,7 @@ import { View, ScrollView, Alert, TouchableOpacity, Text } from "react-native";
 import { HeaderTitle } from "../../../../share/titulos/headerTitle";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { detailHorarioRegister } from "../../../../../src/utils/schemas/horarioSchema";
+import { detailHorarioRegister, EditingdetailHorarioRegister } from "../../../../../src/utils/schemas/horarioSchema";
 import { CustomTimePicker } from "../../../../share/inputs/customDateTimePicker";
 import { diasArray } from "../../../../../src/utils/schemas/horarioSchema";
 import { CustomFlatList } from "../../../../share/inputs/customFlatList";
@@ -41,7 +41,7 @@ export const RegisterDetailHorario = ({
     watch,
     formState: { errors, isDirty },
   } = useForm({
-    resolver: yupResolver(detailHorarioRegister),
+    resolver: yupResolver(editing ? EditingdetailHorarioRegister :detailHorarioRegister ),
   });
   const supervisors = useSupervisorAll();
   const [loading, setLoading] = useState(false);
@@ -143,6 +143,7 @@ export const RegisterDetailHorario = ({
       }
     }
   }, [route.params]);
+  
   const isDisabled = editing && !isDirty;
 
   useEffect(() => {
@@ -159,10 +160,12 @@ export const RegisterDetailHorario = ({
   }, [supervisors]);
 
   const onsubmit = async (data) => {
+    console.log(data , "data al presionar onsubmit");
     const { salon, dia, hora_inicio, hora_fin } = data;
-    let horario = idhorario;
     const ESTADO = "pendiente";
     const TOTAL_MESES = 6;
+    const startDate = new Date(); // Fecha de inicio
+    const endDate = new Date(startDate); // Fecha de final
     try {
       showToast({
         message: STATUS_MESSAGES[APP_STATUS.REGISTERING],
@@ -170,12 +173,12 @@ export const RegisterDetailHorario = ({
         id: APP_STATUS.REGISTERING,
       });
       if (!editing) {
+        let horario = idhorario;
         await registerDetailHorario(horario, dia, hora_inicio, hora_fin);
-        const startDate = new Date(); // Fecha de inicio
-        const endDate = new Date(startDate); // Fecha de final
         endDate.setMonth(endDate.getMonth() + TOTAL_MESES);
         const classCounts = await countClassesForSupervisors();
         if (!classCounts) throw new Error("Error counting classes");
+        
         showToast({
           message: STATUS_MESSAGES[APP_STATUS.LOADED_SUCCESSFULLY],
           type: "warning",
@@ -220,14 +223,16 @@ export const RegisterDetailHorario = ({
             id: APP_STATUS.ERROR,
           });
         }
-      } else {
+      } 
+      else {
+        console.log("entrando a editing...");
         showToast({
           message: STATUS_MESSAGES[APP_STATUS.LOADING],
           type: "danger",
           id: APP_STATUS.LOADING,
         });
-
-        console.log("Loading... dia, hora_inicio, ");
+        console.log("id del cambiante", route.params.id);
+        console.log("Loading... dia, hora_inicio", dia, hora_inicio, hora_fin);
         const updateDetail = updateDetailHorario(route.params.id, {
           dia:dia,
           hora_inicio:hora_inicio,
@@ -239,17 +244,13 @@ export const RegisterDetailHorario = ({
             .map(async (clase) => {
               return {
                 salon,
-                estado: ESTADO,
+                // estado: ESTADO,
                 ...clase,
               };
             })
             .map(async (clase) => {
               await updateClase(
-                clase.horario,
                 clase.salon,
-                clase.supervisor,
-                clase.estado,
-                clase.fecha
               );
             })
         );
@@ -278,6 +279,9 @@ export const RegisterDetailHorario = ({
       setLoading(false);
     }
   };
+
+  console.log(onsubmit, "onSubmit");
+  console.log(handleSubmit, "handleSubmit");
   return (
     <>
       <HeaderTitle
@@ -303,7 +307,6 @@ export const RegisterDetailHorario = ({
               </View>
               <View className="self-center w-[85%] pb-1 pt-5">
                 <CustomFlatList
-                  verticalOffset={324}
                   name="salon"
                   errors={errors.salon}
                   control={control}
@@ -315,13 +318,16 @@ export const RegisterDetailHorario = ({
                   data={salones}
                 />
               </View>
-              <View className="flex-row justify-items-stretch pt-8 pb-7">
+              <View className="flex-row" style={{
+                marginHorizontal:10,
+                marginVertical:25,
+              }}>
                 <View className="w-1/2 items-center">
                   <CustomTimePicker
                     name="hora_inicio"
                     control={control}
                     errors={errors.hora_inicio}
-                    title="Hora inicio"
+                    title="Hora ini..."
                     initialValue={horainicio}
                     testID="hora_inicio"
                     mode="time"
@@ -356,6 +362,7 @@ export const RegisterDetailHorario = ({
               <View className="self-center w-[85%]">
                 <CustomPiker
                   name="dia"
+                  errors={errors.dia}
                   placeholder="seleccione dia"
                   control={control}
                   data={dias}
@@ -364,22 +371,24 @@ export const RegisterDetailHorario = ({
               <View className="self-center w-[85%] pb-1 pt-5">
                 <CustomFlatList
                   name="salon"
+                  errors={errors.salon}
                   placeholder="seleccione salon"
                   control={control}
                   data={salones}
                 />
               </View>
 
-{console.log(`watch hora inicio: ${watch('hora_inicio')} + ${watch('hora_fin')}`)}
               <View className="flex-row" style={{
                 marginHorizontal:10,
                 marginVertical:25,
               }}>
                 <View className="w-1/2 items-center">
                   <CustomTimePicker
+                  errors={errors.hora_inicio}
                     name="hora_inicio"
+                    editing={editing}
                     control={control}
-                     title="Hora inicio"
+                     title="Hora ini..."
                     testID="hora_inicio"
                     mode="time"
                     initialValue={watch("hora_inicio")}
@@ -394,12 +403,14 @@ export const RegisterDetailHorario = ({
                 <View className="w-1/2 items-center">
                   <CustomTimePicker
                     name="hora_fin"
+                    editing={editing}
                     control={control}
                     title="Hora Fin"
+                    errors={errors.hora_fin}
                     testID="hora_fin"
                     initialValue={watch("hora_fin")}
                     mode="time"
-                    display="clock"
+                    display="clock" 
                     is24Hour={true}
                     onTimeSelected={(formattedTime) =>
                       setHoraFin(formattedTime)
@@ -409,7 +420,19 @@ export const RegisterDetailHorario = ({
               </View>
             </View>
           )}
-          <View className="flex-row justify-center w-full">
+          <View className="flex-row-reverse w-full justify-center">
+          
+            <View className={editing ? "w-[40%]" : "w-[85%]"}>
+              <SubmitButton
+               onPress={() => {
+                console.log("Botón presionado");
+                handleSubmit(onsubmit)();
+                console.log("Botón presionado2");
+              }}
+                editing={editing}
+                isDisabled={isDisabled}
+              />
+            </View>
             {editing && (
               <View className="w-[40%] pt-3 self-center">
                 <TouchableOpacity
@@ -441,13 +464,6 @@ export const RegisterDetailHorario = ({
                 </TouchableOpacity>
               </View>
             )}
-            <View className={editing ? "w-[40%]" : "w-[85%]"}>
-              <SubmitButton
-                onPress={handleSubmit(onsubmit)}
-                editing={editing}
-                isDisabled={isDisabled}
-              />
-            </View>
           </View>
         </View>
       </ScrollView>

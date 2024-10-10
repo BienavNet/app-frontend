@@ -10,54 +10,33 @@ import {
   getHorarioOne,
 } from "../../../../src/services/fetchData/fetchHorarios";
 import { ListItemComponentHorario } from "../../Components/customListHorario";
-import { SearchBar } from "@rneui/themed";
-import { View, StyleSheet, FlatList, Text } from "react-native";
-import { ColorItem } from "../../../styles/StylesGlobal";
+import { FlatList, Text } from "react-native";
 import { ListItemSelectHorario } from "./component/listSelect";
 import { ListFilterHorarioDocente } from "./component/listFilterdocente";
 import { ListFilterHorario2 } from "./component/listFilterHorario";
 import { ModalComponente } from "../../Components/customModal";
-export const ListHorario = ({
-  showSearchBar,
-  searchText,
-  selectedOption,
-  setList,
-  setSearchText,
-  selectedItem,
-  setSelectedItem,
-  handleSearchBarClear,
-  handleOptionSelect,
-  list,
-  horarioAll,
-  docenteall,
-}) => {
-  const [additionalData, setAdditionalData] = useState([]);
-  useEffect(() => {
-    if (searchText === "" && selectedOption) {
-      handleOptionSelect(selectedOption);
-    } else if (selectedOption === "docente") {
-      setList(
-        docenteall.filter(
-          (i) =>
-            i.nombre.toLowerCase().indexOf(searchText.toLowerCase()) > -1 ||
-            i.apellido.toString().indexOf(searchText.toLowerCase()) > -1
-        )
-      );
-    } else if (selectedOption === "horario") {
-      setList(
-        horarioAll.filter(
-          (i) =>
-            i.nombre.toLowerCase().indexOf(searchText.toLowerCase()) > -1 ||
-            i.numero_salon.toString().indexOf(searchText) > -1
-        )
-      );
-    }
-  }, [searchText, selectedOption]);
+import { CustomSeachBar } from "../comentario/components/seachBar";
+import { styles } from "../../../styles/StylesGlobal";
+import { ChildFilterOutline } from "../../(SUPERVISOR)/components/chid/chidFilter";
+import { View } from "react-native";
 
-  const handleItemPress = (item) => {
-    setSelectedItem(item);
-    setList([]);
-  };
+export const ListHorario = ({
+  selectedFilters,
+  showSearchBar,
+  selectedOption,
+  searchText,
+  list,
+  selectedItem,
+  setSearchText,
+  handleSearchBarClear,
+  handleItemPress,
+  showModal,
+}) => {
+  console.log("selectedFilters", selectedFilters)
+  const [additionalData, setAdditionalData] = useState([]);
+console.log(additionalData, "additionalData")
+console.log(list, "list")
+
   useEffect(() => {
     const fetchAdditionalData = async () => {
       if (selectedItem && selectedOption) {
@@ -69,120 +48,85 @@ export const ListHorario = ({
           } else if (selectedOption === "horario") {
             data = await getDetailHorario2(selectedItem.id);
           }
-          if (data) {
-            setAdditionalData(data);
-          } else {
-            setAdditionalData([]);
-          }
+          setAdditionalData(data || []);
         } catch (error) {
-          throw Error("Error fetching additional data:", error);
+          setAdditionalData([]);
         }
       }
     };
     fetchAdditionalData();
   }, [selectedItem, selectedOption]);
+  
+  const filteredData = selectedOption && selectedItem ? additionalData : [];
+  console.log("filterer", filteredData)
   return (
     <>
-      {!selectedOption && (
-        <ListItemComponentHorario
-          deleteDataAsociated={DeleteDetailHorarioOne}
-          getDataAll={getHorarioAll}
-          getDataOne={getHorarioOne}
-          deleteData={DeleteHorarioOne}
-          modalTitle="Horario"
-        />
+      {selectedItem && (
+        <View
+          style={{
+            marginHorizontal: 10,
+          }}
+        >
+          {selectedOption && additionalData && (
+            <ChildFilterOutline
+              title={selectedOption}
+              selectedItem={selectedItem}
+              action={handleSearchBarClear}
+            />
+          )}
+        </View>
       )}
 
+      <ListItemComponentHorario
+        filteredData={filteredData}
+        deleteDataAsociated={DeleteDetailHorarioOne}
+        getDataAll={getHorarioAll}
+        getDataOne={getHorarioOne}
+        deleteData={DeleteHorarioOne}
+        modalTitle="Horario"
+      />
       {showSearchBar && (
         <ModalComponente
           modalStyle={{
-            height: "90%",
+            height: "85%",
           }}
-          
+          animationType="slide"
+          title={`Seleccione ${selectedOption}`}
+          modalVisible={showModal}
           transparent={true}
           canCloseModal={true}
           handleCloseModal={handleSearchBarClear}
-        >
-          <View style={styles.searchArea}>
-            <SearchBar
-              platform="android"
-              containerStyle={styles.search}
-              inputContainerStyle={{ backgroundColor: "#fff" }}
-              onChangeText={(t) => setSearchText(t)}
-              placeholder={`Buscar ${selectedOption}`}
-              placeholderTextColor={ColorItem.DeepFir}
-              cancelButtonTitle="Cancel"
-              value={searchText}
-              onCancel={handleSearchBarClear}
-              onClear={handleSearchBarClear}
-            />
-          </View>
-        </ModalComponente>
-      )}
-
-      {selectedOption && !selectedItem && (
-        <FlatList
-          data={list}
-          // style={styles.listFromSearchBar}
-          renderItem={({ item }) => (
-            <ListItemSelectHorario
-              onPress={() => handleItemPress(item)}
-              data={item}
+          childrenStatic={
+            <CustomSeachBar
+              searchText={searchText}
+              handleSearchBarClear={handleSearchBarClear}
               selectedOption={selectedOption}
+              setSearchText={setSearchText}
             />
-          )}
-          keyExtractor={(item) => item.id}
-          ListEmptyComponent={<Text>No coinciden los resultados</Text>}
-        />
-      )}
-
-      {selectedItem && (
-        <>
-          {selectedOption === "docente" && additionalData && (
-            <>
-              <FlatList
-                data={additionalData}
-                style={styles.list}
-                renderItem={({ item }) => (
-                  <ListFilterHorarioDocente data={item} />
-                )}
-                keyExtractor={(item) => item.id.toString()}
-                ListEmptyComponent={
-                  <Text style={styles.noResultsText}>No hay resultados.</Text>
+          }
+        >
+         
+          {console.log(list, "list QQQQQQQQQ")}
+          {selectedOption &&
+            !selectedItem &&
+            list.map((item) => (
+              <ListItemSelectHorario
+                key={
+                  selectedOption === "docente" && selectedOption === "dia"
+                  ? `${item}` // Si es docente y se seleccionó un día
+                  : selectedOption === "docente"
+                  ? `${item.docente_id}-${item.apellido}.${item.nombre}/${item.cedula}` // Si solo es docente
+                  : selectedOption === "horario"
+                  ? `${item.docente_id}-${item.apellido}.${item.nombre}R${item.asignatura}.${item.cedula}` // Si es horario
+                  : undefined
                 }
+                onPress={() => handleItemPress(item)}
+                data={item}
+                selectedOption={selectedOption}
               />
-            </>
-          )}
-          {selectedOption === "horario" && additionalData && (
-            <FlatList
-              data={additionalData}
-              style={styles.list}
-              renderItem={({ item }) => <ListFilterHorario2 data={item} />}
-              keyExtractor={(item) => item.id.toString()}
-              ListEmptyComponent={
-                <Text style={styles.noResultsText}>No hay resultados.</Text>
-              }
-            />
-          )}
-        </>
+            ))}
+        </ModalComponente>
       )}
     </>
   );
 };
-const styles = StyleSheet.create({
-  searchArea: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    backgroundColor: "transparent",
-    width: "100%",
-    height: "10%",
-  },
-  search: {
-    borderBottomWidth: 1,
-    borderBottomColor: ColorItem.KellyGreen,
-    backgroundColor: "transparent",
-    height: "100%",
-    width: "80%",
-    fontSize: 19,
-  },
-});

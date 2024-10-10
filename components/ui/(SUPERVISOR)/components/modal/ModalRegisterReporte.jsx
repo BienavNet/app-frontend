@@ -3,9 +3,9 @@ import { MultilineTextInput } from "../../../../share/inputs/customMultipleTextI
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { RegisterReportSchema } from "../../../../../src/utils/schemas/reportSchema";
-import status from "../../../../../components/ui/(DIRECTOR)/horarios/detalleHorario/json/status.json";
-import { CustomPiker } from "../../../../share/inputs/customPicker";
-import { useCallback, useState } from "react";
+// import status from "../../../../../components/ui/(DIRECTOR)/horarios/detalleHorario/json/status.json";
+// import { CustomPiker } from "../../../../share/inputs/customPicker";
+import { useCallback } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { ColorItem } from "../../../../styles/StylesGlobal";
 import {
@@ -258,27 +258,6 @@ export const ModalRegisterReporte = () => {
               </View>
             </View>
           </View>
-          {/* <>
-            <View
-              className="w-[100%] justify-center"
-              style={{
-                paddingHorizontal: 10,
-              }}
-            >
-              <CustomPiker
-                errors={errors.estado}
-                name="estado"
-                variant="outlined"
-                control={control}
-                data={status.map((i, v) => ({
-                  id: i.id,
-                  label: capitalizeFirstLetter(i.estado),
-                  value: i.estado,
-                }))}
-                placeholder={capitalizeFirstLetter(data.estado)}
-              />
-            </View>
-          </> */}
         </View>
         <View
           className="flex-row justify-center items-center"

@@ -1,7 +1,6 @@
-
 import { FormLogin } from "../components/ui/login/formLogin";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View, Text,ImageBackground } from "react-native";
+import { View, Text, ImageBackground } from "react-native";
 import { PublicRoute } from "../src/hooks/PublicRoute";
 import LogoUPCWhite from "../assets/svg/LogoUpcWhite";
 import LogoSistemasUPC from "../assets/svg/LogoSistemas";
@@ -50,7 +49,8 @@ export default function Index() {
             </View>
           </View>
           <View
-            style={[stylesColors.BackgroundZircon,
+            style={[
+              stylesColors.BackgroundZircon,
               {
                 bottom: 10,
                 width: "100%",
@@ -60,7 +60,7 @@ export default function Index() {
                 paddingVertical: 15,
                 shadowColor: "black",
                 marginBottom: 20,
-              }
+              },
             ]}
           >
             <View
@@ -81,4 +81,3 @@ export default function Index() {
     </PublicRoute>
   );
 }
-

@@ -2,17 +2,17 @@ import { Audio } from "expo-av";
 import moment from "moment";
 
 // Función para reproducir el sonido de notificación
-export default async function playNotificationSound(setSound) {
+export const playNotificationSound = async (setSound) => {
   try {
     const { sound } = await Audio.Sound.createAsync(
-      require("../../../assets/mp3/Sweet.mp3") // Ruta del archivo del sonido
+      require('../../../assets/mp3/Sweet.mp3')
     );
     setSound(sound);
     await sound.playAsync();
   } catch (error) {
-    throw Error("Error al reproducir el sonido de notificación:", error);
+    console.error("Error loading or playing sound: VERIFICA SI LA RUTA DEL SONIDO EXISTE", error);
   }
-}
+};
 
 export const formatHourHHMMAMPM = (timeString) => {
   const [hours, minutes] = timeString.split(":");

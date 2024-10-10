@@ -13,7 +13,6 @@ import { ColorItem } from "../../styles/StylesGlobal";
 import { useRef, useState } from "react";
 
 export const PopupMenu = ({ opcions, onSelect, topM =102, rightM = 10}) => {
-  console.log(`Pop top ${ topM} y right ${ rightM}`);
   const [visible, setVisible] = useState(false);
   const scale = useRef(new Animated.Value(0)).current;
 

@@ -11,6 +11,8 @@ import { ColorItem } from "../../../../styles/StylesGlobal";
 import { stylesHorariosDirector } from "./styles";
 
 export const ListFilterHorarioDocente = ({ data, onPress }) => {
+  console.log(data, " filter horario docente");
+  // "apellido": "guerrero", "cedula": 1212121212, "correo": "didider123@gmail.com", "docente_id": 1, "nombre": "didider"
   const [expanded, setExpanded] = useState(false);
   return (
     <ListItem.Accordion
@@ -32,8 +34,8 @@ export const ListFilterHorarioDocente = ({ data, onPress }) => {
                   }}
                 >
                   <ListItem.Title style={stylesHorariosDirector.itemP2}>
-                    {capitalizeFirstLetter(data.asignatura)}{" "}
-                    {data.dia}
+                    {data.cedula}{" "}
+                    {data.apellido}
                   </ListItem.Title>
                 </View>
               </View>
@@ -63,7 +65,7 @@ export const ListFilterHorarioDocente = ({ data, onPress }) => {
                     size={20}
                     color={ColorItem.TarnishedSilver}
                   />
-                  <Text
+                  {/* <Text
                     style={{
                       fontSize: 18,
                       color: "#999999",
@@ -71,7 +73,7 @@ export const ListFilterHorarioDocente = ({ data, onPress }) => {
                     }}
                   >
                     {truncateText(data.comentario, 15)}
-                  </Text>
+                  </Text> */}
                 </View>
               </View>
             </BoxView>
@@ -99,12 +101,13 @@ export const ListFilterHorarioDocente = ({ data, onPress }) => {
             >
               <View>
                 <ListItem.Title>
-                  {capitalizeFirstLetter(data.nombre_salon)}
+                  {data.nombre}
+                  {/* {capitalizeFirstLetter(data.nombre)} */}
                 </ListItem.Title>
               </View>
               <View style={{}}>
                 <Text style={stylesHorariosDirector.itemP3}>
-                  {truncateText(data.numero_salon)}
+             {    data.correo}
                 </Text>
               </View>
             </View>
@@ -116,8 +119,9 @@ export const ListFilterHorarioDocente = ({ data, onPress }) => {
             >
               <View>
                 <ListItem.Subtitle>
-                  {capitalizeFirstLetter(data.nombre)}{" "}
-                  {capitalizeFirstLetter(data.apellido)}
+                  {data.nombre}
+                  {/* {capitalizeFirstLetter(data.nombre)}{" "}
+                  {capitalizeFirstLetter(data.apellido)} */}
                 </ListItem.Subtitle>
               </View>
             </View>
@@ -128,13 +132,13 @@ export const ListFilterHorarioDocente = ({ data, onPress }) => {
                 flexDirection: "row",
               }}
             >
-              <View
+              {/* <View
                 style={{
                   width: "100%",
                 }}
               >
                 <Text style={stylesHorariosDirector.itemLeft}>{data.comentario}</Text>
-              </View>
+              </View> */}
             </View>
           </BoxView>
         </ListItem.Content>

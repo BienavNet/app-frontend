@@ -156,3 +156,5 @@ install y uso del webscoket
 > npm i lodash.isempty
 
 > npx expo install react-native-reanimated-carousel
+
+> npx expo install expo-notifications

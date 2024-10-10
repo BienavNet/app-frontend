@@ -18,7 +18,6 @@ import { getClasesAll } from "../services/fetchData/fetchClases";
 //fetch Docente
 export const useDocenteAll = () => {
   const [docenteAll, setDocenteAll] = useState([]);
-
   const fetchDocenteAll = useCallback(async () => {
     try {
       const res = await getDocenteAll();
@@ -110,7 +109,7 @@ export const useHorarioAll = () => {
   }, [fetchHorarioAll]);
 
   return horarios;
-}; // obtiene todos los Salones
+}; // obtiene todos los Horarios
 
 //fetch Categorias
 //categorias x salon

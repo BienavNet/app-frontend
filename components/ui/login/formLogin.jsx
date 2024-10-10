@@ -14,12 +14,13 @@ import { useEffect, useState } from "react";
 import { Buttonlogin } from "../../share/button/buttonLogin";
 import { ColorItem } from "../../styles/StylesGlobal";
 import { useAuth } from "../../../src/hooks/use/useAuth";
+import useNotificationPermissions from "../../../src/utils/PERMISSIONS/push.notification/expo.notification";
 
 export const FormLogin = () => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const router = useRouter();
   const { login, isAuthenticated, user } = useAuth();
-
+  const {requestNotificationPermissions} = useNotificationPermissions();
   const {
     handleSubmit,
     control,
@@ -54,6 +55,7 @@ export const FormLogin = () => {
           id: APP_STATUS.SUCCESS,
         });
         router.push("/home");
+        requestNotificationPermissions();
       }
       reset();
     } catch (error) {

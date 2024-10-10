@@ -4,7 +4,7 @@ import {
   truncateText,
 } from "../../../../../src/utils/functiones/functions";
 import { stylesHorariosDirector } from "./styles";
-import { styles } from "../../../../styles/StylesGlobal";
+
 export const ListItemSelectHorario = ({ data, onPress, selectedOption }) => {
   return (
     <TouchableOpacity onPress={onPress} style={stylesHorariosDirector.item}>
@@ -16,24 +16,14 @@ export const ListItemSelectHorario = ({ data, onPress, selectedOption }) => {
           </Text>
         )}
         {selectedOption === "horario" && (
-          <>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                overflow: "hidden",
-              }}
-            >
-              <Text style={stylesHorariosDirector.itemP2}>
-                {truncateText(data.asignatura, 14)} {"-"} {data.numero_salon}
-              </Text>
-              <DateChip item={new Date(data.fecha).toLocaleDateString()} />
-            </View>
-            <Text style={stylesHorariosDirector.itemP1}>
-              {capitalizeFirstLetter(data.docente_nombre)}{" "}
-              {capitalizeFirstLetter(data.docente_apellido)}
-            </Text>
-          </>
+          <Text style={stylesHorariosDirector.itemP2}>
+            {truncateText(data.asignatura, 16)}
+          </Text>
+        )}
+        {selectedOption === "dia" && (
+          <Text style={stylesHorariosDirector.itemP2}>
+            {data}
+          </Text>
         )}
       </View>
     </TouchableOpacity>
