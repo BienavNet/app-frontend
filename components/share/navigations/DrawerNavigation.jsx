@@ -4,7 +4,6 @@ import { CustomDrawerContent } from "./customDrawerLogout";
 import HeaderLeft from "../headerhomeLeft";
 import HeaderRigth from "../headerhomeRigth";
 import { DrawerActions } from "@react-navigation/native";
-import { Redirect } from "expo-router";
 import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
 import { ColorItem } from "../../styles/StylesGlobal";
 import NotificationStackScreen from "../../ui/(DIRECTOR)/notifications/screenNotifications";
@@ -13,10 +12,6 @@ import { userData } from "../../../src/hooks/use/userData";
 export const DrawerHome = ({ drawerScreens }) => {
   const Drawer = createDrawerNavigator();
   const { ROL } = userData();
-  // const ROL = user.rol;
-  // if (!user) {
-  //   return <Redirect href="/" />;
-  // }
 
   return (
     <Drawer.Navigator

@@ -2,15 +2,14 @@ import { Audio } from "expo-av";
 import moment from "moment";
 
 // Función para reproducir el sonido de notificación
-export const playNotificationSound = async (setSound) => {
+export default async function playNotificationSound(setSound) {
   try {
-    const { sound } = await Audio.Sound.createAsync(
-      require('../../../assets/mp3/Sweet.mp3')
-    );
+    const { sound } = await Audio.Sound.createAsync(require('../../../assets/mp3/Sweet.mp3'));
     setSound(sound);
     await sound.playAsync();
   } catch (error) {
     console.error("Error loading or playing sound: VERIFICA SI LA RUTA DEL SONIDO EXISTE", error);
+    return;
   }
 };
 

@@ -43,8 +43,7 @@ const handlers = {
   },
 };
 
-const reducer = (state, action) =>
-  handlers[action.type] ? handlers[action.type](state, action) : state;
+const reducer = (state, action) => handlers[action.type] ? handlers[action.type](state, action) : state;
 
 export const AuthProvider = (props) => {
   const {children} = props;
@@ -107,13 +106,6 @@ export const AuthProvider = (props) => {
     }
   };
 
-  const logout = () => {
-    resetSession();
-    dispatch({
-      type: "LOGOUT",
-    });
-  };
-
   const login = async (correo, contrasena, rol) => {
     try {
       await getTokens(correo, contrasena, rol);
@@ -131,12 +123,16 @@ export const AuthProvider = (props) => {
     } catch (error) {
       logout();
       return Promise.reject(error)
-      // console.log("error.message JWT", error.message);
-      // console.log("error JWT", error);
-      // const errorMessage = error.response?.data?.message || error.message;
-      // throw new Error(errorMessage);
     }
   };
+
+  const logout = () => {
+    resetSession();
+    dispatch({
+      type: "LOGOUT",
+    });
+  };
+
 
   return (
     <AuthContext.Provider

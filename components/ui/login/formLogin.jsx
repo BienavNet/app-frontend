@@ -37,7 +37,7 @@ export const FormLogin = () => {
       showToast({
         message: "Por favor complete todos los campos.",
         type: "danger",
-        id: APP_STATUS.ERROR,
+        id: "ERROR_CAMPOSIMCOMPLETOS",
       });
       return;
     }
@@ -46,7 +46,7 @@ export const FormLogin = () => {
       showToast({
         message: STATUS_MESSAGES[APP_STATUS.LOADED_SUCCESSFULLY],
         type: "success",
-        id: APP_STATUS.LOADED_SUCCESSFULLY,
+        id:"INICIO_STATUS_LOADED_SUCCESSFULL",
       });
       if (user) {
         showToast({
@@ -54,8 +54,8 @@ export const FormLogin = () => {
           type: "success",
           id: APP_STATUS.SUCCESS,
         });
-        router.push("/home");
         requestNotificationPermissions();
+        router.push("/home");
       }
       reset();
     } catch (error) {

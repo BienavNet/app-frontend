@@ -27,10 +27,13 @@ export const ContentNofitications = ({ cedula, estado = "todas" }) => {
       handleEditNotification(item.id);
     }
   };
+
+
   const handlePressNotification = (item) => {
     handleUpdateStatus(item);
     navigation.navigate("NotificationView", { notification: item });
   };
+  
   return (
     <ScrollView>
       <>

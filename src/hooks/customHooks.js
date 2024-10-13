@@ -133,6 +133,7 @@ export const useCategoriaxSalon = () => {
 
 //fetch notifications
 export const useNotificationCedulaEstado = (cedula, estado) => {
+  console.log(estado);
   const [notificationCedulaEstado, setNotificationCedulaEstado] = useState([]);
 
   const fetchNotificationsAll = useCallback(async () => {

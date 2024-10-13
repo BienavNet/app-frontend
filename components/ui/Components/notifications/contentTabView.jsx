@@ -3,7 +3,6 @@ import { useWindowDimensions, Text } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { FilterNotRead, FilterRead, NotificationAll } from "./tabViewFilter";
 import { ColorItem, styles } from "../../../styles/StylesGlobal";
-import { usePathname } from "expo-router";
 
 const renderScene = SceneMap({
   first: NotificationAll,
@@ -12,8 +11,6 @@ const renderScene = SceneMap({
 });
 
 export default function Notification() {
-  const pathname = usePathname();
-  console.log("pathname in notification:", pathname);
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
 

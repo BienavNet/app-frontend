@@ -1,195 +1,86 @@
-import { createContext, useEffect, useState } from "react";
-import { playNotificationSound } from "../../src/utils/functiones/functions";
+import { createContext, useEffect, useRef, useState } from "react";
+import playNotificationSound from "../../src/utils/functiones/functions";
 import io from "socket.io-client";
-import { showNotification } from "../utils/PERMISSIONS/push.notification/viewnotification";
+// import { showNotification } from "../utils/PERMISSIONS/push.notification/viewnotification";
 import useNotificationPermissions from "../utils/PERMISSIONS/push.notification/expo.notification";
 import { userData } from "../hooks/use/userData";
-
 const baseURL = process.env.EXPO_PUBLIC_URLWEBSOCKET;
-let socket = null;
-socket = io(baseURL);
+export let socket = null;
 
-function initSockets(userId, rol) {
-  const permissionGranted = useNotificationPermissions();
-
-  if (permissionGranted) {
-  socket.on("connect", () => {
-  socket.emit("authenticate", { userId, rol });
-  });
-  }
-  socket.on("disconnect", () => {
-    console.log("Desconectado del servidor WebSocket");
-  });
-}
-// Creamos el contexto
 export const NotificationContext = createContext();
 
-// Proveedor del contexto
 export const NotificationProvider = (props) => {
-  const {children} = props;
-  const {ROL, ID } = userData();
+  const permissionGranted = useNotificationPermissions();
+  const { children } = props;
+  const { ROL, ID, INITIALIZE, ISAUTENTICATED } = userData();
   const [totalUnreadNotification, setTotalUnreadNotification] = useState(0);
   const [sound, setSound] = useState(null);
-  initSockets(ID,ROL);
-
-  socket.on("count-notification", (data) => {
-            console.log("Cantidad de count entrante:ssss", data);
-            handleNewNotification(data);
-          });
+  const socketInitialized = useRef(false);
 
   const handleNewNotification = (data) => {
     if (data > totalUnreadNotification) {
       playNotificationSound(setSound);
       setTotalUnreadNotification(data);
+      //  showNotification("Nueva notificación", `Tienes 2 notificaciones no leídas.`);
     } else if (data < totalUnreadNotification) {
       setTotalUnreadNotification(data);
     } else {
       console.log("No hay nuevas notificaciones");
+      return;
+    }
+  };
+
+  const configreSocketEvents = () => {
+    // eventos del websocket
+    socket.on("connect", () => {
+      console.log("Conectado al servidor WebSocket", socket.id);
+      socket.emit("authenticate", { userId: ID, rol: ROL });
+    });
+
+    socket.on("count-notification", (data) => {
+      handleNewNotification(data);
+      console.log("count-notification data: " + data);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Desconectado del servidor WebSocket");
+    });
+  };
+
+  const initialStateSocket = () => {
+    // si el socket ya esta iniciado no hara mas nada, si no verifica que el usuario este inizializado
+    if (socketInitialized.current) return;
+    if (INITIALIZE && ISAUTENTICATED) {
+      socket = io(baseURL);
+      if (permissionGranted) { // verificamos los permiso de notificacion
+        socketInitialized.current = true; // Inicializamos el socket
+        configreSocketEvents();
+      }
+    }
+  };
+
+  const disconnectSocket = () => {
+    if (socket && socketInitialized.current) {
+      socket.emit("disauthenticate", ID);
+      socket.off("count-notification");
+      socket.disconnect();
+      socketInitialized.current = false;
+    }
+    if (sound) {
+      sound.unloadAsync(); // Descargar el sonido si está cargado
     }
   };
 
   useEffect(() => {
-    return () => {  
-      if (sound) {
-        socket.off("count-notification");
-        sound.unloadAsync(); // Descargar el sonido si está cargado
-      }
+    initialStateSocket();
+    return () => {
+      disconnectSocket(); // Limpiar y desconectar el socket al desmontar el contexto o cuando cambie el usuario o cierre session
     };
-  }, [totalUnreadNotification]);
+  }, [INITIALIZE, ISAUTENTICATED]);
+
   return (
     <NotificationContext.Provider value={{ totalUnreadNotification }}>
       {children}
     </NotificationContext.Provider>
   );
 };
-
-// import { createContext, useEffect, useState } from "react";
-// import { playNotificationSound } from "../../src/utils/functiones/functions";
-// import io from "socket.io-client";
-// import { showNotification } from "../utils/PERMISSIONS/push.notification/viewnotification";
-// import useNotificationPermissions from "../utils/PERMISSIONS/push.notification/expo.notification";
-
-// const baseURL = process.env.EXPO_PUBLIC_URLWEBSOCKET;
-// let socket = null;
-// export const NotificationContext = createContext();
-
-// export const NotificationProvider = (props) => {
-//   const { userId, rol, children } = props;
-//   console.log("props del contexto websocket", props);
-//   const [totalUnreadNotification, setTotalUnreadNotification] = useState(0);
-//   const [sound, setSound] = useState(null);
-//   const permissionGranted = useNotificationPermissions();
-
-//   useEffect(() => {
-//     if (permissionGranted && userId && rol) {
-//       socket = io(baseURL);
-//       socket.on("connect", () => {
-//         console.log("Conectado al servidor WebSocket");
-//         socket.emit("authenticate", { userId, rol });
-//       });
-
-//       socket.on("count-notification", (data) => {
-//         console.log("Cantidad de notificaciones entrantes:", data);
-//         handleNewNotification(data); // Manejar la nueva notificación
-//       });
-
-//       socket.on("disconnect", () => {
-//         console.log("Desconectado del servidor WebSocket");
-//       });
-//     }
-
-//     return () => {
-//       // Limpiar y desconectar el socket al desmontar el contexto o cuando cambie el usuario
-//       if (socket) {
-//         socket.disconnect();
-//       }
-//       if (sound) {
-//         sound.unloadAsync(); // Descargar el sonido si está cargado
-//       }
-//     };
-//   }, [permissionGranted, userId, rol]); // Reconfigurar cuando cambie el usuario o permisos
-
-//   // Manejamos las notificaciones
-//   const handleNewNotification = (data) => {
-//     if (data > totalUnreadNotification) {
-//       playNotificationSound(setSound); // Reproducir sonido de notificación
-//       showNotification("Nueva notificación", `Tienes ${data} notificaciones no leídas.`); // Mostrar notificación push
-//       setTotalUnreadNotification(data); // Actualizar el número de notificaciones
-//     } else if (data < totalUnreadNotification) {
-//       setTotalUnreadNotification(data); // Actualizar solo si han disminuido
-//     } else {
-//       console.log("No hay nuevas notificaciones");
-//     }
-//   };
-
-//   return (
-//     <NotificationContext.Provider value={{ totalUnreadNotification }}>
-//       {children}
-//     </NotificationContext.Provider>
-//   );
-// };
-
-// import { createContext, useEffect, useState } from "react";
-// import {playNotificationSound} from "../../src/utils/functiones/functions";
-// import io from "socket.io-client";
-// import { showNotification } from "../utils/PERMISSIONS/push.notification/viewnotification";
-// import useNotificationPermissions from "../utils/PERMISSIONS/push.notification/expo.notification";
-
-// const baseURL = process.env.EXPO_PUBLIC_URLWEBSOCKET;
-// let socket = null;
-// socket = io(baseURL);
-
-// export function initSockets(userId, rol) {
-//   socket.on("connect", () => {
-//   socket.emit("authenticate", { userId, rol });
-//   });
-  
-//   socket.on("disconnect", () => {
-//     console.log("Desconectado del servidor WebSocket");
-//   });
-// }
-// // Creamos el contexto
-// export const NotificationContext = createContext();
-
-// // Proveedor del contexto
-// export const NotificationProvider = (props) => {
-//   const { children } = props;
-//   const [totalUnreadNotification, setTotalUnreadNotification] = useState(0);
-//   const [sound, setSound] = useState(null);
-//   const permissionGranted = useNotificationPermissions();
-
-
-//     socket.on("count-notification", (data) => {
-//       console.log("Cantidad de count entrante:ssss", data);
-//       handleNewNotification(data);
-//     });
-
-//   // Manejamos las notificaciones
-//   const handleNewNotification = (data) => {
-//     if (data > totalUnreadNotification) {
-//       playNotificationSound(setSound);
-//       setTotalUnreadNotification(data);
-//     } else if (data < totalUnreadNotification) {
-//       setTotalUnreadNotification(data);
-//     } else {
-//       console.log("No hay nuevas notificaciones");
-//     }
-//   };
-
-//   useEffect(() => {
-//     return () => {  
-//       if (sound) {
-//         socket.off("count-notification");
-//         sound.unloadAsync(); // Descargar el sonido si está cargado
-//       }
-//     };
-//   }, [totalUnreadNotification]);
-
-//   return (
-//     <NotificationContext.Provider
-//       value={{ totalUnreadNotification}}
-//     >
-//       {children}
-//     </NotificationContext.Provider>
-//   );
-// };
