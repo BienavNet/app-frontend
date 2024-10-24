@@ -9,11 +9,12 @@ const ListFilterReport = ({
   selectedOption,
   temporarySelection,
 }) => {
+  console.log("List Filter Report", temporarySelection);
   const isSelected = temporarySelection?.id === data.id;
 
   const handleCheckSelected = () => {
     const newValue = !isSelected;
-    onPress(data, newValue); // Pasa el nuevo estado al padre
+    onPress(data, newValue);
   };
 
   return (
@@ -27,11 +28,11 @@ const ListFilterReport = ({
         tintColors={{ true: ColorItem.DeepFir, false: ColorItem.DeepFir }} // Colores personalizados
       />
       <View style={styles.itemInfo}>
-        {selectedOption === "salones" && (
+        {/* {selectedOption === "salones" && ( */}
           <Text style={styles.textinfo}>
             {data.numero_salon} {"-"} {capitalizeFirstLetter(data.nombre)}
           </Text>
-        )}
+        {/* )} */}
       </View>
     </View>
   );

@@ -1,83 +1,106 @@
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, Alert } from "react-native";
 import { ModalComponente } from "../../../../Components/customModal";
-import { Divider, SearchBar } from "@rneui/themed";
 import { Reset_Filter } from "../../../components/button/buttonReset&Filter";
 import { ColorItem } from "../../../../../styles/StylesGlobal";
-import { DividerLine } from "../../../../Components/dividerline/dividerLine";
+import { CustomSeachBar } from "../../../../(DIRECTOR)/comentario/components/seachBar";
 
 export const ClassFilter = ({
+  removeFilter,
   selectedOption,
-  temporarySelection,
+  multipleSelectedItem,
   applyFilter,
-  selectedItem,
-  searchText,
-  handleCloseSelectOption,
-  handleItemPress,
   children,
   modalSelect,
+  searchText,
   setSearchText,
+  setModalSelect,
+  setMultipleSelectedOption,
+  temporalSelectedItem,
+  setMultipleSelectedItem,
 }) => {
+  const handleFilter = () => {
+    const hasTemporalSelection = temporalSelectedItem[selectedOption] 
+    ? Object.keys(temporalSelectedItem[selectedOption]).length > 0 
+    : false;
+    
+  const hasExistingSelection = multipleSelectedItem[selectedOption] 
+    ? Object.keys(multipleSelectedItem[selectedOption]).length > 0 
+    : false;
+
+    if (!hasTemporalSelection && !hasExistingSelection) {
+      Alert.alert(
+        "Selección requerida",
+        "Para filtrar debe tener un item seleccionado"
+      );
+    } else {
+      applyFilter();
+    }
+  };
+
+  const closemodal = () => {
+    if (!multipleSelectedItem[selectedOption]) {
+      setMultipleSelectedOption((prev) =>
+        prev.filter((option) => option !== selectedOption)
+      );
+    }
+    setModalSelect(false);
+  };
   return (
     <ModalComponente
+      linearDiviider={true}
+      handleCloseModal={closemodal}
       modalStyle={{ height: "75%" }}
-      handleCloseModal={handleCloseSelectOption}
       animationType="slide"
       transparent={true}
       modalVisible={modalSelect}
       canCloseModal={true}
-    >
-      <SearchBar
-        platform="android"
-        containerStyle={styles.search}
-        loadingProps={{
-          size: "small",
-        }}
-        onChangeText={(t) => setSearchText(t)}
-        placeholder={`Buscar ${selectedOption}`}
-        placeholderTextColor={ColorItem.DeepFir}
-        cancelButtonTitle="Cancel"
-        value={searchText}
-      />
-      <DividerLine />
-      
-      {/* //lista desplegable segun el filtro seleccionado*/}
-      <View
-        style={{
-          paddingVertical: 10,
-          maxHeight:360,
-          minHeight:360,
-        }}
-      >
-          {children}
-      </View>
-
-      <DividerLine/>
-
+      title={`Seleccione ${selectedOption}`}
+      childrenStatic={
+        <CustomSeachBar
+          searchText={searchText}
+          setSearchText={setSearchText}
+          selectedOption={selectedOption}
+        />
+      }
+      bottomStatic={
         <View
           style={{
             paddingVertical: 15,
-            flexDirection: selectedItem ? "row" : "column",
+            flexDirection:
+              multipleSelectedItem[selectedOption] &&
+              Object.keys(multipleSelectedItem[selectedOption]).length > 0
+                ? "row"
+                : "column",
           }}
         >
           <View
             style={{
-              width: selectedItem ? "50%" : "",
+              width:
+                multipleSelectedItem[selectedOption] &&
+                Object.keys(multipleSelectedItem[selectedOption]).length > 0
+                  ? "50%"
+                  : "",
               paddingHorizontal: 5,
             }}
           >
-            {selectedItem && (
-              <Reset_Filter
-                backgroundColor={ColorItem.TarnishedSilver}
-                title="Borrar filtros"
-                colorText="#151515"
-                onPress={handleCloseSelectOption}
-              />
-            )}
+            {multipleSelectedItem[selectedOption] &&
+              Object.keys(multipleSelectedItem[selectedOption]).length > 0 && (
+                <Reset_Filter
+                  backgroundColor={ColorItem.TarnishedSilver}
+                  title="Borrar filtros"
+                  colorText="#151515"
+                  onPress={()=> removeFilter(selectedOption)}
+                />
+              )}
           </View>
 
           <View
             style={{
-              width: selectedItem ? "50%" : "100%",
+              width:
+                multipleSelectedItem[selectedOption] &&
+                Object.keys(multipleSelectedItem[selectedOption]).length > 0
+                  ? "50%"
+                  : "100%",
               paddingHorizontal: 5,
             }}
           >
@@ -85,54 +108,15 @@ export const ClassFilter = ({
               backgroundColor={ColorItem.MediumGreen}
               title="Filtrar"
               colorText="white"
-              onPress={applyFilter}
+              onPress={handleFilter}
             />
           </View>
         </View>
+      }
+    >
+      <View style={{ paddingVertical: 10, paddingHorizontal: 15 }}>
+        {children}
+      </View>
     </ModalComponente>
   );
 };
-
-const styles = StyleSheet.create({
-  item: {
-    marginHorizontal: 8,
-    marginVertical: 8,
-    flex: 1,
-  },
-  itemP1: {
-    fontSize: 20,
-    color: ColorItem.TarnishedSilver,
-    marginBottom: 5,
-    fontWeight: "bold",
-  },
-  itemAsig: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#999999",
-    textAlign: "left",
-  },
-  itemP2: {
-    fontWeight: "bold",
-    fontSize: 18,
-    color: "#999999",
-    textAlign: "center",
-  },
-  itemP3: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#999999",
-    textAlign: "center",
-  },
-  itemLeft: {
-    fontSize: 16,
-    color: ColorItem.TarnishedSilver,
-    fontWeight: "bold",
-  },
-  search: {
-    borderRadius: 10,
-    width: "100%",
-    backgroundColor: ColorItem.Zircon,
-    flex: 1,
-    fontSize: 19,
-  },
-});

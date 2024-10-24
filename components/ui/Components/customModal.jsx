@@ -1,5 +1,6 @@
 import { Modal, View, TouchableOpacity, ScrollView, Text } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { DividerLine } from "./dividerline/dividerLine";
 export const ModalComponente = ({
   modalVisible,
   handleCloseModal,
@@ -9,7 +10,9 @@ export const ModalComponente = ({
   modalStyle = {},
   canCloseModal = true,
   title = "",
-  childrenStatic = ""
+  childrenStatic = "",
+  bottomStatic = "",
+  linearDiviider = false,
 }) => {
   return (
     <Modal
@@ -61,9 +64,12 @@ export const ModalComponente = ({
             {title}
           </Text>
           <View>{childrenStatic}</View>
+          {linearDiviider && <DividerLine />}
           <ScrollView className="h-full">
             <View className="w-[100%]">{children}</View>
           </ScrollView>
+          {linearDiviider && <DividerLine />}
+          <View>{bottomStatic}</View>
         </View>
       </View>
     </Modal>

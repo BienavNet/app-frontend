@@ -26,14 +26,14 @@ export const ListItemComponentHorario = ({
   navigateToFormScreen,
   modalTitle = "Info",
 }) => {
-  console.log("fiterredData >>>>>>>>>><XXXXX", filteredData);
+  // console.log("fiterredData >>>>>>>>>><XXXXX", filteredData);
   const [modalVisible, setModalVisible] = useState(false); // primer modal
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
-  console.log(
-    items,
-    ">>>>>>>>><<<<<<<<WWWW items por default de la list horario"
-  );
+  // console.log(
+  //   items,
+  //   ">>>>>>>>><<<<<<<<WWWW items por default de la list horario"
+  // );
   const [selectedItem, setSelectedItem] = useState(null);
   const today = Today();
   const [value, setValue] = useState(today);
@@ -48,7 +48,7 @@ export const ListItemComponentHorario = ({
       }
       else{
         const res = await getDataAll();
-      setItems(res);
+        setItems(res);
       }
     } catch (error) {
       throw new Error("Error fetching items:", error);

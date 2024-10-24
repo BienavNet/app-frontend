@@ -12,7 +12,6 @@ import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
 import { StatusCircle } from "../../../(DIRECTOR)/reportes/components/StatusCircle";
 
 const ListSelectItem = ({ data }) => {
-  console.log(data, "data del list select item");
   const [expanded, setExpanded] = useState(false);
   return (
     <ListItem.Accordion

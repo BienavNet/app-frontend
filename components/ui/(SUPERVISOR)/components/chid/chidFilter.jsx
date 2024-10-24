@@ -3,6 +3,35 @@ import { Chip } from "@rneui/themed";
 import { ColorItem } from "../../../../styles/StylesGlobal";
 import { View } from "react-native";
 import { truncateText } from "../../../../../src/utils/functiones/functions";
+
+// cuando se maneja varios filtros
+export const ChipMultipleFilter = ({ title, selectedItem, action }) => {
+  return (
+    <View
+      style={{
+        width: 130,
+        marginHorizontal: 10,
+      }}
+    >
+      <Chip
+        size="md"
+        titleStyle={{
+          fontSize: 16,
+          fontWeight: "bold",
+          color: selectedItem ? "white" : ColorItem.TarnishedSilver,
+        }}
+        onPress={action}
+        iconRight
+        title={title}
+        color={selectedItem ? ColorItem.GreenSymphony : "lightgray"}
+        containerStyle={{ marginVertical: 10 }}
+        icon={<FontAwesome name="angle-down" size={24} color="gray" />}
+      />
+    </View>
+  );
+};
+
+// cuando se maneja un solo filtro
 export const ChildFilter = ({ title, selectedItem, action }) => {
   return (
     <View
@@ -16,7 +45,7 @@ export const ChildFilter = ({ title, selectedItem, action }) => {
         titleStyle={{
           fontSize: 16,
           fontWeight: "bold",
-          color: ColorItem.TarnishedSilver,
+          color: selectedItem ? "white" : ColorItem.TarnishedSilver,
         }}
         onPress={action}
         iconRight

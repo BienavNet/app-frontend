@@ -5,7 +5,9 @@ import {
 } from "../../../../../src/utils/functiones/functions";
 import { stylesHorariosDirector } from "./styles";
 
+
 export const ListItemSelectHorario = ({ data, onPress, selectedOption }) => {
+  console.log("data: " + data);
   return (
     <TouchableOpacity onPress={onPress} style={stylesHorariosDirector.item}>
       <View style={stylesHorariosDirector.itemInfo}>
@@ -22,7 +24,8 @@ export const ListItemSelectHorario = ({ data, onPress, selectedOption }) => {
         )}
         {selectedOption === "dia" && (
           <Text style={stylesHorariosDirector.itemP2}>
-            {data}
+            {data.dia}
+            mundo
           </Text>
         )}
       </View>

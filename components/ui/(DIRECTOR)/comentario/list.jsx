@@ -20,6 +20,7 @@ import { ModalComponente } from "../../Components/customModal";
 import { CustomSeachBar } from "./components/seachBar";
 import { ChildFilterOutline } from "../../(SUPERVISOR)/components/chid/chidFilter";
 import { NofilterSelected } from "../../Components/unregistered/noRegistration";
+import { FontAwesome5, MaterialCommunityIcons} from "@expo/vector-icons";
 
 export const ListComentario = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);

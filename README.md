@@ -159,3 +159,5 @@ install y uso del webscoket
 
 > npx expo install expo-notifications
 > npx expo install expo-device
+
+> npm i react-native-multiple-select

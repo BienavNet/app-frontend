@@ -1,362 +1,305 @@
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, SafeAreaView } from "react-native";
-import { ColorItem } from "../../../styles/StylesGlobal";
+import { View, FlatList, SafeAreaView } from "react-native";
+import { styles } from "../../../styles/StylesGlobal";
 import { getClaseSupervisorSalonHorarioDia } from "../../../../src/services/fetchData/fetchClases";
 import { ListClassDefault } from "./components/listDefault";
 import ListSelectItemFilterClases from "./components/lisSelectedItem";
-import { ListClassDia } from "./components/listDia";
+// import { ListClassDia } from "./components/listDia";
 import { ListClassSalon } from "./components/listSalon";
-import { ListClassHorario } from "./components/listHorario";
-import { ListClassSupervisor } from "./components/listSupervisor";
+// import { ListClassHorario } from "./components/listHorario";
 import { ClassFilter } from "./components/modal/modalClassFilter";
 import {
   useDays,
   useHorarioAll,
   useSalonAll,
-  useSupervisorAll,
 } from "../../../../src/hooks/customHooks";
 import { userData } from "../../../../src/hooks/use/userData";
-import { ScrollFilterClass } from "./components/carouselFilter/CarouselFilter";
+import { ScrollMultipleFilterClass } from "./components/carouselFilter/CarouselFilter";
+import { NofilterSelected } from "../../Components/unregistered/noRegistration";
 
 export const ListClassView = () => {
-  const [modalSelect, setModalSelect] = useState(false); // estado del modal
-  const [temporarySelection, setTemporarySelection] = useState(null); // obtiene el item temporal mientras se le aplica en el boton de filtrar
   const { CEDULA } = userData();
-  const [appliedFilters, setAppliedFilters] = useState([]); // muestra la lista de los filtro que estan siendo seleccionado
-  const [list, setList] = useState([]);
-  const handleCloseSelectOption = () => {
-    setModalSelect(false);
-    setSearchText("");
-    setSelectedOption(null);
-    setSelectedItem(null);
-    setList([]);
-  };
-  const [selectedOption, setSelectedOption] = useState(null); // la opcion de filtro seleccionado en el menu
-  const [searchText, setSearchText] = useState(""); // texto para busqueda por filtro
-  const [selectedItem, setSelectedItem] = useState(null); // guarda el item que se a sido seleccionado en la lista
-  const [classbysupervisor, setClassBySupervisor] = useState([]); //clases por defecto del supervisor por id si no se le proporciona otro id del supervisor
+  const [classbysupervisor, setClassBySupervisor] = useState([]); // Datos mostrados por defecto
+  // Opciones de filtros
+  const [filters, setFilters] = useState({ salon: 0, dia: 0, horario: 0 }); //filtros API
+  const [additionalData, setAdditionalData] = useState([]); // los datos que se additional de acuerdo al filtro
+  const [modalSelect, setModalSelect] = useState(false); //modal
+  const [searchText, setSearchText] = useState("");
+  const [list, setList] = useState([]); //lists de las opciones
 
-  //opciones de filtros
-  const salonAll = useSalonAll(); // cuando se a seleccionado el filtro salon
-  const diall = useDays(); // cuando se a seleccionado el filtro dia
-  const supervisorall = useSupervisorAll();
-  const horarioAll = useHorarioAll(); //cuando se a seleccionado el filtro horario
-  const [additionalData, setAdditionalData] = useState([]); // item del dato con filtro selectioando
-  console.log("item del dato con filtro selectioando", additionalData);
+  // manejo de selecciones
+  const [multipleSelectedOption, setMultipleSelectedOption] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [multipleSelectedItem, setMultipleSelectedItem] = useState({});
+  console.log("selectedMultiple", multipleSelectedItem);
+  const [temporalSelectedItem, setTemporalSelectedItem] = useState({});
+
   const [opciones, setOpciones] = useState([
     {
-      id: "supervisor",
-      title: "Supervisor ",
-      action: () => handleOptionSelect("supervisor"),
-    },
-    {
+      isSelected: false,
       id: "salones",
-      title: "Salones ",
-      action: () => handleOptionSelect("salones"),
+      title: "Salones",
+      action: "salones",
     },
     {
+      isSelected: false,
       id: "horarios",
-      title: "Horario ",
-      action: () => handleOptionSelect("horarios"),
+      title: "Horarios",
+      action: "horarios",
     },
     {
+      isSelected: false,
       id: "dia",
-      title: "Dia ",
-      action: () => handleOptionSelect("dia"),
+      title: "Días",
+      action: "dia",
     },
   ]);
 
-  useEffect(() => {
-    const fetchFilteredClasses = async () => {
-      console.log("ENTROOOOOOOOO");
-      try {
-        console.log("ENTROOOOOOOOO2");
-        let salon = 0;
-        let dia = 0;
-        let horario = 0;
-        let cedula = CEDULA;
+  const salonAll = useSalonAll();
+  const diall = useDays();
+  const horarioAll = useHorarioAll();
 
-        // Verifica si selectedItem no es null/undefined y es un array con elementos
-        if (selectedOption) {
-          console.log("Hay una opción seleccionada: ", selectedOption);
+  const fetchFilteredClasses = async () => {
+    const { salon, dia, horario } = filters;
 
-          // Verifica si `selectedItem` tiene elementos
-          if (selectedItem && selectedItem.length > 0) {
-            console.log("selectedItem entro 2", selectedItem);
-            cedula = selectedItem[0]?.supervisor?.cedula || CEDULA;
-            salon = selectedItem[0]?.salon?.id || 0;
-            dia = selectedItem[0]?.dia?.id || 0;
-            horario = selectedItem[0]?.horario?.id || 0;
-          }
-        }
-
-        const response = await getClaseSupervisorSalonHorarioDia(
-          cedula,
-          salon,
-          dia,
-          horario
-        );
-        if (salon === 0 && dia === 0 && horario === 0) {
-          setClassBySupervisor(response); // Actualizar solo la data relacionada con el supervisor
-        } else {
-          console.log("algun filtro se abra aplicado", response);
-          setAdditionalData(response); // Si hay algún filtro, actualizar los datos filtrados
-        }
-      } catch (error) {
-        throw Error("Error fetching filtered classes:", error.message);
+    try {
+      const response = await getClaseSupervisorSalonHorarioDia(
+        CEDULA,
+        salon,
+        dia,
+        horario
+      );
+      if (!salon && !dia && !horario) {
+        setClassBySupervisor(response);
+      } else {
+        setAdditionalData(response);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching filtered classes:", error);
+    }
+  };
+  useEffect(() => {
     fetchFilteredClasses();
-  }, [CEDULA, selectedOption, selectedItem]);
+  }, [filters]);
 
   const handleOptionSelect = (option) => {
-    setSelectedOption(option);
     setSearchText("");
-
-    switch (option) {
-      case "supervisor":
-        setList(supervisorall);
-        break;
-      case "salones":
-        setList(salonAll);
-        break;
-      case "dia":
-        setList(diall);
-        break;
-      case "horarios":
-        setList(horarioAll);
-        break;
-      default:
-        setList([]);
-    }
+    setSelectedOption(option);
+    setMultipleSelectedOption((prev) => {
+      if (prev.includes(option) && multipleSelectedItem[option]) {
+        return prev; // Si ambas condiciones son verdaderas, no elimina la opción
+      } else {
+        return [...prev, option]; // Si alguna de las condiciones no se cumple, la añade
+      }
+    });
+    const optionMapping = {
+      salones: salonAll,
+      dia: diall,
+      horarios: horarioAll,
+    };
+    setList(optionMapping[option] || []);
     setModalSelect(true);
   };
 
-  useEffect(() => {
-    if (searchText === "" && selectedOption) {
-      handleOptionSelect(selectedOption);
-    } else if (selectedOption === "salones") {
-      setList(
-        salonAll.filter(
-          (i) =>
-            i.nombre.toLowerCase().indexOf(searchText.toLowerCase()) > -1 ||
-            i.numero_salon.toString().indexOf(searchText) > -1
-        )
-      );
-    } else if (selectedOption === "dia") {
-      setList(
-        diall.filter(
-          (i) => i.Dia.toLowerCase().indexOf(searchText.toLowerCase()) > -1
-        )
-      );
-    } else if (selectedOption === "supervisor") {
-      setList(
-        supervisorall.filter(
-          (i) =>
-            i.nombre.toLowerCase().indexOf(searchText.toLowerCase()) > -1 ||
-            i.apellido.toLowerCase().indexOf(searchText.toLowerCase())
-        )
-      );
-    } else if (selectedOption === "horarios") {
-      setList(
-        horarioAll.filter(
-          (i) =>
-            i.nombre.toLowerCase().indexOf(searchText.toLowerCase()) > -1 ||
-            i.apellido.toLowerCase().indexOf(searchText.toLowerCase()) > -1 ||
-            i.asignatura.toLowerCase().indexOf(searchText.toLowerCase()) > -1
-        )
-      );
-    }
-  }, [searchText, selectedOption]);
+  const handleItemPress = (item, isSelected) => {
+    setTemporalSelectedItem((prev) => ({
+      ...prev,
+      [selectedOption]: isSelected ? item : null,
+    }));
 
-  // const onItemSelect = (item) => {
-  //   setSelectedItem(item);
-  //   handleItemPress(selectedItem, item);
+    // setTemporalSelectedItem((prev) => ({...prev, [selectedOption]: isSelected ? item: prev[selectedOption] || item,
+    // }));
+  };
+
+  // const removeFilter = (filterId) => {
+  //   const updatedOpciones = opciones.map((opt) =>
+  //     opt.id === filterId ? { ...opt, isSelected: false } : opt
+  //   );
+  //   setOpciones(updatedOpciones);
+  //   setMultipleSelectedOption((prev) => prev.filter((f) => f !== filterId));
+
+  //   setMultipleSelectedItem((prev) => {
+  //     const updated = { ...prev };
+  //     delete updated[filterId];
+  //     return updated;
+  //   });
   // };
+  const removeFilter = (Idkey) => {
+    // Actualizamos las opciones (marcamos como no seleccionadas)
+    const updatedOpciones = opciones.map((opt) =>
+      opt.id === Idkey ? { ...opt, isSelected: false } : opt
+    );
+
+    setMultipleSelectedItem((prev) => {
+      const updated = { ...prev };
+
+      if (updated[Idkey]) {
+        delete updated[Idkey];
+      }
+
+      // Actualizamos los filtros globales basados en lo que queda
+      // const updatedFilters = {
+      //   ...filters,
+      //   salon: updated.salones ? Object.keys(updated.salones).length : 0,
+      //   dia: updated.dia ? Object.keys(updated.dia).length : 0,
+      //   horario: updated.horarios ? Object.keys(updated.horarios).length : 0,
+      // };
+      const updatedFilters = {
+        salon: updated.salones && updated.salones.id ? updated.salones.id : 0,  // Validación estricta
+        dia: updated.dia && updated.dia.id ? updated.dia.id : 0,  // Verificación estricta de 'dia'
+        horario: updated.horarios && updated.horarios.id ? updated.horarios.id : 0,  // Verificación estricta de 'horarios'
+      };
+  
+
+      // Actualizamos el estado de los filtros
+      setFilters(updatedFilters);
+      // fetchFilteredClasses();
+      // Actualizamos las opciones y retornamos el estado actualizado
+      setOpciones(updatedOpciones);
+      alert("Estado actualizado");
+      return updated;
+    });
+  };
+
+  const applyFilter = () => {
+    const hasTemporarySelection = Object.keys(temporalSelectedItem).length > 0;
+    if (hasTemporarySelection || Object.keys(multipleSelectedItem).length > 0) {
+      setMultipleSelectedItem((prev) => ({
+        ...prev,
+        ...temporalSelectedItem,
+      }));
+
+      const updatedOpciones = opciones.map((opt) =>
+        multipleSelectedOption.includes(opt.id)
+          ? { ...opt, isSelected: true }
+          : opt
+      );
+
+      const updatedFilters = {
+        salon: temporalSelectedItem.salones
+          ? temporalSelectedItem.salones.id
+          : multipleSelectedItem.salones?.id || 0,
+        dia: temporalSelectedItem.dia
+          ? temporalSelectedItem.dia.id
+          : multipleSelectedItem.dia?.id || 0,
+        horario: temporalSelectedItem.horarios
+          ? temporalSelectedItem.horarios.id
+          : multipleSelectedItem.horarios?.id || 0,
+      };
+
+      setOpciones(updatedOpciones); // Marca las opciones como seleccionadas
+      setFilters(updatedFilters); // Actualiza los filtros globales
+      fetchFilteredClasses(); // Llama nuevamente a la API para obtener los datos filtrados
+      setModalSelect(false); // Cierra el modal de selección
+      setTemporalSelectedItem({}); // Limpia la selección temporal
+    } else {
+      alert("Debe seleccionar al menos un filtro antes de aplicar.");
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View className="flex-row justify-end">
-        <ScrollFilterClass opciones={opciones} selectedItem={selectedItem} />
+        <ScrollMultipleFilterClass
+          opciones={opciones}
+          handleOptionSelect={handleOptionSelect}
+          removeFilter={removeFilter}
+        />
       </View>
-      {/* //informacion que se mostrara por default */}
-      {!selectedOption && (
+
+      {/* Información mostrada por defecto */}
+      {!Object.keys(multipleSelectedItem).length && (
         <FlatList
           data={classbysupervisor}
           style={styles.list}
           renderItem={({ item }) => <ListClassDefault data={item} />}
           keyExtractor={(item) => item.id.toString()}
-          ListEmptyComponent={
-            <Text style={styles.noResultsText}>No hay resultados.</Text>
-          }
+          ListEmptyComponent={<NofilterSelected />}
         />
       )}
 
-      {/* //lista desplegable segun el filtro seleccionado*/}
+      {/* Lista desplegable según el filtro seleccionado */}
       <ClassFilter
+        removeFilter={removeFilter}
+        setModalSelect={setModalSelect}
         modalSelect={modalSelect}
-        temporarySelection={temporarySelection}
-        selectedOption={selectedOption}
-        // applyFilter={applyFilter}
         searchText={searchText}
+        applyFilter={applyFilter}
+        temporalSelectedItem={temporalSelectedItem}
+        setTemporalSelectedItem={setTemporalSelectedItem}
+        setMultipleSelectedItem={setMultipleSelectedItem}
+        multipleSelectedOption={multipleSelectedOption}
+        setMultipleSelectedOption={setMultipleSelectedOption}
+        multipleSelectedItem={multipleSelectedItem}
         setSearchText={setSearchText}
-        // handleItemPress={handleItemPress}
-        selectedItem={selectedItem}
-        handleCloseSelectOption={handleCloseSelectOption}
+        selectedOption={selectedOption}
       >
-        {selectedOption &&
-          list.map(
-            (item) => (
+        {multipleSelectedOption.length > 0 &&
+          list.length > 0 &&
+          list.map((item) => {
+            return (
               <ListSelectItemFilterClases
+                temporalSelectedItem={temporalSelectedItem}
+                multipleSelectedItems={multipleSelectedItem}
                 key={item.id.toString()}
                 data={item}
                 selectedOption={selectedOption}
-                // onPress={handleItemPress}
-                // // onPress={() => onItemSelect(item)}
+                onPress={handleItemPress}
               />
-            )
-            // <FlatList
-            //   data={list}
-            //   style={styles.listFromSearchBar}
-            //   renderItem={({ item }) => (
-
-            //   )}
-            //   keyExtractor={(item) => item.id.toString()}
-            //   ListEmptyComponent={
-            //     <Text style={styles.noResultsText}>
-            //       No coinciden los resultados
-            //     </Text>
-            //   }
-            // />
-          )}
+            );
+          })}
       </ClassFilter>
 
-      {/* //informacion de los filtros */}
-      {selectedItem && (
-        <>
-          {selectedOption === "salones" && additionalData && (
-            <>
-              <FlatList
-                data={additionalData}
-                style={styles.list}
-                renderItem={({ item }) => <ListClassSalon data={item} />}
-                keyExtractor={(item) =>
-                  `${item.clase.toString()}-${item.docente_id}`
-                }
-                ListEmptyComponent={
-                  <Text style={styles.noResultsText}>
-                    No hay resultados por salones.
-                  </Text>
-                }
-              />
-            </>
+      {/* Información filtrada */}
+      {Object.keys(multipleSelectedItem).length > 0 && additionalData && (
+        <FlatList
+          data={additionalData}
+          style={styles.list}
+          renderItem={({ item }) => (
+            <ListClassSalon data={item} type={selectedOption} />
           )}
-          {selectedOption === "dia" && additionalData && (
-            <>
-              <FlatList
-                data={additionalData}
-                style={styles.list}
-                renderItem={({ item }) => <ListClassDia data={item} />}
-                keyExtractor={(item) =>
-                  `${item.clase.toString()}-${item.docente_id}`
-                }
-                ListEmptyComponent={
-                  <Text style={styles.noResultsText}>
-                    No hay resultados por dias.
-                  </Text>
-                }
-              />
-            </>
-          )}
-          {selectedOption === "horarios" && additionalData && (
-            <>
-              <FlatList
-                data={additionalData}
-                style={styles.list}
-                renderItem={({ item }) => <ListClassHorario data={item} />}
-                keyExtractor={(item) =>
-                  `${item.clase.toString()}-${item.docente_id}`
-                }
-                ListEmptyComponent={
-                  <Text style={styles.noResultsText}>
-                    No hay resultados por horario.
-                  </Text>
-                }
-              />
-            </>
-          )}
-          {selectedOption === "supervisor" && additionalData && (
-            <>
-              <FlatList
-                data={additionalData}
-                style={styles.list}
-                renderItem={({ item }) => <ListClassSupervisor data={item} />}
-                keyExtractor={(item) =>
-                  `${item.clase.toString()}-${item.docente_id}`
-                }
-                ListEmptyComponent={
-                  <Text style={styles.noResultsText}>
-                    No hay resultados por supervisor.
-                  </Text>
-                }
-              />
-            </>
-          )}
-        </>
+          keyExtractor={(item) =>
+            selectedOption === "salones"
+              ? `${item.salon}-${item.id}`
+              : selectedOption === "dia"
+              ? `${item.id}-${item.dia}`
+              : `${item.id}-H${item.horario}`
+          }
+          ListEmptyComponent={<NofilterSelected />}
+        />
       )}
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  item: {
-    marginHorizontal: 8,
-    marginVertical: 8,
-    flex: 1,
-  },
-  itemP1: {
-    fontSize: 20,
-    color: ColorItem.TarnishedSilver,
-    marginBottom: 5,
-    fontWeight: "bold",
-  },
-  itemAsig: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#999999",
-    textAlign: "left",
-  },
-  itemP2: {
-    fontWeight: "bold",
-    fontSize: 18,
-    color: "#999999",
-    textAlign: "center",
-  },
-  itemP3: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#999999",
-    textAlign: "center",
-  },
-  itemLeft: {
-    fontSize: 16,
-    color: ColorItem.TarnishedSilver,
-    fontWeight: "bold",
-  },
-  searchArea: {
-    backgroundColor: "transparent",
-    width: "85%",
-    height: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  search: {
-    borderBottomWidth: 1,
-    borderBottomColor: ColorItem.KellyGreen,
-    backgroundColor: "transparent",
-    marginRight: 30,
-    flex: 1,
-    height: "100%",
-    fontSize: 19,
-  },
-});
+// const removeFilter = (Idkey, option) => {
+
+//   const updatedOpciones = opciones.map((opt) => opt.id === option ? { ...opt, isSelected: false } : opt);
+
+//   // setMultipleSelectedOption((prev) => prev.filter((f) => f !== option));
+//     setMultipleSelectedItem((prev) => {
+//       const updated = { ...prev };
+//       console.log(updated, "update" , "key ", Idkey + " option ", option);
+
+//     //  if(updated[Idkey]){
+//     //   delete updated[Idkey];
+//     //   alert("updated delete")
+//     //  }
+//     if (updated[Idkey]) {
+//       const {[option]: _, ...remainingItems } = updated[Idkey]; // Elimina el elemento específico del filtro
+//       console.log(option, "id" + "remaing Items ", remainingItems);
+//       updated[Idkey] = remainingItems; // Actualizamos con los elementos restantes
+
+//      const updatedFilters = {
+//       salon: updated.salones ? Object.keys(updated.salones).length : 0,
+//       dia: updated.dia ? Object.keys(updated.dia).length : 0,
+//       horario: updated.horarios ? Object.keys(updated.horarios).length : 0,
+//     };
+//       setFilters((prev) => ({ ...prev, updatedFilters })); // Llama a la API con los filtros actualizados
+//       fetchFilteredClasses();
+//       setOpciones(updatedOpciones);
+//       return updated;
+//     }
+//     });
+
+// };

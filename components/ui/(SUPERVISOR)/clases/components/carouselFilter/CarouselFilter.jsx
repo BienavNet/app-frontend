@@ -1,9 +1,11 @@
-import { View, ScrollView, Text, TouchableOpacity } from "react-native";
-import { ChildFilter } from "../../../components/chid/chidFilter";
+import { View, ScrollView } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { ColorItem } from "../../../../../styles/StylesGlobal";
-
-export const ScrollFilterClass = ({ opciones, selectedItem }) => {
+import { Chip } from "@rneui/themed";
+export const ScrollMultipleFilterClass = ({
+  opciones,
+  // removeFilter,
+  handleOptionSelect,
+}) => {
   return (
     <ScrollView
       horizontal={true}
@@ -11,33 +13,45 @@ export const ScrollFilterClass = ({ opciones, selectedItem }) => {
       contentContainerStyle={{ flexDirection: "row", paddingRight: 15 }}
     >
       <>
-        {/* <View
-          style={{
-            marginLeft: 8,
-            padding:5,
-            marginVertical: 8,
-            justifyContent: "center",
-            alignContent: "center",
-            borderRadius: 4,
-            backgroundColor: "lightgray",
-          }}
-        >
-          <TouchableOpacity
-          // onPress={() =>()}
-          >
-            <FontAwesome name="sliders" size={35} color={ColorItem.DeepFir} />
-          </TouchableOpacity>
-        </View> */}
-        {opciones.map((item) => (
-          <View key={item.id} style={{ marginHorizontal: 5 }}>
-            <ChildFilter
-              title={item.title}
-              action={item.action}
-              selectedItem={selectedItem}
-            />
-          </View>
-        ))}
+        {opciones.map((item, index) => {
+          return (
+            <View key={item.id} style={{ marginHorizontal: 5 }}>
+              <View
+                style={{
+                  width: 130,
+                  marginHorizontal: 10,
+                }}
+              >
+                <Chip
+                  size="md"
+                  key={`seletedset-${index}`}
+                  title={item.title}
+                  onPress={() => handleOptionSelect(item.action)}
+                  iconRight
+                  containerStyle={{ marginVertical: 10 }}
+                  color={item.isSelected ? "primary" : "lightgrey"}
+                />
+              </View>
+            </View>
+          );
+        })}
       </>
     </ScrollView>
   );
 };
+
+// icon={
+//   <FontAwesome
+//     style={{
+//       marginHorizontal: item.isSelected ? 5 : 0,
+//     }}
+//     name={item.isSelected ? "remove" : "angle-down"}
+//     size={20}
+//     color="white"
+//     onPress={() => {
+//       if (item.isSelected) {
+//         removeFilter(item.id);
+//       }
+//     }}
+//   />
+// }

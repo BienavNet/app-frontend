@@ -1,47 +1,57 @@
-import { View, Text } from "react-native"
-import { capitalizeFirstLetter, truncateText } from "../../../../../src/utils/functiones/functions";
-import { styles } from "../../../../styles/StylesGlobal";
+import { View, Text } from "react-native";
+import { ColorItem, styles } from "../../../../styles/StylesGlobal";
+import Checkbox from "expo-checkbox";
 
-const ListSelectItemFilterClases = ({ data, onPress, selectedOption }) => {
+const ListSelectItemFilterClases = ({
+  data,
+  onPress,
+  selectedOption,
+  multipleSelectedItems,
+  temporalSelectedItem,
+}) => {
+  let selectedData;
+  if (temporalSelectedItem[selectedOption]) {
+    selectedData = temporalSelectedItem[selectedOption];
+  } else if (multipleSelectedItems[selectedOption]) {
+    selectedData = multipleSelectedItems[selectedOption];
+  }
+
+  const isSelected = selectedData?.id === data.id;
+
+  const handleCheckSelected = () => {
+    const newValue = !isSelected;
+    if (newValue) {
+      onPress(data, true);
+    } else {
+      onPress(data, false);
+    }
+  };
+
   return (
-    <View style={styles.itemInfo}>
-    {selectedOption === "salones" && (
-      <Text style={styles.textinfo}>
-        {data.numero_salon} {"-"} {capitalizeFirstLetter(truncateText(data.nombre,15))}
-      </Text>
-    )}
-      {selectedOption === "horarios" && (
-      <Text style={styles.textinfo}>
-      {capitalizeFirstLetter(data.nombre)} {capitalizeFirstLetter(data.apellido)} {"-"} {data.asignatura}
-      </Text>
-    )}
-      {selectedOption === "dia" && (
-      <Text style={[styles.textinfo]}>
-        {data.Dia}
-      </Text>
-    )}
-      {selectedOption === "supervisor" && (
-      <Text style={styles.textinfo}>
-        {data.nombre} {"-"} {capitalizeFirstLetter(data.apellido)}
-      </Text>
-    )}
-  </View>
-    // <TouchableOpacity onPress={onPress} style={styles.item}>
-     
-    // </TouchableOpacity>
+    <View style={styles.contenCheckbox}>
+      <Checkbox
+        tintColors={{ true: ColorItem.DeepFir, false: ColorItem.DeepFir }}
+        style={{
+          borderRadius: 50,
+        }}
+        value={isSelected}
+        onValueChange={handleCheckSelected}
+        // color={isSelected ? "#4630EB" : undefined}
+      />
+      <View style={styles.itemInfo}>
+        {selectedOption === "horarios" ? (
+          <Text style={styles.textinfo}>
+            {data.nombre} {" - "} {data.apellido}
+          </Text>
+        ) : selectedOption === "salones" ? (
+          <Text style={styles.textinfo}>
+            {data.numero_salon} {" - "} {data.nombre}
+          </Text>
+        ) : (
+          <Text style={styles.textinfo}>{data.Dia}</Text>
+        )}
+      </View>
+    </View>
   );
 };
-
-// const styles = StyleSheet.create({
-//   // item: {
-//   //   flexDirection: "row",
-//   //   marginLeft: 20,
-//   //   marginRight: 20,
-//   //   borderBottomWidth: 1,
-//   //   borderBottomColor: ColorItem.DeepFir,
-//   //   paddingTop: 15,
-//   //   paddingBottom: 15,
-//   // },
-// });
-
 export default ListSelectItemFilterClases;

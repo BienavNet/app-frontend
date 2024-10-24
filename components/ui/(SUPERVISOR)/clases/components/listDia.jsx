@@ -10,6 +10,7 @@ import {
 import { StatusCircle } from "../../../(DIRECTOR)/reportes/components/StatusCircle";
 import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
 export const ListClassDia = ({ data }) => {
+
   const [expanded, setExpanded] = useState(false);
   return (
     <>
@@ -32,8 +33,10 @@ export const ListClassDia = ({ data }) => {
                     }}
                   >
                     <ListItem.Title style={styles.itemP2}>
-                      {capitalizeFirstLetter(data.nombre_docente)}{" "}
-                      {capitalizeFirstLetter(data.apellido_docente)}
+                      {data.dia}
+                      {data.nombre_salon}
+                      {/* {capitalizeFirstLetter(data.nombre_docente)}{" "}
+                      {capitalizeFirstLetter(data.apellido_docente)} */}
                     </ListItem.Title>
                   </View>
                   <View>
@@ -51,31 +54,6 @@ export const ListClassDia = ({ data }) => {
                     marginBottom: 5,
                   }}
                 >
-                  {/* <View
-                    style={{
-                      width: "80%",
-                      flexDirection: "row",
-                    }}
-                  >
-                    <FontAwesome
-                      style={{
-                        marginTop: 2,
-                        marginHorizontal: 10,
-                      }}
-                      name="commenting"
-                      size={20}
-                      color={ColorItem.TarnishedSilver}
-                    />
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        color: "#999999",
-                        textAlign: "center",
-                      }}
-                    >
-                      {truncateText(data.comentario, 15)}
-                    </Text>
-                  </View> */}
                 </View>
               </BoxView>
             </ListItem.Content>
@@ -107,9 +85,10 @@ export const ListClassDia = ({ data }) => {
                   </ListItem.Title>
                 </View>
                 <View>
-                  <ListItem.Title>
+
+                  {/* <ListItem.Title>
                     {capitalizeFirstLetter(truncateText(data.asignatura, 15))}
-                  </ListItem.Title>
+                  </ListItem.Title> */}
                 </View>
               </View>
               <View
@@ -130,7 +109,8 @@ export const ListClassDia = ({ data }) => {
                     flexDirection:"row"
                   }}
                 >
-                   <Text style={{ fontSize: 13, marginRight: 10 }}>
+
+                   {/* <Text style={{ fontSize: 13, marginRight: 10 }}>
                     {new Date(
                       `${data.fecha.split("T")[0]}T${data.hora_inicio}`
                     ).toLocaleTimeString([], {
@@ -145,7 +125,8 @@ export const ListClassDia = ({ data }) => {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
-                  </Text>
+                  </Text> */}
+
                 </View>
               </View>
               <View

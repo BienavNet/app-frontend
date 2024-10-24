@@ -214,12 +214,11 @@ export const useReporteAll = () => {
 //fetch Dias de la semanas
 //fetch Reporte
 export const useDays = () => {
-  const Days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+  const Days = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"];
   const [days, setDiaAll] = useState([]);
   const fetchDia = useCallback(async () => {
     try {
-      const res = Days.map((item, i) => ({ Dia: item, id: i + 1 }));
-      console.log("response del all fetchDia", res);
+      const res = Days.map((item, i) => ({ Dia: item, id: item }));
       setDiaAll(res);
     } catch (error) {
       throw Error("Failted to get days", error);
