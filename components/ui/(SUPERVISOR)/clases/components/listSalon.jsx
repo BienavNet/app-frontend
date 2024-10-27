@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { BoxView } from "../../../(DIRECTOR)/components/customBoxView";
 import { ColorItem } from "../../../../styles/StylesGlobal";
 import { ListItem } from "@rneui/themed";
 import {
@@ -9,10 +8,7 @@ import {
 } from "../../../../../src/utils/functiones/functions";
 import { StatusCircle } from "../../../(DIRECTOR)/reportes/components/StatusCircle";
 import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
-export const ListClassSalon = ({ data, type }) => {
-
-  // console.log("Data: --------------------------------------------- " + JSON.stringify(data) )
-  // {"id":251,"horario":12,"salon":1,"supervisor":1,"estado":"pendiente","fecha":"2024-11-13T05:00:00.000Z","nombre_docente":"eduardo","apellido_docente":"coronel","numero_salon":112,"nombre_salon":"sala de programacion","asignatura":"CALCULO I","hora_inicio":"08:39:00","hora_fin":"12:30:00"}   
+export const ListClassSalon = ({ data, type }) => {  
   const title = type === "salones" ? `${data.numero_salon} - ${data.categoria}` : type === "dia" ? data.dia : `${data.numero_salon} - ${data.categoria}`;
   const docenteName = `${capitalizeFirstLetter(data.nombre_docente)} ${capitalizeFirstLetter(data.apellido_docente)}`;
   const [expanded, setExpanded] = useState(false);
@@ -104,130 +100,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
-
-// <ListItem.Accordion
-// content={
-//   <>
-//     {/* <Icon name="place" size={30} /> */}
-//     <ListItem.Content>
-//       <BoxView>
-//         <View
-//           style={{
-//             flexDirection: "row",
-//             alignItems: "center",
-//             justifyContent: "space-between",
-//           }}
-//         >
-//           <View
-//             style={{
-//               paddingRight: 30,
-//             }}
-//           >
-//             <ListItem.Title style={styles.itemP2}>
-//               {capitalizeFirstLetter(data.nombre_salon)}{" "}
-//               {/* {capitalizeFirstLetter(data.apellido_docente)} */}
-//             </ListItem.Title>
-//           </View>
-//           <View>
-//             <Text style={styles.itemP2}>{data.numero_salon}</Text>
-//           </View>
-//         </View>
-//         <View
-//           style={{
-//             flexDirection: "row",
-//             justifyContent: "space-between",
-//           }}
-//         ></View>
-//         <View
-//           style={{
-//             marginBottom: 5,
-//           }}
-//         >
-//         </View>
-//       </BoxView>
-//     </ListItem.Content>
-//   </>
-// }
-// isExpanded={expanded}
-// onPress={() => setExpanded(!expanded)}
-// >
-// <ListItem bottomDivider>
-//   <ListItem.Content>
-//     <BoxView
-//       style={{
-//         borderLeftColor: ColorItem.GreenSymphony,
-//         padding: 4,
-//         borderLeftWidth: 6,
-//       }}
-//     >
-//       <View
-//         style={{
-//           flexDirection: "row",
-//           alignItems: "center",
-//           justifyContent: "space-between",
-//         }}
-//       >
-//         <View>
-//           <ListItem.Title>
-//             {capitalizeFirstLetter(data.nombre_docente)}{" "}
-//             {capitalizeFirstLetter(data.apellido_docente)}
-//           </ListItem.Title>
-//         </View>
-//         <View>
-//           <ListItem.Title>
-//             {capitalizeFirstLetter(truncateText(data.asignatura, 15))}
-//           </ListItem.Title>
-//         </View>
-//       </View>
-//       <View
-//         style={{
-//           flexDirection: "row",
-//           justifyContent: "space-between",
-//         }}
-//       >
-//         <View
-//           style={{
-//             justifyContent:"space-around",
-//             alignItems:"center",
-//             flexDirection:"row"
-//           }}
-//         >
-//            <Text style={{ fontSize: 13, marginRight: 10 }}>
-//             {new Date(
-//               `${data.fecha.split("T")[0]}T${data.hora_inicio}`
-//             ).toLocaleTimeString([], {
-//               hour: "2-digit",
-//               minute: "2-digit",
-//             })}
-//           </Text>
-//           <Text style={{ fontSize: 13 }}>
-//             {new Date(
-//               `${data.fecha.split("T")[0]}T${data.hora_fin}`
-//             ).toLocaleTimeString([], {
-//               hour: "2-digit",
-//               minute: "2-digit",
-//             })}
-//           </Text>
-//         </View>
-//       </View>
-//       <View
-//         style={{
-//           marginTop: 10,
-//           justifyContent: "space-between",
-//           flexDirection: "row",
-//         }}
-//       >
-//         <View>
-//           <DateChip item={new Date(data.fecha).toLocaleDateString()} />
-//         </View>
-
-//         <View>
-//           <StatusCircle item={data.estado} />
-//         </View>
-//       </View>
-//     </BoxView>
-//   </ListItem.Content>
-//   <ListItem.Chevron />
-// </ListItem>
-// </ListItem.Accordion>

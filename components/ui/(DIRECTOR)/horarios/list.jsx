@@ -28,72 +28,62 @@ export const ListHorario = ({
   selectedOption,
   searchText,
   list,
-  selectedItem,
+  // selectedItem,
   setSearchText,
-  handleSearchBarClear,
+  // handleSearchBarClear,
   handleItemPress,
+  setMultipleSelectedItem,
+  multipleSelectedItem,
   showModal,
+  applyFilter,
+  temporalSelectedItem,
+  setTemporalSelectedItem,
+  multipleSelectedOption,
+  setMultipleSelectedOption,
+  filters, opciones, handleOptionSelect
 }) => {
-  console.log("selecteditem list.jsx", selectedItem, selectedOption)
+  console.log("selecteditem list.jsx", multipleSelectedItem, selectedOption);
 
   const [additionalData, setAdditionalData] = useState([]);
-  useEffect(() => {
-    const fetchAdditionalData = async () => {
-      if (selectedItem && selectedOption) {
-        try {
-          let data;
-          if (selectedOption.includes("docente")) {
-            data = await getDetailHorarioDocente(selectedItem.docente.cedula);
-          } 
-          // else if (selectedOption.includes("docente") && selectedOption.includes("dia")) {
-          //   data = await getDetailHorarioDia(selectedItem.docente.cedula, selectedItem.dia.dia);
-          // }
-           else if (selectedOption ==="horario") {
-            data = await getDetailHorario2(selectedItem.horario.id);
-          }
-          setAdditionalData(data || []);
-        } catch (error) {
-          setAdditionalData([]);
-        }
+  const fetchAdditionalData = async () => {
+    let { docente, horario, dia } = filters;
+    try {
+      if (selectedOption == "docente") {
+        docente = await getDetailHorarioDocente(docente);
+      } else if (selectedOption === "horario") {
+        horario = await getDetailHorario2(horario);
+      } else if (selectedOption === "dia") {
+        dia = await getDetailHorarioDia(docente, dia);
       }
-    };
-    fetchAdditionalData();
-  }, [selectedItem, selectedOption]);
-
-  const filteredData = additionalData.filter((item) => {
-    if (Array.isArray(selectedOption)) {
-      return selectedOption.every((option) => {
-        return (
-          (option === "docente" && item.docente_id === selectedItem.docente_id) || (option === "dia" && item.dia === selectedItem.dia)
-        );
-      });
+      setAdditionalData([docente, horario, dia] || []);
+    } catch (error) {
+      setAdditionalData([]);
     }
-    return true;
-  });
-  console.log("filterer", filteredData);
-
+  };
+  useEffect(() => {
+    fetchAdditionalData();
+  }, [filters]);
 
   return (
     <>
-    {selectedItem && (
+      {Object.keys(multipleSelectedItem).length > 0 && (
         <View
           style={{
             marginHorizontal: 10,
           }}
         >
-          {selectedOption && additionalData && (
+          {multipleSelectedOption.length > 0 && additionalData && (
             <ChildFilterOutline
-              title={selectedOption}
-              selectedItem={selectedItem}
-              action={handleSearchBarClear}
+              opciones={opciones}
+              handleOptionSelect={handleOptionSelect}
+              // action={handleSearchBarClear}
             />
           )}
         </View>
       )}
-   
 
       <ListItemComponentHorario
-        filteredData={filteredData}
+        // filteredData={filteredData}
         deleteDataAsociated={DeleteDetailHorarioOne}
         getDataAll={getHorarioAll}
         getDataOne={getHorarioOne}
@@ -107,11 +97,7 @@ export const ListHorario = ({
             height: "85%",
           }}
           animationType="slide"
-          title={`Seleccione ${
-            Array.isArray(selectedOption)
-              ? selectedOption.join(", ")
-              : selectedOption
-          }`}
+          title={`Seleccione ${selectedOption}`}
           // title={`Seleccione ${selectedOption}`}
           modalVisible={showModal}
           transparent={true}
@@ -120,20 +106,24 @@ export const ListHorario = ({
           childrenStatic={
             <CustomSeachBar
               searchText={searchText}
-              handleSearchBarClear={handleSearchBarClear}
+              // handleSearchBarClear={handleSearchBarClear}
               selectedOption={selectedOption}
               setSearchText={setSearchText}
             />
           }
         >
           {selectedOption &&
-            !selectedItem &&
+            !multipleSelectedItem &&
             list.map((item) => (
               <ListItemSelectHorario
                 key={
-                    selectedOption.includes("docente") && selectedOption.includes("dia") ? `${item.id}_${item.dia}`
-                    : selectedOption.includes("docente") ? `${item.docente_id}-${item.apellido}.${item.nombre}/${item.cedula}`
-                    : selectedOption.includes("horario") ? `${item.docente_id}-${item.apellido}.${item.nombre}/${item.asignatura}.${item.cedula}`
+                  selectedOption.includes("docente") &&
+                  selectedOption.includes("dia")
+                    ? `${item.id}_${item.dia}`
+                    : selectedOption.includes("docente")
+                    ? `${item.docente_id}-${item.apellido}.${item.nombre}/${item.cedula}`
+                    : selectedOption.includes("horario")
+                    ? `${item.docente_id}-${item.apellido}.${item.nombre}/${item.asignatura}.${item.cedula}`
                     : undefined
                 }
                 onPress={() => handleItemPress(item)}
@@ -233,7 +223,6 @@ export const ListHorario = ({
 //   );
 // });
 
-
 // {Object.keys(selectedItem) // Mapea solo las claves presentes en selectedItem
 //   .filter((key) => selectedItem[key] !== null && selectedItem[key] !== undefined) // Filtra solo las claves que tienen valores no nulos
 //   .map((key) => (
@@ -245,41 +234,41 @@ export const ListHorario = ({
 //     />
 //   ))}
 
-      // {/* {selectedItem && (
-      //   <View style={{ marginHorizontal: 10 }}>
-      //     {Array.isArray(selectedOption) &&
-      //       selectedOption.length > 0 &&
-      //       additionalData &&
-      //       selectedOption.map((option) => (
-      //         <ChildFilterOutline
-      //           key={option}
-      //           title={option}
-      //           selectedItem={selectedItem}
-      //           action={() => handleFilterSelect(option)}
-      //         />
-      //       ))}
-      //   </View>
-      // )} */}
-  // const handleFilterSelect = (option) => {
-  //   setSelectedItem((prev) => ({
-  //     ...prev, 
-  //     [option]: prev[option] ? null : list.find((item) => item[option]) // Actualiza solo el campo seleccionado
-  //   }));
-  // };
+// {/* {selectedItem && (
+//   <View style={{ marginHorizontal: 10 }}>
+//     {Array.isArray(selectedOption) &&
+//       selectedOption.length > 0 &&
+//       additionalData &&
+//       selectedOption.map((option) => (
+//         <ChildFilterOutline
+//           key={option}
+//           title={option}
+//           selectedItem={selectedItem}
+//           action={() => handleFilterSelect(option)}
+//         />
+//       ))}
+//   </View>
+// )} */}
+// const handleFilterSelect = (option) => {
+//   setSelectedItem((prev) => ({
+//     ...prev,
+//     [option]: prev[option] ? null : list.find((item) => item[option]) // Actualiza solo el campo seleccionado
+//   }));
+// };
 
-  // const handleOptionChange = (option) => {
-  //   (prev) => {
-  //     // Si 'prev' ya es un array, verificamos si contiene la opción seleccionada
-  //     if (Array.isArray(prev)) {
-  //       // Verificar si la opción ya está seleccionada
-  //       if (!prev.includes(option)) {
-  //         return [...prev, option]; // Agregar la nueva opción
-  //       } else {
-  //         return prev; // Si ya está seleccionada, no hacer nada
-  //       }
-  //     } else {
-  //       // Si no es un array, inicializamos uno con la opción seleccionada
-  //       return [option];
-  //     }
-  //   };
-  // };
+// const handleOptionChange = (option) => {
+//   (prev) => {
+//     // Si 'prev' ya es un array, verificamos si contiene la opción seleccionada
+//     if (Array.isArray(prev)) {
+//       // Verificar si la opción ya está seleccionada
+//       if (!prev.includes(option)) {
+//         return [...prev, option]; // Agregar la nueva opción
+//       } else {
+//         return prev; // Si ya está seleccionada, no hacer nada
+//       }
+//     } else {
+//       // Si no es un array, inicializamos uno con la opción seleccionada
+//       return [option];
+//     }
+//   };
+// };

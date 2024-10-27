@@ -1,8 +1,6 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Chip } from "@rneui/themed";
 import { ColorItem } from "../../../../styles/StylesGlobal";
-import { View } from "react-native";
-import { truncateText } from "../../../../../src/utils/functiones/functions";
+import { ScrollView, View } from "react-native";
 
 // cuando se maneja varios filtros
 export const ChipMultipleFilter = ({ title, selectedItem, action }) => {
@@ -23,9 +21,8 @@ export const ChipMultipleFilter = ({ title, selectedItem, action }) => {
         onPress={action}
         iconRight
         title={title}
-        color={selectedItem ? ColorItem.GreenSymphony : "lightgray"}
+        color={selectedItem ? "primary" : "lightgray"}
         containerStyle={{ marginVertical: 10 }}
-        icon={<FontAwesome name="angle-down" size={24} color="gray" />}
       />
     </View>
   );
@@ -34,51 +31,60 @@ export const ChipMultipleFilter = ({ title, selectedItem, action }) => {
 // cuando se maneja un solo filtro
 export const ChildFilter = ({ title, selectedItem, action }) => {
   return (
-    <View
-      style={{
-        width: 130,
+    <ScrollView
+      horizontal={true}
+      contentContainerStyle={{
         marginHorizontal: 10,
       }}
+      style={{
+        width: "100%",
+        backgroundColor: "white",
+      }}
     >
-      <Chip
-        size="md"
-        titleStyle={{
-          fontSize: 16,
-          fontWeight: "bold",
-          color: selectedItem ? "white" : ColorItem.TarnishedSilver,
-        }}
-        onPress={action}
-        iconRight
-        title={title}
-        color={selectedItem ? ColorItem.GreenSymphony : "lightgray"}
-        containerStyle={{ marginVertical: 10 }}
-        icon={<FontAwesome name="angle-down" size={24} color="gray" />}
-      />
-    </View>
+      <View>
+        <Chip
+          size="md"
+          titleStyle={{
+            fontSize: 16,
+            fontWeight: "bold",
+            color: selectedItem ? "white" : ColorItem.TarnishedSilver,
+          }}
+          onPress={action}
+          iconRight
+          title={title}
+          color={selectedItem ? "primary" : "lightgray"}
+          containerStyle={{ marginVertical: 10 }}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
-export const ChildFilterOutline= ({ title, selectedItem, action }) => {
+export const ChildFilterOutline = ({ opciones, handleOptionSelect }) => {
   return (
-    <View
-      style={{
-        width: 120,
-        marginHorizontal: 10,
-      }}
-    >
-      <Chip
-       type="outline"
-        size="md"
-        titleStyle={{
-          fontSize: 16,
-          paddingHorizontal:5
-        }}
-        onPress={action}
-        iconRight
-        title={truncateText(title, 8)}
-        containerStyle={{ marginVertical: 10 }}
-        icon={<FontAwesome name="close" size={16} color="lightblue" />}
-      />
-    </View>
+    <>
+      {opciones.map((item, index) => (
+        <View
+          style={{
+            width: 120,
+            marginHorizontal: 10,
+          }}
+        >
+          <Chip
+            key={`select-/${index}`}
+            type="outline"
+            size="md"
+            titleStyle={{
+              fontSize: 16,
+              paddingHorizontal: 5,
+            }}
+            onPress={() => handleOptionSelect(item.action)}
+            iconRight
+            title={item.title}
+            containerStyle={{ marginVertical: 10 }}
+          />
+        </View>
+      ))}
+    </>
   );
 };

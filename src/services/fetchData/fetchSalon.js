@@ -13,6 +13,7 @@ export const getSalon = async () => {
     try {
         const response = await axiosInstance.get(`/salon/`);
         return response.data;
+
     } catch (error) {
         throw new Error(error.response ? error.response.data.message : error.message);
     }

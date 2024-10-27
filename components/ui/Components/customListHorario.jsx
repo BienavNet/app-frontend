@@ -43,19 +43,19 @@ export const ListItemComponentHorario = ({
   const fetchItems = useCallback(async () => {
     setLoading(true);
     try {
-      if (filteredData.length > 0) {
-        setItems(filteredData);
-      }
-      else{
-        const res = await getDataAll();
-        setItems(res);
-      }
+      const res = await getDataAll();
+      setItems(res);
+      // if (filteredData.length > 0) {
+      //   setItems(filteredData);
+      // } else {
+       
+      // }
     } catch (error) {
       throw new Error("Error fetching items:", error);
     } finally {
       setLoading(false);
     }
-  }, [getDataAll, filteredData]);
+  }, [getDataAll]);
 
   useFocusEffect(
     useCallback(() => {
@@ -161,11 +161,10 @@ export const ListItemComponentHorario = ({
         ) : (
           items.map((item, index) => (
             <ListItem.Swipeable
-            containerStyle={{
-              backgroundColor:filteredData.length > 0 ? ColorItem.OceanCrest : "white"
-            }}
-
-
+              // containerStyle={{
+              //   backgroundColor:
+              //     filteredData.length > 0 ? ColorItem.OceanCrest : "white",
+              // }}
               key={`${item.id}-${index}`}
               leftContent={(reset) => (
                 <Button
@@ -191,9 +190,7 @@ export const ListItemComponentHorario = ({
               )}
             >
               <Ionicons name="calendar" size={25} color="black" />
-              <ListItem.Content
-              
-              >
+              <ListItem.Content>
                 <ListItem.Title>
                   <TouchableOpacity
                     className="flex-row"

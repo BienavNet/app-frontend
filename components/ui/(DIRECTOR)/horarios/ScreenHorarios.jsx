@@ -12,86 +12,56 @@ import {
   useHorarioAll,
 } from "../../../../src/hooks/customHooks";
 import diasArray from "./json/dias.json";
+
 export const IndexHorario = () => {
   const horarioAll = useHorarioAll();
   const dias = diasArray.map((d) => ({ id: d.id, dia: d.dia }));
   const docenteall = useDocenteAll();
+
   const [searchText, setSearchText] = useState("");
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
-
-  const [selectedItem, setSelectedItem] = useState(null);
-  console.log("selectedItem", selectedItem + "selectedItem TYPEPF",typeof selectedItem);
-  const [selectedOption, setSelectedOption] = useState(null);
-  console.log("selectedOption", selectedOption);
-  console.log("selectedOption.includes --> ", selectedOption.includes("docente"));
   const [list, setList] = useState([]);
-  console.log("list", list);
 
-
-  const handleSearchBarClear = () => {
-    setSearchText("");
-    setSelectedOption(null);
-    setSelectedItem(null);
-    // if (!selectedOption === "docente") {
-    //   console.log("selectedOption en HANDELSEARCHBARCLEAR", selectedOption)
-    //   setSelectedOption(null); // Limpiar si "docente" no está seleccionado
-    // }
-    // if (!selectedItem?.docente) {
-    //   console.log("selectedItem en HANDELSEARCHBARCLEAR", selectedItem)
-    //   setSelectedItem(null);
-    // }
-    
-    setShowSearchBar(false);
-    setShowModal(false);
-   setList([]);
-  };
+  const [filters, setFilters] = useState({ horario: 0, docente: 0 }); //filtros API
+  const [multipleSelectedOption, setMultipleSelectedOption] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [multipleSelectedItem, setMultipleSelectedItem] = useState({});
+  const [temporalSelectedItem, setTemporalSelectedItem] = useState({});
 
   const handleOptionSelect = (option) => {
-    console.log(selectedItem, "selectedItem handleOptionSelect");
-  
-    // Actualizar el valor de selectedOption
-    if (option === "docente") {
-      setSelectedOption("docente");
-      setList(docenteall);
-    } else if (option === "horario") {
-      setSelectedOption("horario");
-      setList(horarioAll);
-    } else if (option === "dia") {
-    if (selectedItem && selectedItem.docente) {
-      setSelectedOption((prev) => {
-        // Agrega "dia" si no está ya en el array
-        if (!prev.includes("dia")) {
-          return [...prev, "dia"];
-        }
-        return prev; // No hacer nada si ya está
-      });
-      // if (selectedItem && selectedItem.docente) {
-      //   console.log(selectedOption, "selected option entrnado en day zxxxxxxxxxxs");
-      //   setSelectedOption((prev) => [...prev, option]);
-        setList(dias);
-      } else {
-        alert("Por favor, selecciona un docente primero.");
-        return; // Detenemos la ejecución aquí si no hay un docente seleccionado
-      }
-    }
-  
     setSearchText("");
-    setShowSearchBar(true);
-    setShowModal(true);
+    setSelectedOption(option);
+    setMultipleSelectedOption((prev) => {
+      if (prev.includes(option) && multipleSelectedItem[option]) {
+        return prev; // Si ambas condiciones son verdaderas, no elimina la opción
+      } else {
+        return [...prev, option]; // Si alguna de las condiciones no se cumple, la añade
+      }
+    });
+    const optionMapping = {
+      docente: docenteall,
+      horario: horarioAll,
+      dia: dias,
+    };
+    setList(optionMapping[option] || []);
+    setModalSelect(true);
   };
- 
+
   const [opciones, setOpciones] = useState([
     {
+      isSelected: false,
+      id: "docente",
       title: "docente",
       icon: <FontAwesome5 name="user-circle" size={24} color="black" />,
-      action: () => handleOptionSelect("docente"),
+      action: "docente",
     },
     {
+      isSelected: false,
+      id: "horario",
       title: "horario",
       icon: <MaterialCommunityIcons name="timetable" size={24} color="black" />,
-      action: () => handleOptionSelect("horario"),
+      action: "horario",
     },
   ]);
 
@@ -100,9 +70,11 @@ export const IndexHorario = () => {
       setOpciones((prevOpciones) => [
         ...prevOpciones.filter((opcion) => opcion.title !== "dia"),
         {
+          isSelected: false,
+          id: "dia",
           title: "dia",
           icon: <FontAwesome5 name="calendar-day" size={24} color="black" />,
-          action: () => handleOptionSelect("dia"),
+          action: "dia",
         },
       ]);
     } else {
@@ -112,17 +84,72 @@ export const IndexHorario = () => {
     }
   }, [selectedOption]);
 
-  const handleItemPress = (item) => {
-    if (selectedOption === "docente") {
-      setSelectedItem({docente:item});
-      // setSelectedItem((prevFilters) => ({...prevFilters,[selectedOption]: item}));
-    } else if (selectedOption === "horario") {
-      setSelectedItem({horario: item});
-    }
+  const handleItemPress = (item, isSelected) => {
+    setTemporalSelectedItem((prev) => ({
+      ...prev,
+      [selectedOption]: isSelected ? item : null,
+    }));
+  };
 
-    setShowSearchBar(false);
-    setList([]);
-    setShowModal(true);
+  const removeFilter = (Idkey) => {
+    // Actualizamos las opciones (marcamos como no seleccionadas)
+    const updatedOpciones = opciones.map((opt) =>
+      opt.id === Idkey ? { ...opt, isSelected: false } : opt
+    );
+
+    setMultipleSelectedItem((prev) => {
+      const updated = { ...prev };
+
+      if (updated[Idkey]) {
+        delete updated[Idkey];
+      }
+      const updatedFilters = {
+        salon: updated.salones && updated.salones.id ? updated.salones.id : 0,
+        dia: updated.dia && updated.dia.id ? updated.dia.id : 0,
+        horario:
+          updated.horarios && updated.horarios.id ? updated.horarios.id : 0,
+      };
+      setFilters(updatedFilters);
+      setOpciones(updatedOpciones);
+      alert("Estado actualizado");
+      return updated;
+    });
+  };
+
+  const applyFilter = () => {
+    const hasTemporarySelection = Object.keys(temporalSelectedItem).length > 0;
+    if (hasTemporarySelection || Object.keys(multipleSelectedItem).length > 0) {
+      setMultipleSelectedItem((prev) => ({
+        ...prev,
+        ...temporalSelectedItem,
+      }));
+
+      const updatedOpciones = opciones.map((opt) =>
+        multipleSelectedOption.includes(opt.id)
+          ? { ...opt, isSelected: true }
+          : opt
+      );
+
+      const updatedFilters = {
+        salon: temporalSelectedItem.salones
+          ? temporalSelectedItem.salones.id
+          : multipleSelectedItem.salones?.id || 0,
+        dia: temporalSelectedItem.dia
+          ? temporalSelectedItem.dia.id
+          : multipleSelectedItem.dia?.id || 0,
+        horario: temporalSelectedItem.horarios
+          ? temporalSelectedItem.horarios.id
+          : multipleSelectedItem.horarios?.id || 0,
+      };
+
+      setOpciones(updatedOpciones);
+      setFilters(updatedFilters);
+      fetchFilteredClasses();
+      setModalSelect(false);
+      setTemporalSelectedItem({});
+    } else {
+      alert("Debe seleccionar al menos un filtro antes de aplicar.");
+    }
   };
 
   useEffect(() => {
@@ -149,16 +176,26 @@ export const IndexHorario = () => {
   const ListHorarioScreen = (props) => (
     <ListHorario
       {...props}
+      opciones={opciones}
+      filters={filters}
       showModal={showModal}
       selectedOption={selectedOption}
       searchText={searchText}
       list={list}
-      selectedItem={selectedItem}
-      // selectedFilters={selectedFilters}
-      setSelectedItem={setSelectedItem}
+      applyFilter={applyFilter}
+      temporalSelectedItem={temporalSelectedItem}
+      setTemporalSelectedItem={setTemporalSelectedItem}
+      setMultipleSelectedItem={setMultipleSelectedItem}
+      multipleSelectedOption={multipleSelectedOption}
+      setMultipleSelectedOption={setMultipleSelectedOption}
+      multipleSelectedItem={multipleSelectedItem}
+      handleOptionSelect={handleOptionSelect}
+      // selectedItem={selectedItem}
+      // // selectedFilters={selectedFilters}
+      // setSelectedItem={setSelectedItem}
       showSearchBar={showSearchBar}
       setSearchText={setSearchText}
-      handleSearchBarClear={handleSearchBarClear}
+      // handleSearchBarClear={handleSearchBarClear}
       handleItemPress={handleItemPress}
     />
   );
@@ -168,7 +205,7 @@ export const IndexHorario = () => {
       name: "ListScreen",
       component: ListHorarioScreen,
       title:
-        selectedItem && selectedOption
+        Object.keys(multipleSelectedItem).length > 0 && selectedOption
           ? `Filtro por ${selectedOption}`
           : "Listado",
       headerRight: (navigation) => {
@@ -302,69 +339,98 @@ export const IndexHorario = () => {
 //   setSelectedOption(option);
 // }
 
+// if(selectedOption && selectedOption === "docente"){
+//   setSelectedItem((prevFilters) => ({...prevFilters, [selectedOption]: [item]}));
+// }
 
+// else if (selectedOption === "dia" && selectedItem.docente) {
+//   setSelectedItem((prevFilters) => ({
+//     ...prevFilters,
+//     dia: item,
+//   }));
 
-    // if(selectedOption && selectedOption === "docente"){
-    //   setSelectedItem((prevFilters) => ({...prevFilters, [selectedOption]: [item]}));
-    // }
+//   // Si la opción es "horario", solo se almacena el valor de horario sin combinar con otros valores
+// }
 
-    // else if (selectedOption === "dia" && selectedItem.docente) {
-    //   setSelectedItem((prevFilters) => ({
-    //     ...prevFilters,
-    //     dia: item,
-    //   }));
+// const handleOptionSelect = (option) => {
+//   console.log(selectedItem, "selectedItem handleOptionSelect")
+//   if (option === "docente") {
+//     setSelectedOption("docente");
 
-    //   // Si la opción es "horario", solo se almacena el valor de horario sin combinar con otros valores
-    // }
+//   } else if (option === "horario") {
+//     setSelectedOption("horario");
+//   }
 
+//  if(selectedOption === "docente"){
+//   if (option === "dia") {
+//     console.log("datos del selectedItem", selectedItem);
+//     console.log("datos del selectedItem.docente", selectedItem.docente);
+//     if (selectedItem && selectedItem.docente) {
+//       setSelectedOption((prevOptions) => [...prevOptions, "dia"]);
+//     } else {
+//       alert("Por favor, selecciona un docente primero.");
+//       return; // Detenemos la ejecución aquí
+//     }
+//   }
+//  }
+//   // else if (option === "dia") {
+//   //   console.log("Option si entro a dia para XXXXXX " + selectedItem.docente )
+//   //   if (selectedItem && selectedItem.docente) {
+//   //     setSelectedOption((prevOptions) => [...prevOptions, "dia"]);
+//   //   } else {
+//   //     alert("Por favor, selecciona un docente primero.");
+//   //   }
+//   // }
 
+//   setSearchText("");
+//   setShowSearchBar(true);
 
+//   switch (option) {
+//     case "docente":
+//       setList(docenteall);
+//       break;
+//     case "horario":
+//       setList(horarioAll);
+//       break;
+//     case "dia":
+//       setList(dias);
+//       break;
+//     default:
+//       setList([]);
+//   }
+//   setShowModal(true);
+// };
 
-     // const handleOptionSelect = (option) => {
-  //   console.log(selectedItem, "selectedItem handleOptionSelect")
-  //   if (option === "docente") {
-  //     setSelectedOption("docente");
+// const handleOptionSelect = (option) => {
+//   console.log(selectedItem, "selectedItem handleOptionSelect");
 
-  //   } else if (option === "horario") {
-  //     setSelectedOption("horario");
-  //   }
+//   // Actualizar el valor de selectedOption
+//   if (option === "docente") {
+//     setSelectedOption("docente");
+//     setList(docenteall);
+//   } else if (option === "horario") {
+//     setSelectedOption("horario");
+//     setList(horarioAll);
+//   } else if (option === "dia") {
+//   if (selectedItem && selectedItem.docente) {
+//     setSelectedOption((prev) => {
+//       // Agrega "dia" si no está ya en el array
+//       if (!prev.includes("dia")) {
+//         return [...prev, "dia"];
+//       }
+//       return prev; // No hacer nada si ya está
+//     });
+//     // if (selectedItem && selectedItem.docente) {
+//     //   console.log(selectedOption, "selected option entrnado en day zxxxxxxxxxxs");
+//     //   setSelectedOption((prev) => [...prev, option]);
+//       setList(dias);
+//     } else {
+//       alert("Por favor, selecciona un docente primero.");
+//       return; // Detenemos la ejecución aquí si no hay un docente seleccionado
+//     }
+//   }
 
-  //  if(selectedOption === "docente"){
-  //   if (option === "dia") {
-  //     console.log("datos del selectedItem", selectedItem);
-  //     console.log("datos del selectedItem.docente", selectedItem.docente);
-  //     if (selectedItem && selectedItem.docente) {
-  //       setSelectedOption((prevOptions) => [...prevOptions, "dia"]);
-  //     } else {
-  //       alert("Por favor, selecciona un docente primero.");
-  //       return; // Detenemos la ejecución aquí
-  //     }
-  //   }
-  //  }
-  //   // else if (option === "dia") {
-  //   //   console.log("Option si entro a dia para XXXXXX " + selectedItem.docente )
-  //   //   if (selectedItem && selectedItem.docente) {
-  //   //     setSelectedOption((prevOptions) => [...prevOptions, "dia"]);
-  //   //   } else {
-  //   //     alert("Por favor, selecciona un docente primero.");
-  //   //   }
-  //   // }
-
-  //   setSearchText("");
-  //   setShowSearchBar(true);
-
-  //   switch (option) {
-  //     case "docente":
-  //       setList(docenteall);
-  //       break;
-  //     case "horario":
-  //       setList(horarioAll);
-  //       break;
-  //     case "dia":
-  //       setList(dias);
-  //       break;
-  //     default:
-  //       setList([]);
-  //   }
-  //   setShowModal(true);
-  // };
+//   setSearchText("");
+//   setShowSearchBar(true);
+//   setShowModal(true);
+// };

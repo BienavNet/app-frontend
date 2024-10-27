@@ -9,11 +9,13 @@ import { getCategorySalon, getSalon } from "../services/fetchData/fetchSalon";
 import {
   getHorarioAll,
   getHorarioDocente,
+  getHorarioDocenteCedula,
 } from "../services/fetchData/fetchHorarios";
 import { getDocenteAll } from "../services/fetchData/fetchDocente";
 import { getNotificationCedulaEstado } from "../services/fetchData/fetchNotification";
 import { getReportAll } from "../services/fetchData/fetchReporte";
 import { getClasesAll } from "../services/fetchData/fetchClases";
+import { getComentarioDocenteSalon } from "../services/fetchData/fetchComentario";
 
 //fetch Docente
 export const useDocenteAll = () => {
@@ -76,7 +78,7 @@ export const useSupervisorCedula = (CEDULA) => {
 // fetch Salones
 export const useSalonAll = () => {
   const [salones, setSalonAll] = useState([]);
-  const fetchSalonAll = useCallback( async () => {
+  const fetchSalonAll = useCallback(async () => {
     try {
       const res = await getSalon();
       setSalonAll(res);
@@ -90,7 +92,7 @@ export const useSalonAll = () => {
   }, [fetchSalonAll]);
 
   return salones;
-}; // obtiene todos los Salones
+};
 
 // fetch Horarios
 export const useHorarioAll = () => {
@@ -152,24 +154,45 @@ export const useNotificationCedulaEstado = (cedula, estado) => {
   return notificationCedulaEstado;
 }; // obtiene todas las notificaciones x cedula y estado
 
-//fetch Comentarios
-export const useComentarioDocente = (CEDULA) => {
-  const [comentarioDocente, setComentarioDocente] = useState([]);
+//fetch Horarios
+export const useHorarioDocenteCedula = (CEDULA) => {
+  const [horarioDocenteCedula, setHorarioDocenteCedula] = useState([]);
 
-  const fetchComentarioDocente = useCallback(async () => {
+  const fetchHorarioDocenteCedula = useCallback(async () => {
     try {
-      const res = await getHorarioDocente(CEDULA);
-      setComentarioDocente(res);
+      const res = await getHorarioDocenteCedula(CEDULA);
+      setHorarioDocenteCedula(res);
     } catch (error) {
       throw Error("Error a fetching comentario", error);
     }
   }, [CEDULA]);
 
   useEffect(() => {
-    fetchComentarioDocente();
-  }, [fetchComentarioDocente]);
-  return comentarioDocente;
-}; // obtiene todas los comentarios x docente
+    fetchHorarioDocenteCedula();
+  }, [fetchHorarioDocenteCedula]);
+  return horarioDocenteCedula;
+}; // obtiene todas horarios por la cedula del docente
+
+
+//fetch Comentarios
+// obtiene todos los comentarios por salones del docente
+export const useComentarioDocenteSalon = (cedula, salon) => {
+  const [comentarioDocenteSalon, setComentarioDocenteSalon] = useState([]);
+  const fetchComentarioDocenteSalon = useCallback(async () => {
+    try {
+      const res = await getComentarioDocenteSalon(cedula, salon);
+      setComentarioDocenteSalon(res);
+    } catch (error) {
+      throw Error("Failted to get salonall", error);
+    }
+  }, [salon]);
+
+  useEffect(() => {
+    fetchComentarioDocenteSalon();
+  }, [fetchComentarioDocenteSalon]);
+
+  return comentarioDocenteSalon;
+}; // obtiene todos los comentarios
 
 //fetch Clases
 export const useClasesAll = () => {

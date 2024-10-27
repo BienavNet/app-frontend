@@ -1,16 +1,18 @@
 import { View, ScrollView } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
 import { Chip } from "@rneui/themed";
-export const ScrollMultipleFilterClass = ({
-  opciones,
-  // removeFilter,
-  handleOptionSelect,
-}) => {
+import { ColorItem } from "../../../../../styles/StylesGlobal";
+
+export const ScrollMultipleFilterClass = ({ opciones, handleOptionSelect }) => {
   return (
     <ScrollView
       horizontal={true}
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ flexDirection: "row", paddingRight: 15 }}
+      contentContainerStyle={{
+        flexDirection: "row",
+        paddingRight: 15,
+        backgroundColor: "white",
+        width: "100%",
+      }}
     >
       <>
         {opciones.map((item, index) => {
@@ -27,6 +29,13 @@ export const ScrollMultipleFilterClass = ({
                   key={`seletedset-${index}`}
                   title={item.title}
                   onPress={() => handleOptionSelect(item.action)}
+                  titleStyle={{
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    color: item.isSelected
+                      ? "white"
+                      : ColorItem.TarnishedSilver,
+                  }}
                   iconRight
                   containerStyle={{ marginVertical: 10 }}
                   color={item.isSelected ? "primary" : "lightgrey"}
@@ -39,19 +48,3 @@ export const ScrollMultipleFilterClass = ({
     </ScrollView>
   );
 };
-
-// icon={
-//   <FontAwesome
-//     style={{
-//       marginHorizontal: item.isSelected ? 5 : 0,
-//     }}
-//     name={item.isSelected ? "remove" : "angle-down"}
-//     size={20}
-//     color="white"
-//     onPress={() => {
-//       if (item.isSelected) {
-//         removeFilter(item.id);
-//       }
-//     }}
-//   />
-// }

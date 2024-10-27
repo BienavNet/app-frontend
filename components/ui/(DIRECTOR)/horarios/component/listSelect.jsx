@@ -5,7 +5,6 @@ import {
 } from "../../../../../src/utils/functiones/functions";
 import { stylesHorariosDirector } from "./styles";
 
-
 export const ListItemSelectHorario = ({ data, onPress, selectedOption }) => {
   console.log("data: " + data);
   return (
@@ -23,10 +22,7 @@ export const ListItemSelectHorario = ({ data, onPress, selectedOption }) => {
           </Text>
         )}
         {selectedOption === "dia" && (
-          <Text style={stylesHorariosDirector.itemP2}>
-            {data.dia}
-            mundo
-          </Text>
+          <Text style={stylesHorariosDirector.itemP2}>{data.dia}</Text>
         )}
       </View>
     </TouchableOpacity>

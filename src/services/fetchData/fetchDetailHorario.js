@@ -89,7 +89,7 @@ export const getDetailHorarioDocente = async (cedula) => {
 export const getDetailHorario2 = async (horario) => {
   try {
     const response = await axiosInstance.get(
-      `/horarios/detalles/horario/${horario}`
+      `/horarios/detalles/horario2/${horario}`
     );
     return response.data;
   } catch (error) {

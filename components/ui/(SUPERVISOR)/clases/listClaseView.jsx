@@ -4,9 +4,7 @@ import { styles } from "../../../styles/StylesGlobal";
 import { getClaseSupervisorSalonHorarioDia } from "../../../../src/services/fetchData/fetchClases";
 import { ListClassDefault } from "./components/listDefault";
 import ListSelectItemFilterClases from "./components/lisSelectedItem";
-// import { ListClassDia } from "./components/listDia";
 import { ListClassSalon } from "./components/listSalon";
-// import { ListClassHorario } from "./components/listHorario";
 import { ClassFilter } from "./components/modal/modalClassFilter";
 import {
   useDays,
@@ -31,7 +29,6 @@ export const ListClassView = () => {
   const [multipleSelectedOption, setMultipleSelectedOption] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [multipleSelectedItem, setMultipleSelectedItem] = useState({});
-  console.log("selectedMultiple", multipleSelectedItem);
   const [temporalSelectedItem, setTemporalSelectedItem] = useState({});
 
   const [opciones, setOpciones] = useState([
@@ -106,24 +103,7 @@ export const ListClassView = () => {
       ...prev,
       [selectedOption]: isSelected ? item : null,
     }));
-
-    // setTemporalSelectedItem((prev) => ({...prev, [selectedOption]: isSelected ? item: prev[selectedOption] || item,
-    // }));
   };
-
-  // const removeFilter = (filterId) => {
-  //   const updatedOpciones = opciones.map((opt) =>
-  //     opt.id === filterId ? { ...opt, isSelected: false } : opt
-  //   );
-  //   setOpciones(updatedOpciones);
-  //   setMultipleSelectedOption((prev) => prev.filter((f) => f !== filterId));
-
-  //   setMultipleSelectedItem((prev) => {
-  //     const updated = { ...prev };
-  //     delete updated[filterId];
-  //     return updated;
-  //   });
-  // };
   const removeFilter = (Idkey) => {
     // Actualizamos las opciones (marcamos como no seleccionadas)
     const updatedOpciones = opciones.map((opt) =>
@@ -136,27 +116,13 @@ export const ListClassView = () => {
       if (updated[Idkey]) {
         delete updated[Idkey];
       }
-
-      // Actualizamos los filtros globales basados en lo que queda
-      // const updatedFilters = {
-      //   ...filters,
-      //   salon: updated.salones ? Object.keys(updated.salones).length : 0,
-      //   dia: updated.dia ? Object.keys(updated.dia).length : 0,
-      //   horario: updated.horarios ? Object.keys(updated.horarios).length : 0,
-      // };
       const updatedFilters = {
-        salon: updated.salones && updated.salones.id ? updated.salones.id : 0,  // Validación estricta
-        dia: updated.dia && updated.dia.id ? updated.dia.id : 0,  // Verificación estricta de 'dia'
-        horario: updated.horarios && updated.horarios.id ? updated.horarios.id : 0,  // Verificación estricta de 'horarios'
+        salon: updated.salones && updated.salones.id ? updated.salones.id : 0,  
+        dia: updated.dia && updated.dia.id ? updated.dia.id : 0,  
+        horario: updated.horarios && updated.horarios.id ? updated.horarios.id : 0, 
       };
-  
-
-      // Actualizamos el estado de los filtros
       setFilters(updatedFilters);
-      // fetchFilteredClasses();
-      // Actualizamos las opciones y retornamos el estado actualizado
       setOpciones(updatedOpciones);
-      alert("Estado actualizado");
       return updated;
     });
   };
@@ -187,11 +153,11 @@ export const ListClassView = () => {
           : multipleSelectedItem.horarios?.id || 0,
       };
 
-      setOpciones(updatedOpciones); // Marca las opciones como seleccionadas
-      setFilters(updatedFilters); // Actualiza los filtros globales
-      fetchFilteredClasses(); // Llama nuevamente a la API para obtener los datos filtrados
-      setModalSelect(false); // Cierra el modal de selección
-      setTemporalSelectedItem({}); // Limpia la selección temporal
+      setOpciones(updatedOpciones);
+      setFilters(updatedFilters);
+      fetchFilteredClasses(); 
+      setModalSelect(false); 
+      setTemporalSelectedItem({}); 
     } else {
       alert("Debe seleccionar al menos un filtro antes de aplicar.");
     }
@@ -271,35 +237,3 @@ export const ListClassView = () => {
     </SafeAreaView>
   );
 };
-
-// const removeFilter = (Idkey, option) => {
-
-//   const updatedOpciones = opciones.map((opt) => opt.id === option ? { ...opt, isSelected: false } : opt);
-
-//   // setMultipleSelectedOption((prev) => prev.filter((f) => f !== option));
-//     setMultipleSelectedItem((prev) => {
-//       const updated = { ...prev };
-//       console.log(updated, "update" , "key ", Idkey + " option ", option);
-
-//     //  if(updated[Idkey]){
-//     //   delete updated[Idkey];
-//     //   alert("updated delete")
-//     //  }
-//     if (updated[Idkey]) {
-//       const {[option]: _, ...remainingItems } = updated[Idkey]; // Elimina el elemento específico del filtro
-//       console.log(option, "id" + "remaing Items ", remainingItems);
-//       updated[Idkey] = remainingItems; // Actualizamos con los elementos restantes
-
-//      const updatedFilters = {
-//       salon: updated.salones ? Object.keys(updated.salones).length : 0,
-//       dia: updated.dia ? Object.keys(updated.dia).length : 0,
-//       horario: updated.horarios ? Object.keys(updated.horarios).length : 0,
-//     };
-//       setFilters((prev) => ({ ...prev, updatedFilters })); // Llama a la API con los filtros actualizados
-//       fetchFilteredClasses();
-//       setOpciones(updatedOpciones);
-//       return updated;
-//     }
-//     });
-
-// };

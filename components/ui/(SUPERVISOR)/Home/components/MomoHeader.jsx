@@ -27,7 +27,7 @@ const Scroll_Distance = Header_Max_Height - Header_Min_Height;
 export const ScrollViewScreen = () => {
   const { CORREO } = userData()
   const { totalUnreadNotification } = useSocket();
-  console.log("total", totalUnreadNotification);
+
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef(null);
   const navigation = useNavigation();

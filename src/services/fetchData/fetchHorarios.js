@@ -46,7 +46,7 @@ export const updateHorario = async (id, data) => {
 
 // docente and director
 
-export const getHorarioDocente = async (cedula) => {
+export const getHorarioDocenteCedula = async (cedula) => {
     try {
         const response = await axiosInstance.get(`/horarios/${cedula}`);
         return response.data;
