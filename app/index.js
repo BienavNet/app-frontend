@@ -1,12 +1,13 @@
 import { FormLogin } from "../components/ui/login/formLogin";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View, Text, ImageBackground } from "react-native";
 import { PublicRoute } from "../src/hooks/PublicRoute";
 import LogoUPCWhite from "../assets/svg/LogoUpcWhite";
 import LogoSistemasUPC from "../assets/svg/LogoSistemas";
 import { styles, stylesColors } from "../components/styles/StylesGlobal";
+import { useSafeAreaInset } from "../src/utils/utils";
+
 export default function Index() {
-  const insert = useSafeAreaInsets();
+  const insert = useSafeAreaInset();
   return (
     <PublicRoute>
       <View

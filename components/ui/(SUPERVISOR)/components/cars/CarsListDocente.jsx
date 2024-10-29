@@ -6,8 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { getClaseSupervisor } from "../../../../../src/services/fetchData/fetchClases";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   capitalizeFirstLetter,
   truncateText,
@@ -17,51 +16,42 @@ import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
 import { useNavigation } from "expo-router";
 import { refreshControl } from "../../../../../src/utils/functiones/refresh";
 import { userData } from "../../../../../src/hooks/use/userData";
+import { useClaseSupervisor } from "../../../../../src/hooks/customHooks";
 
-export const CarListDocentes = ({ scrollViewRef, handleScroll }) => {
-  const [refreshing, setRefreshing]= useState(false);
+export const CarListDocentes = () => {
+  const [refreshing, setRefreshing] = useState(false);
   const { CEDULA } = userData();
   const navigation = useNavigation();
-  const [data, setData] = useState([]);
-  const fechtDataSupervisorId = useCallback(async () => {
-    try {
-      const res = await getClaseSupervisor(CEDULA);
-      setData(res);
-    } catch (error) {
-      throw new Error("Error getting supervisor by ID:", error);
-    }
-  }, []);
+  const { claseSupervisor, fetchClaseSupervisor } = useClaseSupervisor(CEDULA);
 
   const handlePress = (data) => {
     navigation.navigate("RegistrarReporte", { data });
   };
 
-  useEffect(() => {
-    (async () => {
-      await fechtDataSupervisorId();
-    })();
-  }, [fechtDataSupervisorId]);
-
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await fechtDataSupervisorId();
+    await fetchClaseSupervisor();
     setRefreshing(false);
-  }, [fechtDataSupervisorId]);
+  }, [fetchClaseSupervisor]);
 
   return (
-    <ScrollView
+    <View style={{ height:"100%", backgroundColor:"transparent" }}>
+      <ScrollView
       refreshControl={refreshControl(refreshing, onRefresh)}
       scrollEventThrottle={16}
-      ref={scrollViewRef}
       showsVerticalScrollIndicator={false}
-      onScroll={handleScroll}
-      style={{marginBottom:160}}
+      style={{ marginBottom: 185 }}
     >
-      {data.map((item, index) => (
-        <View key={item.id} style={[styles.card, 
-        {
-          // marginBottom: 160
-        }]}>
+      {claseSupervisor.map((item, index) => (
+        <View
+          key={item.id}
+          style={[
+            styles.card,
+            {
+              // marginBottom: 160
+            },
+          ]}
+        >
           <TouchableOpacity
             style={{
               paddingVertical: 10,
@@ -112,7 +102,7 @@ export const CarListDocentes = ({ scrollViewRef, handleScroll }) => {
                     style={{
                       fontSize: 16,
                       // color: ColorItem.OceanCrest,
-                      color: '#000000',
+                      color: "#000000",
                       fontWeight: "500",
                     }}
                   >
@@ -158,6 +148,7 @@ export const CarListDocentes = ({ scrollViewRef, handleScroll }) => {
         </View>
       ))}
     </ScrollView>
+    </View>
   );
 };
 
@@ -180,12 +171,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     // color: "white",
-    color: '#000000',
+    color: "#000000",
   },
   fontZise14: {
     fontSize: 14,
     fontWeight: "bold",
     // color: "white",
-    color: '#000000'
+    color: "#000000",
   },
 });

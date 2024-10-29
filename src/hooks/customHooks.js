@@ -14,7 +14,7 @@ import {
 import { getDocenteAll } from "../services/fetchData/fetchDocente";
 import { getNotificationCedulaEstado } from "../services/fetchData/fetchNotification";
 import { getReportAll } from "../services/fetchData/fetchReporte";
-import { getClasesAll, getClasesByDocentes, getfilterByAllDate } from "../services/fetchData/fetchClases";
+import { getClasesAll, getClasesByDocentes, getClaseSupervisor, getfilterByAllDate } from "../services/fetchData/fetchClases";
 import { getComentarioDocenteDocente ,getComentarioDocenteSalon} from "../services/fetchData/fetchComentario";
 
 //fetch Docente
@@ -173,7 +173,6 @@ export const useHorarioDocenteCedula = (CEDULA) => {
   return horarioDocenteCedula;
 }; // obtiene todas horarios por la cedula del docente
 
-
 //fetch Comentarios
 // obtiene todos los comentarios por salones del docente
 export const useComentarioDocenteSalon = (cedula, salon) => {
@@ -212,6 +211,28 @@ export const useClasesAll = () => {
 
   return clasesAll;
 }; // obtiene todos las Clases
+
+export const useClaseSupervisor= (cedula) => {
+  const [claseSupervisor, setClaseSupervisor] = useState([]);
+  const fetchClaseSupervisor = useCallback(async () => {
+    try {
+      const res = await getClaseSupervisor(cedula);
+      setClaseSupervisor(res);
+    } catch (error) {
+      throw Error(error);
+    }
+  }, [cedula]);
+
+  useEffect(() => {
+    fetchClaseSupervisor();
+  }, [fetchClaseSupervisor]);
+
+  return { claseSupervisor, fetchClaseSupervisor};
+}; // obtiene todos las clases x supervisor
+
+
+
+
 
 //fetch Reporte
 export const useReporteAll = () => {
