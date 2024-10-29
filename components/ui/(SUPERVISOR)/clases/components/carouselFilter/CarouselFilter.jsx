@@ -2,7 +2,7 @@ import { View, ScrollView } from "react-native";
 import { Chip } from "@rneui/themed";
 import { ColorItem } from "../../../../../styles/StylesGlobal";
 
-export const ScrollMultipleFilterClass = ({ opciones, handleOptionSelect }) => {
+export const  ScrollMultipleFilterClass = ({ opciones, handleOptionSelect }) => {
   return (
     <ScrollView
       horizontal={true}
@@ -38,7 +38,7 @@ export const ScrollMultipleFilterClass = ({ opciones, handleOptionSelect }) => {
                   }}
                   iconRight
                   containerStyle={{ marginVertical: 10 }}
-                  color={item.isSelected ? "primary" : "lightgrey"}
+                  color={item.isSelected ? "primary" : "lightgray"}
                 />
               </View>
             </View>

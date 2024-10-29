@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
+import { StatusCircle } from "../../../../(DIRECTOR)/reportes/components/StatusCircle";
 
 const AgendaItem = (props) => {
   const { item } = props;
@@ -23,24 +24,33 @@ const AgendaItem = (props) => {
   if (isEmpty(item)) {
     return (
       <View style={styles.emptyItem}>
-        <Text style={styles.emptyItemText}>No Events Planned Today</Text>
+        <Text style={styles.emptyItemText}>No evento planeado para este dia.</Text>
       </View>
     );
   }
 
   return (
-    <TouchableOpacity
-      onPress={itemPressed}
-      style={styles.item}
-      testID="agenda-items"
-    >
+    <TouchableOpacity onPress={itemPressed} style={styles.item} testID="agenda-items">
       <View>
-        <Text style={styles.itemHourText}>{item.hour}</Text>
+      <Text style={styles.itemHourText}>{item.room}</Text>
+        <Text style={styles.itemHourText}>{item.hours}</Text>
         <Text style={styles.itemDurationText}>{item.duration}</Text>
       </View>
-      <Text style={styles.itemTitleText}>{item.title}</Text>
+     <View style={{
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
+     }}>
+      <Text style={styles.itemTitleText}>{item.subject}</Text>
+     <Text style={styles.itemTitleText}>{item.title}</Text>
+      <StatusCircle
+      item={item.status}
+      />
+     </View>
       <View style={styles.itemButtonContainer}>
-        <Button color={"grey"} title={"Info"} onPress={buttonPressed} />
+        <Button 
+        
+        color={"lightblue"} title={"Reportar"} onPress={buttonPressed} />
       </View>
     </TouchableOpacity>
   );
@@ -63,7 +73,7 @@ const styles = StyleSheet.create({
     color: "grey",
     fontSize: 12,
     marginTop: 4,
-    marginLeft: 4,
+    marginHorizontal:5
   },
   itemTitleText: {
     color: "black",

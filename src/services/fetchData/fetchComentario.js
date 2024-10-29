@@ -1,18 +1,15 @@
 import axiosInstance from "../axios";
 
 // doncente & director
-export const registerComentario = async (comentario, docente, salon) => {
-  try {
-    const response = await axiosInstance.post("/comentarios/register", {
-      comentario,
-      docente,
-      salon,
-    });
-    return response;
-  } catch (error) {
-    throw new Error(error.response.data.message);
-  }
-};
+export const registerComentario= async (comentario, docente, salon, fecha, clase)  => {
+try {
+    const response = await axiosInstance.post('/comentarios/register', {comentario, docente, salon, fecha, clase});
+     return response;
+} catch (error) {
+    throw new Error(error.response.data.message)
+}
+}
+
 
 export const getComentarioDocenteDocente = async (cedula) => {
   try {

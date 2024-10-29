@@ -100,7 +100,7 @@ export const IndexHorarioDefault = () => {
                   flexDirection: "row",
                 }}
               >
-                <Text style={{ fontSize: 13, marginRight: 10 }}>
+                {/* <Text style={{ fontSize: 13, marginRight: 10 }}>
                   {new Date(
                     `${i.fecha.split("T")[0]}T${i.hora_inicio}`
                   ).toLocaleTimeString([], {
@@ -115,7 +115,7 @@ export const IndexHorarioDefault = () => {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
-                </Text>
+                </Text> */}
               </View>
             </View>
             <View

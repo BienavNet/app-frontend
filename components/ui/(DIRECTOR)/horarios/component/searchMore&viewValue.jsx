@@ -5,6 +5,7 @@ import { ColorItem, styles } from "../../../../styles/StylesGlobal";
 import moment from "../../../../../src/utils/InstanceMoment";
 export const SearchView = ({ value, handleOpenSecondModal }) => {
   return (
+
     <View style={[styles.viewmore]}>
       <Text style={styles.subtitle}>
         {moment(value).format("ddd D MMM YYYY")}

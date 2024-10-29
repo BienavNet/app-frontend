@@ -14,6 +14,7 @@ import { NofilterSelected } from "../../../Components/unregistered/noRegistratio
 import { ListReportDefault } from "../../../(SUPERVISOR)/reportes/components/listDefault";
 import { ListComentarioDocenteSalonDefault } from "./listDefault";
 import ListFilterReport from "../../../(SUPERVISOR)/reportes/components/listFilter";
+
 export const IndexComentarioDocente = () => {
   const { CEDULA } = userData();
   const salonAll = useSalonAll();
@@ -223,3 +224,14 @@ export const IndexComentarioDocente = () => {
     </>
   );
 };
+
+// import { ScrollView } from "react-native";
+// import { IndexComentarioDefault } from "./indexDefault"
+
+// export const IndexComentarioDocente = () => {
+//   return (
+//     <ScrollView>
+//       <IndexComentarioDefault/>
+//     </ScrollView>
+//   )
+// }

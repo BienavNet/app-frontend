@@ -2,14 +2,12 @@ import { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { BoxView } from "../../../(DIRECTOR)/components/customBoxView";
 import { ColorItem } from "../../../../styles/StylesGlobal";
-import { FontAwesome } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { ListItem } from "@rneui/themed";
 import {
   capitalizeFirstLetter,
   truncateText,
 } from "../../../../../src/utils/functiones/functions";
-import { StatusCircle } from "../../../(DIRECTOR)/reportes/components/StatusCircle";
-import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
 export const ListReportDefault = ({ data }) => {
   const [expanded, setExpanded] = useState(false);
   return (
@@ -38,7 +36,7 @@ export const ListReportDefault = ({ data }) => {
                     </ListItem.Title>
                   </View>
                   <View>
-                    <Text style={styles.itemP2}>{data.numero_salon}</Text>
+                    <Text style={styles.itemP2}>{data.clase}</Text>
                   </View>
                 </View>
                 <View
@@ -56,26 +54,20 @@ export const ListReportDefault = ({ data }) => {
                     style={{
                       width: "80%",
                       flexDirection: "row",
+                      marginTop:10
                     }}
                   >
-                    <FontAwesome
-                      style={{
-                        marginTop: 2,
-                        marginHorizontal: 10,
-                      }}
-                      name="commenting"
-                      size={20}
-                      color={ColorItem.TarnishedSilver}
-                    />
+                    <MaterialIcons name="date-range" size={24} color="#444444" />
                     <Text
                       style={{
                         fontSize: 18,
-                        color: "#999999",
+                        color: "#444444",
                         textAlign: "center",
+                        marginLeft: 10
                       }}
                     >
-                      {truncateText(data.comentario, 15)}
-                    </Text>
+                      {data.fecha.substring(0, 10)}
+                    </Text> 
                   </View>
                 </View>
               </BoxView>
@@ -97,52 +89,37 @@ export const ListReportDefault = ({ data }) => {
               <View
                 style={{
                   flexDirection: "row",
-                  alignItems: "center",
                   justifyContent: "space-between",
                 }}
               >
-                <View>
-                  <ListItem.Title>
-                    {capitalizeFirstLetter(data.nombre)}{" "}
-                    {capitalizeFirstLetter(data.apellido)}
-                  </ListItem.Title>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View>
-                  <ListItem.Subtitle>
-                    {capitalizeFirstLetter(data.nombre_salon)}
+                <View style={{
+                  paddingLeft: 15,
+                }}>
+                  <ListItem.Subtitle style={{
+                    color: "#000000",
+                    fontSize: 15
+                  }}>
+                    {capitalizeFirstLetter(data.nombre_salon)}{" "}{data.numero_salon}{" "}{data.asignatura}
                   </ListItem.Subtitle>
-                </View>
-                <View
-                  style={{
-                    width: "50%",
-                  }}
-                >
-                  <Text style={styles.itemP3}>
-                    {truncateText(data.numero_salon)}
-                  </Text>
                 </View>
               </View>
               <View
                 style={{
                   marginTop: 10,
-                  justifyContent: "space-between",
-                  flexDirection: "row",
+                  flexDirection: "row"
                 }}
               >
-                <View>
-                  <DateChip item={new Date(data.fecha).toLocaleDateString()} />
+                <MaterialIcons name="chat" size={24} color="#444444" style={{
+                  marginLeft: 25
+                }}/>
+                <View style={{
+                  paddingTop:2,
+                  paddingLeft:5,
+                  color: "#444444"
+                }}>
+                  <Text>{" Comentario: "}{data.comentario}</Text>
                 </View>
 
-                <View>
-                  <StatusCircle item={data.estado} />
-                </View>
               </View>
             </BoxView>
           </ListItem.Content>
@@ -173,7 +150,7 @@ const styles = StyleSheet.create({
   itemP2: {
     fontWeight: "bold",
     fontSize: 18,
-    color: "#999999",
+    color: "#000000",
     textAlign: "center",
   },
   itemP3: {

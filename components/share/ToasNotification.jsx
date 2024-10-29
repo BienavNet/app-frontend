@@ -30,7 +30,7 @@ const useToastMessage = () => {
   const showToast = ({
     message,
     type = "success",
-    duration = 800,
+    duration = 1000,
     successIcon,
     errorIcon,
     warningIcon,

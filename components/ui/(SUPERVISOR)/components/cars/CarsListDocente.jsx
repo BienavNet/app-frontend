@@ -55,9 +55,13 @@ export const CarListDocentes = ({ scrollViewRef, handleScroll }) => {
       ref={scrollViewRef}
       showsVerticalScrollIndicator={false}
       onScroll={handleScroll}
+      style={{marginBottom:160}}
     >
       {data.map((item, index) => (
-        <View key={item.id} style={styles.card}>
+        <View key={item.id} style={[styles.card, 
+        {
+          // marginBottom: 160
+        }]}>
           <TouchableOpacity
             style={{
               paddingVertical: 10,
@@ -106,8 +110,9 @@ export const CarListDocentes = ({ scrollViewRef, handleScroll }) => {
                 <View className="flex">
                   <Text
                     style={{
-                      fontSize: 14,
-                      color: ColorItem.OceanCrest,
+                      fontSize: 16,
+                      // color: ColorItem.OceanCrest,
+                      color: '#000000',
                       fontWeight: "500",
                     }}
                   >
@@ -174,11 +179,13 @@ const styles = StyleSheet.create({
   fontZise: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "white",
+    // color: "white",
+    color: '#000000',
   },
   fontZise14: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "white",
+    // color: "white",
+    color: '#000000'
   },
 });

@@ -61,7 +61,7 @@ export const ScrollViewScreen = () => {
                 style={{
                   marginLeft: 30,
                   fontSize: 18,
-                  color: "white",
+                  color: "black",
                 }}
               >
                 {capitalizeFirstLetter(CORREO)}
@@ -73,12 +73,13 @@ export const ScrollViewScreen = () => {
     }
   );
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.headerContent}
+      >
       <StatusBar barStyle="light-content" />
-      <SafeAreaView>
+      {/* <SafeAreaView>
         <View style={styles.upperHeaderPlaceholder} />
-      </SafeAreaView>
-      <Animated.View
+      </SafeAreaView> */}
+      {/* <Animated.View
         style={[
           styles.headerContent,
           {
@@ -86,7 +87,7 @@ export const ScrollViewScreen = () => {
             backgroundColor: animatedHeaderColor,
           },
         ]}
-      >
+      > */}
         <View style={styles.upperHeader}>
           <InfoSup
             displayedInfo={displayedInfo}
@@ -109,13 +110,13 @@ export const ScrollViewScreen = () => {
               />
             )}
           </TouchableOpacity>
-          <ButtonLogoutS />
+          <ButtonLogoutS/>
         </View>
-      </Animated.View>
-        <CarListDocentes 
-        handleScroll={handleScroll}
+      {/* </Animated.View> */}
+      <CarListDocentes
+        // handleScroll={handleScroll}
         scrollViewRef={scrollViewRef}
-        />
+      />
     </View>
   );
 };
@@ -124,17 +125,20 @@ const styles = StyleSheet.create({
   headerContent: {
     width: "100%",
     zIndex: 9999,
-    paddingTop: Platform.OS === "android" ? 12 : 0,
+    paddingTop: Platform.OS === "android" ? 15 : 0,
   },
   upperHeaderPlaceholder: {
-    height: 0,
-    paddingTop: 0,
+    height: 10,
+    paddingTop: 10,
   },
   upperHeader: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 13,
+    paddingHorizontal: 10,
+    paddingLeft: 20,
+    marginTop: 30,
     height: Header_Min_Height,
+    backgroundColor: ColorItem.MediumGreen
   },
   searchInput: {
     width: "100%",
@@ -146,7 +150,9 @@ const styles = StyleSheet.create({
     paddingLeft: 32,
   },
   bell: {
-    marginHorizontal: 25,
+    marginLeft: 60,
+    marginRight: 30,
+    paddingLeft: 10
   },
   spaceForHeader: {
     height: Header_Max_Height,

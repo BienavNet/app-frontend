@@ -108,3 +108,21 @@ export const getClaseSupervisorSalonHorarioDia = async (cedula, salon, dia, hora
     throw new Error(error.response.data.message);
   }
 };
+
+export const getClasesByDocentes = async (cedula) => {
+  try {
+    const response = await axiosInstance.get(`/clase/docente/${cedula}`)
+    return response.data
+  } catch (error) {
+    console.log('No se pudo obtener los datos del metodo getClasesByDocentes: ', error)
+    return undefined
+  }
+}
+export const getfilterByAllDate = async (cedula) => {
+  try {
+    const response = await axiosInstance.get(`/clase/fechadocente/${cedula}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+};

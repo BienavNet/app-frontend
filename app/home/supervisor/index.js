@@ -39,7 +39,9 @@ export const IndexSupervisor = (props) => {
     right: 15,
     elevation: 0,
     borderRadius: 12,
-    height: 60,
+    height: 70,
+    margin: 10,
+    paddingTop: 15
   };
   const SIZE = 26;
   const tabsSupervisor = [
@@ -48,7 +50,7 @@ export const IndexSupervisor = (props) => {
       component: IndexListSupervisor,
       options: {
         headerShown: false,
-        tabBarLabel: "",
+        tabBarLabel: "Inicio",
         tabBarIcon: ({ color }) => (
           <FontAwesome6 name="house" size={SIZE} color={color} />
         ),
@@ -59,11 +61,12 @@ export const IndexSupervisor = (props) => {
       component: IndexReportesSupervisor,
       options: {
         headerShown: false,
-        tabBarLabel: "",
+        tabBarLabel: "Reportes",
         tabBarIcon: ({ color }) => (
-          <Entypo name="info-with-circle" size={40} color={color} />
+          <FontAwesome6 name="file-circle-exclamation" size={SIZE} color={color}/>
         ),
-        tabBarButton: (props) => <CustomTabBarButton {...props} />,
+        // tabBarButton: (props) => <CustomTabBarButton {...props} />,
+        
       },
     },
     {
@@ -71,22 +74,19 @@ export const IndexSupervisor = (props) => {
       component: IndexClases,
       options: {
         headerShown: false,
-        tabBarLabel: "",
+        tabBarLabel: "Clases",
         tabBarIcon: ({ color }) => (
           <MaterialIcons
             name="class"
-            size={35}
+            size={30}
             color={color}
-            style={{
-              marginTop: 3,
-            }}
           />
         ),
       },
     },
   ];
   return (
-    <TabsHome tabsConfig={tabsSupervisor} customTabBarStyle={TabBarStyle} />
+    <TabsHome tabsConfig={tabsSupervisor} customTabBarStyle={TabBarStyle}/>
   );
 };
 export const HomeSupervisor = () => {

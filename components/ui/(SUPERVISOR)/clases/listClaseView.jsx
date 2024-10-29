@@ -162,15 +162,18 @@ export const ListClassView = () => {
       alert("Debe seleccionar al menos un filtro antes de aplicar.");
     }
   };
-
+//
   return (
     <SafeAreaView style={styles.container}>
-      <View className="flex-row justify-end">
+      <View className="flex-row justify-end" style={{
+        // top: 30
+      }}>
+        {/* Aqui es donde se debe de editar para arreglar los filtros de las clases de los supervisores */}
         <ScrollMultipleFilterClass
           opciones={opciones}
           handleOptionSelect={handleOptionSelect}
           removeFilter={removeFilter}
-        />
+        /> 
       </View>
 
       {/* Información mostrada por defecto */}

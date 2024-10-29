@@ -12,7 +12,16 @@ export default async function playNotificationSound(setSound) {
     return;
   }
 };
-
+export const formatDuration = (horainicio, horafin) =>{
+  const start = moment(horainicio, "HH:mm")
+  const end = moment(horafin, "HH:mm");
+  const duration = moment.duration(end.diff(start)).asMinutes();
+  const hours = Math.floor(duration / 60);
+  const minutes = duration % 60;
+  const hourFormat = `${hours}h ${minutes > 0 ? `${minutes}m`:''}`;
+  return hourFormat;
+  }
+  
 export const formatHourHHMMAMPM = (timeString) => {
   const [hours, minutes] = timeString.split(":");
   const date = new Date();
@@ -51,7 +60,9 @@ export const generateClassDates = (dia, startDate, endDate) => {
 
 // devuelve el string pero con la primera letra de un string en mayuscula {"docente" ---> "Docente"}
 export const capitalizeFirstLetter = (name) => {
-  return name.charAt(0).toUpperCase() + name.slice(1);
+  if (name !=undefined ){
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
 };
 
 // devuelve la primera letra de un string en mayuscula {"Pendiente" ---> "P"}
@@ -118,7 +129,13 @@ export const getFutureDatesDisabled = (minDate) => {
 
   return marked;
 };
-
+export const timeHHMM = (fecha, hour) =>{
+  const time =  new Date(`${fecha.split("T")[0]}T${hour}`).toLocaleTimeString([], {
+     hour: "2-digit",
+     minute: "2-digit",
+   });
+   return time;
+ }
 // devuelve el numero del dia, {lunes:1, martes:2 , etc}
 export const obtenerDiaNumero = (dia) => {
   console.log(dia, "dia de la funcion obtener dia Numero")

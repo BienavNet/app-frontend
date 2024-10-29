@@ -27,7 +27,8 @@ export const getReportSupervisorCedulaSalon = async (cedula, salon) => {
     const response = await axiosInstance.get(`/reporte/supervisor/${cedula}/salon/${salon}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message);
+    // throw new Error(error.response.data.message);
+    return undefined
   }
 };
 
