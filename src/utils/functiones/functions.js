@@ -51,7 +51,9 @@ export const generateClassDates = (dia, startDate, endDate) => {
 
 // devuelve el string pero con la primera letra de un string en mayuscula {"docente" ---> "Docente"}
 export const capitalizeFirstLetter = (name) => {
-  return name.charAt(0).toUpperCase() + name.slice(1);
+  if (name !=undefined ){
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
 };
 
 // devuelve la primera letra de un string en mayuscula {"Pendiente" ---> "P"}

@@ -25,7 +25,7 @@ export const IndexHorario = () => {
   console.log("selectedItem", selectedItem + "selectedItem TYPEPF",typeof selectedItem);
   const [selectedOption, setSelectedOption] = useState(null);
   console.log("selectedOption", selectedOption);
-  console.log("selectedOption.includes --> ", selectedOption.includes("docente"));
+  // console.log("selectedOption.includes --> ", selectedOption.includes("docente"));
   const [list, setList] = useState([]);
   console.log("list", list);
 
@@ -189,6 +189,8 @@ export const IndexHorario = () => {
 
   return <CustomStack initialRouteName="ListScreen" screens={screens} />;
 };
+
+
 
 // if (selectedOption === "dia") {
 //   setAdditionalData((prevData) => ({ ...prevData, dia: item }));

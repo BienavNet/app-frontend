@@ -13,6 +13,7 @@ export const ListClassDefault = ({ data }) => {
   const [expanded, setExpanded] = useState(false);
   return (
     <>
+    {/* List action whom lists all clases */}
       <ListItem.Accordion
         content={
           <>
@@ -28,16 +29,23 @@ export const ListClassDefault = ({ data }) => {
                 >
                   <View
                     style={{
-                      paddingRight: 30,
+                      paddingRight: 15,
                     }}
                   >
                     <ListItem.Title style={styles.itemP2}>
-                      {capitalizeFirstLetter(data.nombre_docente)}{" "}
+                      {capitalizeFirstLetter(data.nombre_docente.substring(0, 1))}{". "}
                       {capitalizeFirstLetter(data.apellido_docente)}
                     </ListItem.Title>
                   </View>
+                  <View 
+                    style={{
+                      paddingRight: 15
+                    }}
+                  >
+                    <Text style={styles.itemP2}>{data.asignatura.substring(0, 10)}{"..."}</Text>
+                  </View>
                   <View>
-                    <Text style={styles.itemP2}>{data.numero_salon}</Text>
+                    <Text style={styles.itemP2}>{data.fecha.substring(0, 10)}</Text>
                   </View>
                 </View>
                 <View
@@ -51,31 +59,6 @@ export const ListClassDefault = ({ data }) => {
                     marginBottom: 5,
                   }}
                 >
-                  {/* <View
-                    style={{
-                      width: "80%",
-                      flexDirection: "row",
-                    }}
-                  >
-                    <FontAwesome
-                      style={{
-                        marginTop: 2,
-                        marginHorizontal: 10,
-                      }}
-                      name="commenting"
-                      size={20}
-                      color={ColorItem.TarnishedSilver}
-                    />
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        color: "#999999",
-                        textAlign: "center",
-                      }}
-                    >
-                      {truncateText(data.comentario, 15)}
-                    </Text>
-                  </View> */}
                 </View>
               </BoxView>
             </ListItem.Content>
@@ -108,7 +91,7 @@ export const ListClassDefault = ({ data }) => {
                 </View>
                 <View>
                   <ListItem.Title>
-                    {capitalizeFirstLetter(truncateText(data.asignatura, 15))}
+                    {capitalizeFirstLetter(data.asignatura, 15)}
                   </ListItem.Title>
                 </View>
               </View>
@@ -192,7 +175,7 @@ const styles = StyleSheet.create({
   itemP2: {
     fontWeight: "bold",
     fontSize: 18,
-    color: "#999999",
+    color: "#000000",
     textAlign: "center",
   },
   itemP3: {

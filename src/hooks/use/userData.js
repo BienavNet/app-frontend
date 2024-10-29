@@ -12,6 +12,7 @@ export const userData = () => {
     const ID = user?.id;
     const INITIALIZE = isInitialized;
     const ISAUTENTICATED = isAuthenticated;
-    return { NOMBRE, CEDULA, CORREO, ROL , ID, INITIALIZE, ISAUTENTICATED};
+    const DIRECTOR = 1003187623
+    return { NOMBRE, CEDULA, CORREO, ROL , ID, INITIALIZE, ISAUTENTICATED, DIRECTOR};
   };
   

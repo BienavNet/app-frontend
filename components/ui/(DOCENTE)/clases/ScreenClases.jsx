@@ -6,7 +6,7 @@ export const RegistroClases = () => {
     {
       name: "ClasesRegistro",
       component: Clasesregistro,
-      title: "Mis Registros",
+      title: "Mis Clases",
     },
   ];
   return <CustomStack initialRouteName="ListScreen" screens={screens} />;

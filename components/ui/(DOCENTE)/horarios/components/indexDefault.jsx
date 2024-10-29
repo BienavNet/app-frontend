@@ -41,9 +41,17 @@ export const IndexHorarioDefault = () => {
   const handlePress = (id) => {
     setExpandedId(expandedId === id ? null : id);
   };
+
+  const getDate = (date) => {
+    const myDate = new Date(date)
+    const month = myDate.toLocaleString('es-ES', { month: "long" })
+    return ` ${myDate.getDay()} de ${month}`
+  }
   return comentariosdata.map((i, j) => (
+
     <ListItem.Accordion
-      key={i.id_class}
+      // key={i.id_class}
+      key={i.id}
       content={
         <>
           {/* <Icon name="place" size={30} /> */}
@@ -62,11 +70,17 @@ export const IndexHorarioDefault = () => {
                   }}
                 >
                   <ListItem.Title style={styles.itemP2}>
-                    {capitalizeFirstLetter(truncateText(i.asignatura, 10))}
+                    {i.asignatura.substring(0, 15)}{"."}
                   </ListItem.Title>
                 </View>
                 <View>
-                  <Text style={styles.itemP2}>{i.dia}</Text>
+                  {/* <Text style={styles.itemP2}>{i.dia}</Text> */}
+                  <Text style={{
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    color: "#111111",
+                    textAlign: "center",
+                  }}>{i.dia}</Text>
                 </View>
               </View>
               <View
@@ -80,38 +94,15 @@ export const IndexHorarioDefault = () => {
                   marginBottom: 5,
                 }}
               >
-                {/* <View
-                style={{
-                  width: "80%",
-                  flexDirection: "row",
-                }}
-              >
-                <FontAwesome
-                  style={{
-                    marginTop: 2,
-                    marginHorizontal: 10,
-                  }}
-                  name="commenting"
-                  size={20}
-                  color={ColorItem.TarnishedSilver}
-                />
-                <Text
-                  style={{
-                    fontSize: 18,
-                    color: "#999999",
-                    textAlign: "center",
-                  }}
-                >
-                  {truncateText(data.comentario, 15)}
-                </Text>
-              </View> */}
               </View>
             </BoxView>
           </ListItem.Content>
         </>
       }
-      isExpanded={expandedId === i.id_class}
-      onPress={() => handlePress(i.id_class)}
+      // isExpanded={expandedId === i.id_class}
+      // onPress={() => handlePress(i.id_class)}
+      isExpanded={expandedId === i.id}
+      onPress={() => handlePress(i.id)}
     >
       <ListItem bottomDivider>
         <ListItem.Content>
@@ -127,13 +118,28 @@ export const IndexHorarioDefault = () => {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
+                marginLeft: 10
               }}
             >
               <View>
                 <ListItem.Title>
-                  {capitalizeFirstLetter(i.asignatura)} {i.numero_salon}
+                  {capitalizeFirstLetter(i.asignatura)}
                 </ListItem.Title>
               </View>
+            </View>
+            <View style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                marginLeft: 10
+              }}>
+              <Text>{"Salon: "}{i.numero_salon}</Text>
+            </View>
+            <View style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                marginLeft: 10
+              }}>
+              <Text>{"Sector: "}{i.nombre}</Text>
             </View>
             <View
               style={{
@@ -148,22 +154,6 @@ export const IndexHorarioDefault = () => {
                   flexDirection: "row",
                 }}
               >
-                <Text style={{ fontSize: 13, marginRight: 10 }}>
-                  {new Date(
-                    `${i.fecha.split("T")[0]}T${i.hora_inicio}`
-                  ).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </Text>
-                <Text style={{ fontSize: 13 }}>
-                  {new Date(
-                    `${i.fecha.split("T")[0]}T${i.hora_fin}`
-                  ).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </Text>
               </View>
             </View>
             <View
@@ -172,9 +162,12 @@ export const IndexHorarioDefault = () => {
                 // marginHorizontal: 8,
                 justifyContent: "space-between",
                 flexDirection: "row",
+                marginLeft: 10
               }}
             >
-              <View><Text>{i.dia}</Text></View>
+              <View><Text>{"Dia: "}{i.dia}</Text></View>
+              <View><Text>{"Hora: "}{i.hora_inicio}{" - "}{i.hora_fin}</Text></View>
+
             </View>
           </BoxView>
         </ListItem.Content>
@@ -203,8 +196,8 @@ const styles = StyleSheet.create({
   },
   itemP2: {
     fontWeight: "bold",
-    fontSize: 18,
-    color: "#999999",
+    fontSize: 16,
+    color: "#000000",
     textAlign: "center",
   },
   itemP3: {

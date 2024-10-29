@@ -1,296 +1,401 @@
-import { useState, useCallback, useRef, useEffect } from "react";
-import { StyleSheet } from "react-native";
-import isEmpty from "lodash.isempty";
-// import Feather from "@expo/vector-icons/Feather";
-import {getFutureDatesDisabled} from "../../../../../src/utils/functiones/functions"
-const iconLeft = require("../../../../../assets/png/previous.png");
-const iconrigth = require("../../../../../assets/png/nextt.png");
+// import { useState, useCallback, useRef, useEffect } from "react";
+// import { StyleSheet } from "react-native";
+// // import Feather from "@expo/vector-icons/Feather";
+// import { getFutureDatesDisabled } from "../../../../../src/utils/functiones/functions"
+// const iconLeft = require("../../../../../assets/png/previous.png");
+// const iconrigth = require("../../../../../assets/png/nextt.png");
 
-import {
-  AgendaList,
-  CalendarProvider,
-  ExpandableCalendar,
-  WeekCalendar,
-} from "react-native-calendars";
-// import { ColorItem } from "../../../../styles/StylesGlobal";
-import AgendaItem from "./AgendaCalendar/AgendaItem";
-import { getTheme, themeColor, lightThemeColor } from "./AgendaCalendar/theme";
-import Loading from "../../../../share/loading";
+// import { CalendarList } from "react-native-calendars"
 
-export function getMarkedDates() {
-  const marked = {};
+// import {
+//   AgendaList,
+//   CalendarProvider,
+//   ExpandableCalendar,
+//   WeekCalendar,
+// } from "react-native-calendars";
+// // import { ColorItem } from "../../../../styles/StylesGlobal";
+// import AgendaItem from "./AgendaCalendar/AgendaItem";
+// import { getTheme, themeColor, lightThemeColor } from "./AgendaCalendar/theme";
+// import Loading from "../../../../share/loading";
+// import { useClaseDocentes } from "../../../../../src/hooks/customHooks";
+// import { userData } from "../../../../../src/hooks/use/userData";
 
-  agendaItems.forEach((item) => {
-    // NOTE: only mark dates with data
-    if (item.data && item.data.length > 0 && !isEmpty(item.data[0])) {
-      marked[item.title] = { marked: true };
-    } else {
-      marked[item.title] = { disabled: true };
-    }
-  });
-  return marked;
-}
-// function getFutureDates(numberOfDays) {
-//   const array = [];
-//   for (let index = 1; index <= numberOfDays; index++) {
-//     let d = Date.now();
-//     if (index > 8) {
-//       // set dates on the next month
-//       const newMonth = new Date(d).getMonth() + 1;
-//       d = new Date(d).setMonth(newMonth);
+
+
+// export function getMarkedDates() {
+//   const marked = {};
+//   // agendaItems = loadAgendaItems()
+//   // console.log(agendaItems)
+
+//   agendaItems.forEach((item) => {
+//     console.log(item)
+//     // NOTE: only mark dates with data
+//     if (item.data && item.data.length > 0 && !isEmpty(item.data[0])) {
+//       marked[item.title] = { marked: true };
+//     } else {
+//       marked[item.title] = { disabled: true };
 //     }
-//     const date = new Date(d + 864e5 * index); // 864e5 == 86400000 == 24*60*60*1000
-//     const dateString = date.toISOString().split("T")[0];
-//     array.push(dateString);
+//   });
+//   return marked;
+// }
+
+// // const {CEDULA} = userData()
+// // export const agendaItems = useClaseDocentes('1007582633')
+// // export const agendaItems = []
+
+
+
+// export const agendaItems = [
+//   {
+//     title: "",
+//     data: [
+//       { hour: "4pm", duration: "1h", title: "Pilates ABC" },
+//       { hour: "5pm", duration: "1h", title: "Vinyasa Yoga" },
+//     ],
+//   },
+// ]
+
+// const CalendarListScreen = (props) => {
+//   const {CEDULA} = userData()
+//   const agendaItems2 = useClaseDocentes(CEDULA)
+//   const [loading, setLoading] = useState(true); // estado de carga
+//   const { horizontalView } = props;
+//   const minDate = "2024-01-01"
+//   const marked = useRef(getFutureDatesDisabled(minDate));
+//   console.log(`markes ${marked} -- marked current ${marked.current}`)
+//   // const marked = useRef(getMarkedDates());
+//   const theme = useRef(getTheme()); // theme
+//   const todayBtnTheme = useRef({ todayButtonTextColor: themeColor }); //stylos de un button
+
+//   const renderItem = useCallback(({ item }) => {
+//     return <AgendaItem item={item} />;
+//   }, []);
+
+//   useEffect(() => {
+//     // Simulamos la carga de los datos necesarios
+//     if (agendaItems && marked.current) {
+//       // Si los datos de la agenda y las fechas marcadas están disponibles, dejamos de cargar
+//       setLoading(false);
+//     }
+//   }, [agendaItems, marked.current]); // Reaccionar cuando estos elementos estén listos
+
+//   if (loading) {
+//     // Mientras se cargan los datos, mostramos el indicador de carga
+//     return <Loading />;
 //   }
-//   return array;
-// }
-// Obtener fechas deshabilitadas (futuras) y habilitadas (pasadas)
-
-// const RANGE = 6;
-// const fastDate = getPastDate(3);
-// const futureDates = getFutureDates(12);
-// const today = new Date().toISOString().split("T")[0]; // obtenemos la fecha actual pasandola a string
-// console.log(today, "today");
-// const dates = [fastDate, today].concat(RANGE);
-
-// function getPastDate(numberOfDays) {
-//   return new Date(Date.now() - 864e5 * numberOfDays)
-//     .toISOString()
-//     .split("T")[0];
-// }
-
-export const agendaItems = [
-  {
-    title: "dates[0]",
-    data: [
-      { hour: "12am", duration: "1h", title: "First Yoga" },
-      {
-        hour: "9am",
-        duration: "1h",
-        title: "Long Yoga",
-        itemCustomHeightType: "LongEvent",
-      },
-    ],
-  },
-  {
-    title: "dates[1]",
-    data: [
-      { hour: "4pm", duration: "1h", title: "Pilates ABC" },
-      { hour: "5pm", duration: "1h", title: "Vinyasa Yoga" },
-    ],
-  },
-]
-//   {
-//     title: dates[2],
-//     data: [
-//       { hour: "1pm", duration: "1h", title: "Ashtanga Yoga" },
-//       { hour: "2pm", duration: "1h", title: "Deep Stretches" },
-//       { hour: "3pm", duration: "1h", title: "Private Yoga" },
-//     ],
-//   },
-//   {
-//     title: dates[3],
-//     data: [{ hour: "12am", duration: "1h", title: "Ashtanga Yoga" }],
-//   },
-//   {
-//     title: dates[4],
-//     data: [{}],
-//   },
-//   {
-//     title: dates[5],
-//     data: [
-//       { hour: "9pm", duration: "1h", title: "Middle Yoga" },
-//       { hour: "10pm", duration: "1h", title: "Ashtanga" },
-//       { hour: "11pm", duration: "1h", title: "TRX" },
-//       { hour: "12pm", duration: "1h", title: "Running Group" },
-//     ],
-//   },
-//   {
-//     title: dates[6],
-//     data: [{ hour: "12am", duration: "1h", title: "Ashtanga Yoga" }],
-//   },
-//   {
-//     title: dates[7],
-//     data: [{}],
-//   },
-//   {
-//     title: dates[8],
-//     data: [
-//       { hour: "9pm", duration: "1h", title: "Pilates Reformer" },
-//       { hour: "10pm", duration: "1h", title: "Ashtanga" },
-//       { hour: "11pm", duration: "1h", title: "TRX" },
-//       { hour: "12pm", duration: "1h", title: "Running Group" },
-//     ],
-//   },
-//   {
-//     title: dates[9],
-//     data: [
-//       { hour: "1pm", duration: "1h", title: "Ashtanga Yoga" },
-//       { hour: "2pm", duration: "1h", title: "Deep Stretches" },
-//       { hour: "3pm", duration: "1h", title: "Private Yoga" },
-//     ],
-//   },
-//   {
-//     title: dates[10],
-//     data: [{ hour: "12am", duration: "1h", title: "Last Yoga" }],
-//   },
-//   {
-//     title: dates[11],
-//     data: [
-//       { hour: "1pm", duration: "1h", title: "Ashtanga Yoga" },
-//       { hour: "2pm", duration: "1h", title: "Deep Stretches" },
-//       { hour: "3pm", duration: "1h", title: "Private Yoga" },
-//     ],
-//   },
-//   {
-//     title: dates[12],
-//     data: [{ hour: "12am", duration: "1h", title: "Last Yoga" }],
-//   },
-//   {
-//     title: dates[13],
-//     data: [{ hour: "12am", duration: "1h", title: "Last Yoga" }],
-//   },
-// ];
-
-const CalendarListScreen = (props) => {
-  const [loading, setLoading] = useState(true); // estado de carga
-  const { horizontalView } = props;
-  const minDate = "2024-01-01"
-  const marked = useRef(getFutureDatesDisabled(minDate));
-  console.log(`markes ${marked} -- marked current ${marked.current}`)
-  // const marked = useRef(getMarkedDates());
-  const theme = useRef(getTheme()); // theme
-  const todayBtnTheme = useRef({todayButtonTextColor: themeColor}); //stylos de un button
-
-  const renderItem = useCallback(({ item }) => {
-    return <AgendaItem item={item} />;
-  }, []);
-
-  useEffect(() => {
-    // Simulamos la carga de los datos necesarios
-    if (agendaItems && marked.current) {
-      // Si los datos de la agenda y las fechas marcadas están disponibles, dejamos de cargar
-      setLoading(false);
-    }
-  }, [agendaItems, marked.current]); // Reaccionar cuando estos elementos estén listos
-
-  if (loading) {
-    // Mientras se cargan los datos, mostramos el indicador de carga
-    return <Loading />;
-  }
-  return (
-    <CalendarProvider
-      theme={todayBtnTheme.current}
-      showTodayButton
-      date="2024-06-25" // Fecha actual seleccionada
-    >
-      {horizontalView ? (
-        <>
-          <WeekCalendar
-            minDate={minDate}
-            maxDate="2025-01-01"
-            testID="week_calendar_btn"
-            firstDay={1}
-            markedDates={marked.current}
-          />
-        </>
-      ) : (
-        <ExpandableCalendar
-          minDate={minDate}
-          maxDate="2025-01-01"
-          testID="expandable_calendar_btn"
-          leftArrowImageSource={iconLeft}
-          rightArrowImageSource={iconrigth}
-          firstDay={1}
-          theme={theme.current}
-          markedDates={marked}
-        />
-      )}
-      <AgendaList
-        sections={agendaItems}
-        renderItem={renderItem}
-        scrollToNextEvent
-        sectionStyle={styles.section}
-      />
-    </CalendarProvider>
-  );
-};
-
-// const theme = {
-//   stylesheet: {
-//     calendar: {
-//       header: {
-//         dayHeader: {
-//           fontWeight: "600",
-//           color: ColorItem.Luigi,
-//         },
-//       },
-//     },
-//   },
-//   "stylesheet.day.basic": {
-//     today: {
-//       borderColor: ColorItem.Luigi,
-//       borderWidth: 0.8,
-//     },
-//     todayText: {
-//       color: ColorItem.GreenSymphony,
-//       fontWeight: "800",
-//     },
-//   },
+//   return (
+//     <CalendarProvider
+//       theme={todayBtnTheme.current}
+//       showTodayButton
+//       date="2024-06-25" // Fecha actual seleccionada
+//     >
+//       {horizontalView ? (
+//         <>
+//           <WeekCalendar
+//             minDate={minDate}
+//             maxDate="2025-01-01"
+//             testID="week_calendar_btn"
+//             firstDay={1}
+//           // markedDates={marked.current}
+//           />
+//         </>
+//       ) : (
+//         <ExpandableCalendar
+//           minDate={minDate}
+//           maxDate="2025-01-01"
+//           testID="expandable_calendar_btn"
+//           leftArrowImageSource={iconLeft}
+//           rightArrowImageSource={iconrigth}
+//           firstDay={1}
+//           theme={theme.current}
+//         // markedDates={marked}
+//         />
+//       )}
+//       <AgendaList
+//         sections={agendaItems}
+//         renderItem={renderItem}
+//         scrollToNextEvent
+//         sectionStyle={styles.section}
+//       />
+//     </CalendarProvider>
+//   );
 // };
 
-// function renderCustomHeader(date) {
-//   if (!date) {
-//     console.log("ntro");
-//     return null;
-//   }
-//   console.log("data", date);
-//   const header = new Date(date).toString("MMMM yyyy");
-//   const [month, year] = header.split(" ");
-//   const textStyle = {
-//     fontSize: 18,
-//     fontWeight: "bold",
-//     paddingTop: 10,
-//     paddingBottom: 10,
-//     color: "#5E60CE",
-//     paddingRight: 5,
-//   };
 
-//   return (
-//     <View style={styles.header}>
-//       <Text style={[styles.month, textStyle]}>{`${month}`}</Text>
-//       <Text style={[styles.year, textStyle]}>{year}</Text>
-//     </View>
-//   );
-// }
+
+// export default CalendarListScreen;
+
+// const styles = StyleSheet.create({
+//   header: {
+//     flexDirection: "row",
+//     width: "100%",
+//     justifyContent: "space-between",
+//     marginTop: 10,
+//     marginBottom: 10,
+//   },
+//   month: {
+//     marginLeft: 5,
+//   },
+//   year: {
+//     marginRight: 5,
+//   },
+//   calendar: {
+//     paddingLeft: 20,
+//     paddingRight: 20,
+//   },
+//   header: {
+//     backgroundColor: "lightgrey",
+//   },
+//   section: {
+//     backgroundColor: "red",
+//     color: "grey",
+//     textTransform: "capitalize",
+//   },
+// });
+
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Modal, Pressable, TextInput } from 'react-native'
+import { Agenda } from 'react-native-calendars'
+import { useState } from 'react'
+import { userData } from "../../../../../src/hooks/use/userData";
+import { useClaseDocentes } from "../../../../../src/hooks/customHooks";
+import { registerComentario } from '../../../../../src/services/fetchData/fetchComentario';
+import { registerNotification } from '../../../../../src/services/fetchData/fetchNotification';
+
+
+export function loadCalendarItems(CEDULA) {
+  const data = useClaseDocentes(CEDULA)
+  let aux = {}
+
+  for (item of data) {
+    const dateFixed = item.fecha.substring(0, 10)
+    aux[dateFixed] = [
+      {
+        height: 100,
+        data: item
+      }
+    ]
+  }
+  return aux
+}
+
+
+const CalendarListScreen = () => {
+
+  const { CEDULA, ID, DIRECTOR } = userData()
+  const items = loadCalendarItems(CEDULA)
+  const [showModal, setShowModal] = useState(false)
+  const [currentDate, setCurrentDate] = useState(new Date())
+  const [currentItem, setCurrentItem] = useState()
+  const [text, setText] = useState()
+
+  const _renderItem = (item) => {
+    return (
+      <TouchableOpacity
+        style={[styles.item, { height: item.height }]}
+        // onPress={() => alert(item.data.asignatura)}
+        onPress={() => {
+          setShowModal(true)
+        }}
+        onPressIn={() => {
+          setCurrentItem(item)
+        }}
+      >
+
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          marginHorizontal: 20
+        }}>
+
+          <View style={{
+            paddingTop: 5
+          }}>
+            <Text style={styles.text}>{item.data.asignatura}</Text>
+          </View>
+          <View style={{
+            alignSelf: 'flex-end'
+          }}>
+            <Text style={styles.text}>{"Hora: "}{item.data.hora_inicio}{" - "}{item.data.hora_fin}</Text>
+          </View>
+          <View style={{
+            alignSelf: 'flex-end'
+          }}>
+            <Text style={styles.text} >{"Salon: "}{item.data.numero_salon}</Text>
+          </View>
+
+        </View>
+
+      </TouchableOpacity>
+    )
+  }
+
+  return (
+    <View style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(!showModal)
+        }}
+      >
+        <View style={styles.centeredView}>
+
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>{"Dejar un comentario sobre la clase: "}{currentItem?.data.asignatura}</Text>
+            {/* <Text style={styles.modalText}>{currentItem?.data.asignatura}</Text> */}
+            <TextInput
+              style={[styles.input, {
+                width: 250,
+                height: 100,
+                borderRadius: 8,
+                textAlign: 'left'
+              }]}
+              // onChangeText={onChangeNumber}
+              // value={number}
+              placeholder="Escribe tu comentario aqui..."
+              keyboardType="default"
+              defaultValue={text}
+              onChangeText={ newText => setText(newText)}
+            />
+            <View style={{
+              flexDirection: 'row'
+            }}>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => {
+                  setShowModal(!showModal)
+                  setCurrentItem(undefined)
+                  setText('')
+                }}>
+                <Text style={styles.textStyle}>Cerrar Ventana</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button, {
+                  backgroundColor: '#27b220'
+                }]}
+                onPress={ async () => {
+                  // console.log(text, ID, currentItem.data.salon_id, currentDate, currentItem.data.clase_id)
+                  const resp = await registerComentario(text, ID, currentItem.data.salon_id, currentDate, currentItem.data.clase_id)
+                  if (resp?.status == 200){
+                    setText('')
+                    setShowModal(!showModal)
+                    alert("Comentario realizado con exito!")
+
+                    //sending notification to director rol
+                    //SOLO HAY UN DIRECTOR, HAY QUE DEFINIR UNA VARIABLE DE ENTORNO
+                    try {
+                      //No funciona para enviar notificaciones
+                      const notification_response = await registerNotification('comentario', `${CEDULA}`, `${DIRECTOR}`)
+                      if (notification_response?.status == 200)
+                          console.log("Notificacion enviada al DIRECTOR")
+                    } catch (error) {
+                      console.log("Error al enviar la notificacion. ", error)
+                    }
+                  }
+                }}
+              >
+                <Text style={styles.textStyle}>Comentar</Text>
+              </Pressable>
+
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Agenda
+        selected={currentDate}
+        items={items}
+        style={styles.agenda}
+        renderItem={_renderItem}
+        showClosingKnob={true}
+        pastScrollRange={50}
+        futureScrollRange={50}
+      // markedDates={markedDates}
+      >
+
+      </Agenda>
+    </View>
+  )
+
+
+}
 
 export default CalendarListScreen;
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-between",
-    marginTop: 10,
-    marginBottom: 10,
+  agenda: {
+    height: Dimensions.get('window').height,
+    maxHeight: Dimensions.get('window').height,
   },
-  month: {
-    marginLeft: 5,
+  container: {
+    flex: 1,
+    marginTop: 50
   },
-  year: {
-    marginRight: 5,
+  text: {
+    fontSize: 15,
+    margin: 5,
+    alignSelf: "stretch",
+    color: 'white'
+    // textAlign: "left"
   },
-  calendar: {
-    paddingLeft: 20,
-    paddingRight: 20,
+  item: {
+    flex: 1,
+    marginLeft: 10,
+    alignContent: 'flex-start',
+    justifyContent: 'center',
+    marginTop: 20,
+    backgroundColor: '#3C9B61',
+    borderRadius: 15
   },
-  header: {
-    backgroundColor: "lightgrey",
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  section: {
-    backgroundColor: "red",
-    color: "grey",
-    textTransform: "capitalize",
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 15,
+    padding: 10,
+    elevation: 2,
+    margin: 10
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#e0310b',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize: 15
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });
+
+

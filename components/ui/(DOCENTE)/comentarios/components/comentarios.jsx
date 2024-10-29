@@ -1,7 +1,12 @@
-import { View } from "react-native";
+import { ScrollView } from "react-native";
+import { IndexComentarioDefault } from "./indexDefault"
 
 
-export const IndexComentarioDocente
- = () => {
-  return <View></View>;
-};
+
+export const IndexComentarioDocente = () => {
+  return (
+    <ScrollView>
+      <IndexComentarioDefault/>
+    </ScrollView>
+  )
+}

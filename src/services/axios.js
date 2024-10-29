@@ -1,10 +1,12 @@
 import axios from "axios";
+
 const baseURL = process.env.EXPO_PUBLIC_URLBACKEND_API;
+console.log(baseURL)
 const axiosInstance = axios.create({
   baseURL,
   headers: {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json; charset=UTF-8",
+    // "Access-Control-Allow-Origin": "*",
   },
 });
 

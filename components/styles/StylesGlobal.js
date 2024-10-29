@@ -18,7 +18,7 @@ export const ColorItem = {
   MediumGreen:"#388253",
   DeepFir:"#193824" ,
   TarnishedSilver:"#797A7E" ,
-  Zircon:"#DFE3E3" ,
+  Zircon:"#88C273" ,
   ChromeAluminum:"#AAABAE" ,
   OceanCrest:"#D6DEDE",
   GoldOre:"#EBC115",

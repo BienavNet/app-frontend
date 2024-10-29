@@ -29,7 +29,7 @@ export const ScrollMultipleFilterClass = ({
                   onPress={() => handleOptionSelect(item.action)}
                   iconRight
                   containerStyle={{ marginVertical: 10 }}
-                  color={item.isSelected ? "primary" : "lightgrey"}
+                  color={item.isSelected ? "#444444" : "#000000"}
                 />
               </View>
             </View>

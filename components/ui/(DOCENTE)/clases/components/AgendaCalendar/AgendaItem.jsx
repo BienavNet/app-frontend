@@ -39,10 +39,16 @@ const AgendaItem = (props) => {
         <Text style={styles.itemDurationText}>{item.duration}</Text>
       </View>
       <Text style={styles.itemTitleText}>{item.title}</Text>
-      <View style={styles.itemButtonContainer}>
-        <Button color={"grey"} title={"Info"} onPress={buttonPressed} />
-      </View>
+      {/* <View style={styles.itemButtonContainer}>
+        <Button color={"grey"} title={"Ver Mas"} onPress={buttonPressed} />
+      </View> */}
     </TouchableOpacity>
+
+  // <SafeAreaView>
+  //   <Agenda
+  //     // items={{elements}}
+  //   />
+  // </SafeAreaView>
   );
 };
 

@@ -7,7 +7,6 @@ export const Clasesregistro = () => {
   return (
     <>
       <View style={{ flex: 1 }}>
-        <ContentFilter />
         <CalendarListScreen />
       </View>
 
