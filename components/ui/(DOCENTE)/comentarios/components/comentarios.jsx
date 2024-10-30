@@ -18,7 +18,6 @@ import ListFilterReport from "../../../(SUPERVISOR)/reportes/components/listFilt
 export const IndexComentarioDocente = () => {
   const { CEDULA } = userData();
   const salonAll = useSalonAll();
-  console.log("IndexComentarioDocenteSalonDefault--------", salonAll);
 
   const [reportdefault, setReportDefault] = useState([]); // lista que se muestra por defecto
   const [list, setList] = useState([]); // lista de los datos filtrados
@@ -76,11 +75,8 @@ export const IndexComentarioDocente = () => {
     }
   };
 
-  const comentarioDocenteSalon = useComentarioDocenteSalon(
-    CEDULA,
-    selectedItem ? selectedItem.id : 0
-  );
-
+  const comentarioDocenteSalon = useComentarioDocenteSalon(CEDULA,selectedItem ? selectedItem.id : 0);
+//revisar bug cuando comentarioDocenteSalon es vacio
   useEffect(() => {
     if (selectedItem && selectedOption === "salon") {
       setAdditionalData(comentarioDocenteSalon);

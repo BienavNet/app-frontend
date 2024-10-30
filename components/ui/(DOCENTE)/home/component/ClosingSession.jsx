@@ -1,5 +1,4 @@
-import { ListItem } from "@react-native-material/core";
-import { Alert, View } from "react-native";
+import { Alert, View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { ColorItem } from "../../../../styles/StylesGlobal";
@@ -35,27 +34,30 @@ export const LogoutSession = () => {
   return (
     <View
       style={{
-        paddingHorizontal: 16,
-        paddingVertical: 5,
-        paddingBottom: 10,
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: ColorItem.TarnishedSilver,
       }}
     >
-      <TouchableOpacity
-        style={{
-          justifyContent: "center",
-        }}
-        onPress={handleLogout}
-      >
-        <ListItem
-          title="Cerrar Sesión"
-          leading={
-            <SimpleLineIcons
-              name="logout"
-              size={22}
-              color={ColorItem.DeepFir}
-            />
-          }
-        />
+      <TouchableOpacity onPress={handleLogout}>
+        <View
+          style={{
+            flexDirection: "row",
+            padding: 12,
+            justifyContent: "center",
+          }}
+        >
+          <SimpleLineIcons name="logout" size={22} color={ColorItem.DeepFir} />
+          <Text
+            style={{
+              fontSize: 18,
+              color: ColorItem.DeepFir,
+              marginHorizontal: 10,
+            }}
+          >
+            Cerrar Sesión
+          </Text>
+        </View>
       </TouchableOpacity>
     </View>
   );

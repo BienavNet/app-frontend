@@ -4,10 +4,8 @@ import { BoxView } from "../../../(DIRECTOR)/components/customBoxView";
 import { ColorItem } from "../../../../styles/StylesGlobal";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ListItem } from "@rneui/themed";
-import {
-  capitalizeFirstLetter,
-  truncateText,
-} from "../../../../../src/utils/functiones/functions";
+import {capitalizeFirstLetter} from "../../../../../src/utils/functiones/functions";
+
 export const ListReportDefault = ({ data }) => {
   const [expanded, setExpanded] = useState(false);
   return (
@@ -15,7 +13,6 @@ export const ListReportDefault = ({ data }) => {
       <ListItem.Accordion
         content={
           <>
-            {/* <Icon name="place" size={30} /> */}
             <ListItem.Content>
               <BoxView>
                 <View

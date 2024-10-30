@@ -25,7 +25,7 @@ export const useDocenteAll = () => {
       const res = await getDocenteAll();
       setDocenteAll(res);
     } catch (error) {
-      throw Error(error);
+      setDocenteAll([])
     }
   }, []);
 
@@ -45,7 +45,7 @@ export const useSupervisorAll = () => {
       const res = await getSupervisor();
       setSupervisors(res);
     } catch (error) {
-      throw Error("Failted to get Supervisorall", error);
+      setSupervisors([])
     }
   }, []);
 
@@ -64,7 +64,7 @@ export const useSupervisorCedula = (CEDULA) => {
       const res = await getSupervisorCedula(CEDULA);
       setSupervisorCedula(res);
     } catch (error) {
-      throw Error("Failed to fetch :", error);
+      setSupervisorCedula([])
     }
   }, []);
 
@@ -83,7 +83,7 @@ export const useSalonAll = () => {
       const res = await getSalon();
       setSalonAll(res);
     } catch (error) {
-      throw Error("Failted to get salonall", error);
+      setSalonAll([])
     }
   }, []);
 
@@ -182,7 +182,7 @@ export const useComentarioDocenteSalon = (cedula, salon) => {
       const res = await getComentarioDocenteSalon(cedula, salon);
       setComentarioDocenteSalon(res);
     } catch (error) {
-      throw Error("Failted to get salonall", error);
+      setComentarioDocenteSalon([])
     }
   }, [salon]);
 

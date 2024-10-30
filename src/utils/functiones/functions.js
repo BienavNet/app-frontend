@@ -12,6 +12,8 @@ export default async function playNotificationSound(setSound) {
     return;
   }
 };
+
+// Función para obtener la duración entre la horainicio y la horafin 8:00 a 10:00 duration 2h
 export const formatDuration = (horainicio, horafin) =>{
   const start = moment(horainicio, "HH:mm")
   const end = moment(horafin, "HH:mm");

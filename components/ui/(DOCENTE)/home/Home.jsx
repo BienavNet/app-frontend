@@ -50,7 +50,12 @@ export const DashboardDocente = () => {
         <ListViewScreen screen={screen} />
       </View>
 
-      <LogoutSession />
+     <View style={{
+      marginHorizontal:15,
+      marginVertical:10
+     }}>
+     <LogoutSession />
+     </View>
     </View>
   );
 };

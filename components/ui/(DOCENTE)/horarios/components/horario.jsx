@@ -15,16 +15,16 @@ import {
 import { ClassFilter } from "../../../(SUPERVISOR)/clases/components/modal/modalClassFilter";
 import ListSelectItemDocenteHorario from "./listSelectedItem";
 import { NofilterSelected } from "../../../Components/unregistered/noRegistration";
-import { ListClassSalon } from "../../../(SUPERVISOR)/clases/components/listSalon";
 import { ListDocenteHorarioFilters } from "./listHorarioFilter";
 import { styles } from "../../../../styles/StylesGlobal";
+
 export const IndexHorarioDocente = () => {
   const { CEDULA } = userData();
   const horarioxdocente = useHorarioDocenteCedula(CEDULA);
   const diall = useDays();
   const [filters, setFilters] = useState({ dia: 0, horario: 0 }); //filtros API
   const [additionalData, setAdditionalData] = useState([]); // los datos que se additional de acuerdo al filtro
-  console.log(additionalData, "horario aditionalData")
+  console.log(additionalData, "horario aditionalData");
   const [modalSelect, setModalSelect] = useState(false); //modal
   const [searchText, setSearchText] = useState("");
   const [list, setList] = useState([]);
@@ -51,7 +51,6 @@ export const IndexHorarioDocente = () => {
     },
   ]);
 
- console.log("Opciones --------------------", opciones);
   const fetchHorario = async () => {
     const { dia, horario } = filters;
     try {
@@ -73,7 +72,7 @@ export const IndexHorarioDocente = () => {
 
   const handleOptionSelect = (option) => {
     setSearchText("");
-  
+
     // Verifica si el usuario intenta seleccionar 'día' cuando el filtro 'horarios' ya está seleccionado
     if (option === "dia" && multipleSelectedItem.horarios) {
       return Alert.alert(
@@ -87,7 +86,9 @@ export const IndexHorarioDocente = () => {
           {
             text: "OK",
             onPress: () => {
-              setMultipleSelectedOption((prev) => prev.filter((f) => f !== "horarios"))
+              setMultipleSelectedOption((prev) =>
+                prev.filter((f) => f !== "horarios")
+              );
               removeFilter("horarios");
               OptionSelect(option);
             },
@@ -95,7 +96,7 @@ export const IndexHorarioDocente = () => {
         ]
       );
     }
-  
+
     // Verifica si el usuario intenta seleccionar 'horarios' cuando el filtro 'día' ya está seleccionado
     if (option === "horarios" && multipleSelectedItem.dia) {
       return Alert.alert(
@@ -109,7 +110,9 @@ export const IndexHorarioDocente = () => {
           {
             text: "OK",
             onPress: () => {
-              setMultipleSelectedOption((prev) => prev.filter((f) => f !== "dia"))
+              setMultipleSelectedOption((prev) =>
+                prev.filter((f) => f !== "dia")
+              );
               removeFilter("dia");
               OptionSelect(option);
             },
@@ -117,11 +120,10 @@ export const IndexHorarioDocente = () => {
         ]
       );
     }
-  
+
     OptionSelect(option); // Si no hay conflicto con filtros previos, selecciona el nuevo filtro
   };
-  
-  
+
   const OptionSelect = (option) => {
     setSelectedOption(option);
 
@@ -137,7 +139,7 @@ export const IndexHorarioDocente = () => {
       dia: diall,
       horarios: horarioxdocente,
     };
-    
+
     setList(optionMapping[option] || []);
     setModalSelect(true);
   };
@@ -161,7 +163,8 @@ export const IndexHorarioDocente = () => {
       }
       const updatedFilters = {
         dia: updated.dia && updated.dia.id ? updated.dia.id : 0,
-        horario: updated.horarios && updated.horarios.id ? updated.horarios.id : 0,
+        horario:
+          updated.horarios && updated.horarios.id ? updated.horarios.id : 0,
       };
       setFilters(updatedFilters);
       setOpciones(updatedOpciones);
@@ -180,7 +183,7 @@ export const IndexHorarioDocente = () => {
       const updatedOpciones = opciones.map((opt) =>
         multipleSelectedOption.includes(opt.id)
           ? { ...opt, isSelected: true }
-          : { ...opt, isSelected: false } 
+          : { ...opt, isSelected: false }
       );
 
       const updatedFilters = {
@@ -258,10 +261,10 @@ export const IndexHorarioDocente = () => {
         <FlatList
           data={additionalData}
           style={styles.list}
-          renderItem={({ item}) => (
+          renderItem={({ item }) => (
             <ListDocenteHorarioFilters data={item} type={selectedOption} />
           )}
-          keyExtractor={(item, index ) =>
+          keyExtractor={(item, index) =>
             selectedOption === "horarios"
               ? `${item.id_class}_${item.fecha}_${index}`
               : `${item.Dia}_${index}`

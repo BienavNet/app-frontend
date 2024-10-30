@@ -5,6 +5,7 @@ import { ColorItem } from "../../../../styles/StylesGlobal";
 import { BoxView } from "../../../(DIRECTOR)/components/customBoxView";
 import {
   capitalizeFirstLetter,
+  formatTimeTo12Hour,
   truncateText,
 } from "../../../../../src/utils/functiones/functions";
 import { userData } from "../../../../../src/hooks/use/userData";
@@ -12,6 +13,7 @@ import { useHorarioDocenteCedula } from "../../../../../src/hooks/customHooks";
 export const IndexHorarioDefault = () => {
   const { CEDULA } = userData();
   const HorarioDocenteCedula = useHorarioDocenteCedula(CEDULA);
+  console.log("HorarioDocenteCedula", HorarioDocenteCedula);
 
   const [expandedId, setExpandedId] = useState(null);
 
@@ -21,7 +23,7 @@ export const IndexHorarioDefault = () => {
 
   return HorarioDocenteCedula.map((i, j) => (
     <ListItem.Accordion
-      key={i.id_class}
+      key={i.id}
       content={
         <>
           {/* <Icon name="place" size={30} /> */}
@@ -100,22 +102,12 @@ export const IndexHorarioDefault = () => {
                   flexDirection: "row",
                 }}
               >
-                {/* <Text style={{ fontSize: 13, marginRight: 10 }}>
-                  {new Date(
-                    `${i.fecha.split("T")[0]}T${i.hora_inicio}`
-                  ).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                <Text style={{ fontSize: 13, marginRight: 10 }}>
+                {formatTimeTo12Hour(i.hora_inicio)}
                 </Text>
                 <Text style={{ fontSize: 13 }}>
-                  {new Date(
-                    `${i.fecha.split("T")[0]}T${i.hora_fin}`
-                  ).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </Text> */}
+                 {formatTimeTo12Hour(i.hora_fin)}
+                </Text>
               </View>
             </View>
             <View

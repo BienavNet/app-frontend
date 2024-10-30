@@ -18,10 +18,7 @@ const ListSelectItemDocenteHorario = ({
     selectedData = multipleSelectedItems[selectedOption];
   }
 
-  const isSelected =
-    selectedOption === "horarios"
-      ? selectedData?.id_class === data.id_class
-      : selectedData?.id === data.id;
+  const isSelected = selectedData?.id === data.id;
 
   const handleCheckSelected = () => {
     const newValue = !isSelected;
@@ -41,13 +38,11 @@ const ListSelectItemDocenteHorario = ({
         }}
         value={isSelected}
         onValueChange={handleCheckSelected}
-        // color={isSelected ? "#4630EB" : undefined}
       />
       <View style={styles.itemInfo}>
         {selectedOption === "horarios" ? (
           <Text style={styles.textinfo}>
-            {data.numero_salon} {" - "} {data.asignatura} {" - "}{" "}
-            {<DateChip item={new Date(data.fecha).toLocaleDateString()} />}
+            {data.numero_salon} {" - "} {data.asignatura}
           </Text>
         ) : (
           <Text style={styles.textinfo}>{data.Dia}</Text>

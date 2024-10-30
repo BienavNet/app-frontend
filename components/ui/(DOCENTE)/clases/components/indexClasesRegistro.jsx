@@ -8,9 +8,6 @@ export const Clasesregistro = () => {
       <View style={{ flex: 1 }}>
         <CalendarListScreen />
       </View>
-      {/*      
-        <ListClass />
-     */}
     </>
   );
 };
