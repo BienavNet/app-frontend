@@ -11,6 +11,7 @@ import {
 import { StatusCircle } from "../../../(DIRECTOR)/reportes/components/StatusCircle";
 import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
 export const ListComentarioDocenteSalonDefault = ({ data }) => {
+  console.log("data ListComentarioDocenteSalonDefault", data);
   const [expanded, setExpanded] = useState(false);
   return (
     <>

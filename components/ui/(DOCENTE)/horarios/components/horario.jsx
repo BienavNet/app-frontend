@@ -24,15 +24,12 @@ export const IndexHorarioDocente = () => {
   const diall = useDays();
   const [filters, setFilters] = useState({ dia: 0, horario: 0 }); //filtros API
   const [additionalData, setAdditionalData] = useState([]); // los datos que se additional de acuerdo al filtro
-  console.log(additionalData, "horario aditionalData");
   const [modalSelect, setModalSelect] = useState(false); //modal
   const [searchText, setSearchText] = useState("");
   const [list, setList] = useState([]);
   // manejo de selecciones
   const [multipleSelectedOption, setMultipleSelectedOption] = useState([]);
-  console.log(multipleSelectedOption, "--------------- multipleSelectedOption");
   const [selectedOption, setSelectedOption] = useState(null);
-  console.log(selectedOption, "------------------ selectedOption");
   const [multipleSelectedItem, setMultipleSelectedItem] = useState({});
   const [temporalSelectedItem, setTemporalSelectedItem] = useState({});
 

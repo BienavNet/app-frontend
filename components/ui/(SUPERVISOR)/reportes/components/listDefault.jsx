@@ -127,38 +127,10 @@ export const ListReportDefault = ({ data }) => {
   );
 };
 const styles = StyleSheet.create({
-  item: {
-    marginHorizontal: 8,
-    marginVertical: 8,
-    flex: 1,
-  },
-  itemP1: {
-    fontSize: 20,
-    color: ColorItem.TarnishedSilver,
-    marginBottom: 5,
-    fontWeight: "bold",
-  },
-  itemAsig: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#999999",
-    textAlign: "left",
-  },
   itemP2: {
     fontWeight: "bold",
     fontSize: 18,
     color: "#000000",
     textAlign: "center",
-  },
-  itemP3: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#999999",
-    textAlign: "center",
-  },
-  itemLeft: {
-    fontSize: 16,
-    color: ColorItem.TarnishedSilver,
-    fontWeight: "bold",
-  },
+  }
 });

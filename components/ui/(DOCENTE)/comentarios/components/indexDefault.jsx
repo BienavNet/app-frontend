@@ -2,7 +2,6 @@ import { userData } from "../../../../../src/hooks/use/userData";
 import { useDocenteComentario } from "../../../../../src/hooks/customHooks";
 import { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-// import { FontAwesome } from "@expo/vector-icons";
 import { ListItem } from "@rneui/themed";
 import { ColorItem } from "../../../../styles/StylesGlobal";
 import { BoxView } from "../../../(DIRECTOR)/components/customBoxView";
@@ -28,11 +27,10 @@ export const IndexComentarioDefault = () => {
       return comentarios.map((i, j) => (
     
         <ListItem.Accordion
-          // key={i.id_class}
+
           key={i.id}
           content={
             <>
-              {/* <Icon name="place" size={30} /> */}
               <ListItem.Content>
                 <BoxView>
                   <View
@@ -49,12 +47,10 @@ export const IndexComentarioDefault = () => {
                       }}
                     >
                       <ListItem.Title style={styles.itemP2}>
-                        {/* {i.asignatura.substring(0, 15)}{"."} */}
                         {capitalizeFirstLetter(i.nombre_salon)}{" Salon: "}{i.numero_salon}
                       </ListItem.Title>
                     </View>
                     <View>
-                      {/* <Text style={styles.itemP2}>{i.dia}</Text> */}
                       <Text style={{
                         fontWeight: "bold",
                         fontSize: 14,
@@ -79,8 +75,6 @@ export const IndexComentarioDefault = () => {
               </ListItem.Content>
             </>
           }
-          // isExpanded={isExpanded === i.id_class}
-          // onPress={() => handlePress(i.id_class)}
           isExpanded={isExpanded === i.id}
           onPress={() => handlePress(i.id)}
         >
@@ -113,7 +107,6 @@ export const IndexComentarioDefault = () => {
                     justifyContent: "flex-end",
                     marginLeft: 10
                   }}>
-                  {/* <Text>{"Sector: "}{i.nombre}</Text> */}
                 </View>
                 <View
                   style={{

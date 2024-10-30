@@ -23,7 +23,7 @@ export const ListViewScreen = ({ screen }) => {
             start: { x: 1, y: 0 },
             end: { x: 0.2, y: 0.9 },
           }}
-          ViewComponent={LinearGradient} // Only if no expo
+          ViewComponent={LinearGradient} 
         >
           {i.icon}
 

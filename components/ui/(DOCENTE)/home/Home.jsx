@@ -9,7 +9,6 @@ import {
 import { LogoutSession } from "./component/ClosingSession";
 import { useNavigation } from "@react-navigation/native";
 
-
 export const DashboardDocente = () => {
   const navigation = useNavigation();
   const COLORWHITE = "white";
@@ -50,12 +49,14 @@ export const DashboardDocente = () => {
         <ListViewScreen screen={screen} />
       </View>
 
-     <View style={{
-      marginHorizontal:15,
-      marginVertical:10
-     }}>
-     <LogoutSession />
-     </View>
+      <View
+        style={{
+          marginHorizontal: 15,
+          marginVertical: 10,
+        }}
+      >
+        <LogoutSession />
+      </View>
     </View>
   );
 };

@@ -14,6 +14,8 @@ import { NofilterSelected } from "../../../Components/unregistered/noRegistratio
 import { ListReportDefault } from "../../../(SUPERVISOR)/reportes/components/listDefault";
 import { ListComentarioDocenteSalonDefault } from "./listDefault";
 import ListFilterReport from "../../../(SUPERVISOR)/reportes/components/listFilter";
+import ListSelectItem from "../../../(SUPERVISOR)/reportes/components/listSelectItem";
+import ListFilterComentario from "./filterSalon";
 
 export const IndexComentarioDocente = () => {
   const { CEDULA } = userData();
@@ -33,6 +35,7 @@ export const IndexComentarioDocente = () => {
   const fetchComentarioDocenteCedula= useCallback(async () => {
     try {
       const res = await getComentarioDocenteDocente(CEDULA);
+      console.log(res, "fetchComentarioDocenteCedula");
       setReportDefault(res);
     } catch (error) {
       setReportDefault([])
@@ -113,8 +116,7 @@ export const IndexComentarioDocente = () => {
             data={reportdefault}
             style={styles.list}
             renderItem={({ item }) => <ListComentarioDocenteSalonDefault data={item} />}
-            keyExtractor={(item) =>
-              `${item.reporte_id.toString()}-${item.clase_id.toString()}`
+            keyExtractor={(item) =>item.id.toString()
             }
             ListEmptyComponent={
               <NofilterSelected/>
@@ -130,9 +132,8 @@ export const IndexComentarioDocente = () => {
                 <FlatList
                   data={additionalData}
                   style={styles.list}
-                  renderItem={({ item }) => <ListSelectItem data={item} />}
-                  keyExtractor={(item) =>
-                    `${item.clase.toString()}-${item.docente_id}`
+                  renderItem={({ item }) => <ListFilterComentario data={item} />}
+                  keyExtractor={(item) =>item.id.toString()
                   }
                   ListEmptyComponent={<NofilterSelected />}
                 />
@@ -220,14 +221,3 @@ export const IndexComentarioDocente = () => {
     </>
   );
 };
-
-// import { ScrollView } from "react-native";
-// import { IndexComentarioDefault } from "./indexDefault"
-
-// export const IndexComentarioDocente = () => {
-//   return (
-//     <ScrollView>
-//       <IndexComentarioDefault/>
-//     </ScrollView>
-//   )
-// }

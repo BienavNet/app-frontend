@@ -1,7 +1,6 @@
 import { View, Text } from "react-native";
 import { ColorItem, styles } from "../../../../styles/StylesGlobal";
 import Checkbox from "expo-checkbox";
-import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
 
 const ListSelectItemDocenteHorario = ({
   data,
@@ -10,7 +9,6 @@ const ListSelectItemDocenteHorario = ({
   multipleSelectedItems,
   temporalSelectedItem,
 }) => {
-  console.log("ListSelectItemDocenteHorario", data);
   let selectedData;
   if (temporalSelectedItem[selectedOption]) {
     selectedData = temporalSelectedItem[selectedOption];

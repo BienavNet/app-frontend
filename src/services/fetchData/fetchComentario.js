@@ -14,7 +14,6 @@ try {
 export const getComentarioDocenteDocente = async (cedula) => {
   try {
     const response = await axiosInstance.get(`/comentarios/docente/${cedula}`);
-    console.log(response,  "getComentarioDocenteDocente");
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
