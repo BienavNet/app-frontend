@@ -42,7 +42,7 @@ export const ViewReportSup = () => {
           const res = await getReportSupervisorID(supervisorID);
           setReportDefault(res);
         } catch (error) {
-          throw Error("Failted to get reportSupervisorID", error);
+          setReportDefault([]);
         }
       }
     } catch (error) {
@@ -99,7 +99,7 @@ export const ViewReportSup = () => {
           }
           setAdditionalData(data);
         } catch (error) {
-          throw Error("Error fetching additional data:", error);
+          setAdditionalData([]);
         }
       }
     };
@@ -140,7 +140,7 @@ export const ViewReportSup = () => {
               `${item.reporte_id.toString()}-${item.clase_id.toString()}`
             }
             ListEmptyComponent={
-              <Text style={styles.noResultsText}>No hay resultados.</Text>
+              <NofilterSelected/>
             }
           />
         )}

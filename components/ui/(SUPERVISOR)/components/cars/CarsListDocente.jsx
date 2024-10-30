@@ -40,7 +40,7 @@ export const CarListDocentes = () => {
       refreshControl={refreshControl(refreshing, onRefresh)}
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
-      style={{ marginBottom: 185 }}
+      style={{ marginBottom: 170 }}
     >
       {claseSupervisor.map((item, index) => (
         <View

@@ -1,10 +1,8 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { MultilineTextInput } from "../../../../share/inputs/customMultipleTextInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { RegisterReportSchema } from "../../../../../src/utils/schemas/reportSchema";
-// import status from "../../../../../components/ui/(DIRECTOR)/horarios/detalleHorario/json/status.json";
-// import { CustomPiker } from "../../../../share/inputs/customPicker";
 import { useCallback } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { ColorItem } from "../../../../styles/StylesGlobal";
@@ -15,6 +13,7 @@ import {
 import { useFocusEffect } from "expo-router";
 import { registerReporte } from "../../../../../src/services/fetchData/fetchReporte";
 import useToastMessage from "../../../../share/ToasNotification";
+
 const TabBarStyle = {
   display: "flex",
   position: "absolute",
@@ -40,7 +39,8 @@ export const ModalRegisterReporte = () => {
   );
   const router = useRoute();
   const { data } = router.params;
-  const CLASE_ID = data.id
+  console.log("data", data)
+  const CLASE_ID = data.id;
   const {
     handleSubmit,
     control,
@@ -51,9 +51,7 @@ export const ModalRegisterReporte = () => {
   });
 
   const onSubmitRegisterReport = async (data) => {
-    console.log("datos a la hora de registrar", data)
     const { comentario } = data;
-    console.log("datos a la hora de registrar", data)
     try {
       await registerReporte(CLASE_ID, comentario);
       reset();
@@ -91,18 +89,7 @@ export const ModalRegisterReporte = () => {
         <View key={data.id}>
           <View className="justify-center items-center">
             <View
-              style={{
-                width: "95%",
-                backgroundColor: "white",
-                paddingVertical: 10,
-                paddingHorizontal: 10,
-                borderWidth: 1,
-                borderColor: ColorItem.TarnishedSilver,
-                marginTop: 8,
-                borderRadius: 4,
-                justifyContent: "space-between",
-                flexDirection: "row",
-              }}
+              style={style.container}
             >
               <View
                 style={{
@@ -193,18 +180,7 @@ export const ModalRegisterReporte = () => {
               </View>
             </View>
             <View
-              style={{
-                width: "95%",
-                backgroundColor: "white",
-                paddingVertical: 10,
-                borderWidth: 1,
-                borderColor: ColorItem.TarnishedSilver,
-                paddingHorizontal: 10,
-                marginTop: 5,
-                borderRadius: 4,
-                justifyContent: "space-between",
-                flexDirection: "row",
-              }}
+              style={style.container}
             >
               <View
                 style={{
@@ -262,19 +238,21 @@ export const ModalRegisterReporte = () => {
         <View
           className="flex-row justify-center items-center"
           style={{
-            paddingVertical:5,
+            paddingVertical: 5,
             paddingHorizontal: 10,
           }}
         >
-          <MultilineTextInput
-            errors={errors.comentario}
+            <MultilineTextInput
+            errors={data.comentario?.length > 0 ? undefined : errors.comentario}
             maxLength={10}
             numberOfLines={12}
             name="comentario"
+            editable={data.comentario?.length > 0 ? false : true}
             variant="outlined"
             control={control}
-            placeholder="Escribir reporte..."
+            placeholder={data.comentario?.length > 0 ? data.comentario : "Escribir reporte..."}
           />
+        
         </View>
         <View className="flex-row justify-center p-3">
           <View className="w-[40%] pt-2 self-center">
@@ -306,3 +284,18 @@ export const ModalRegisterReporte = () => {
     </>
   );
 };
+
+const style = StyleSheet.create({
+  container: {
+      width: "95%",
+      backgroundColor: "white",
+      paddingVertical: 10,
+      borderWidth: 1,
+      borderColor: ColorItem.TarnishedSilver,
+      paddingHorizontal: 10,
+      marginTop: 5,
+      borderRadius: 4,
+      justifyContent: "space-between",
+      flexDirection: "row",
+  },
+})

@@ -165,9 +165,7 @@ export const ListClassView = () => {
 //
   return (
     <SafeAreaView style={styles.container}>
-      <View className="flex-row justify-end" style={{
-        // top: 30
-      }}>
+      <View className="flex-row">
         {/* Aqui es donde se debe de editar para arreglar los filtros de las clases de los supervisores */}
         <ScrollMultipleFilterClass
           opciones={opciones}

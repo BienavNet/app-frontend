@@ -2,12 +2,7 @@ import { useState, useCallback } from "react";
 import { Keyboard, Platform, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useFocusEffect } from "@react-navigation/native";
-// import { Redirect } from "expo-router";
-// import { useAuth } from "../../../src/hooks/useAuth";
 import { ColorItem } from "../../styles/StylesGlobal";
-import { initSockets } from "../../../src/context/SocketContext";
-import { userData } from "../../../src/hooks/use/userData";
-// import { useAuth } from "../../../src/hooks/use/useAuth";
 
 export const TabsHome = ({
   tabsConfig,
@@ -17,8 +12,6 @@ export const TabsHome = ({
 }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const Tab = createBottomTabNavigator();
-  // const {ID, ROL } = userData();
-  // initSockets(ID, ROL);
   useFocusEffect(
     useCallback(() => {
       const handleKeyboardShow = () => setKeyboardVisible(true);
@@ -57,7 +50,6 @@ export const TabsHome = ({
           navigation.getState()?.routes[navigation.getState().index]?.name;
         const hiddenOptions = [
           "Comentario",
-          // "Horarios",
           "Reportes",
           "Clases",
           "RegistrarReporte",
@@ -75,10 +67,10 @@ export const TabsHome = ({
           tabBarLabelStyle: {
             fontSize: 16,
             fontWeight: "bold",
-            paddingBottom: 10,
+            paddingBottom: 5,
           },
           tabBarIconStyle: {
-            marginBottom: -10,
+            marginBottom: -5,
           },
         };
       }}

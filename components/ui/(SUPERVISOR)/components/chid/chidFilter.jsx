@@ -34,14 +34,16 @@ export const ChildFilter = ({ title, selectedItem, action }) => {
     <ScrollView
       horizontal={true}
       contentContainerStyle={{
-        marginHorizontal: 10,
+        marginHorizontal: 13,
       }}
       style={{
         width: "100%",
-        backgroundColor: "white",
+        backgroundColor: "transparent",
       }}
     >
-      <View>
+      <View style={{
+        width: 130,
+      }}>
         <Chip
           size="md"
           titleStyle={{

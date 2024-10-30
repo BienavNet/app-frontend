@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 import { Controller } from "react-hook-form";
 import { TextInput } from "@react-native-material/core";
@@ -10,9 +10,20 @@ export const MultilineTextInput = ({
   control,
   name,
   errors,
+  editable = true,
 }) => {
+  console.log("MultilineTextInput", placeholder, name, errors, editable);
   const [charCount, setCharCount] = useState(0);
   const maxLength = 250;
+
+  useEffect(() => {
+    const count = placeholder.length;
+    if (placeholder === "Escribir reporte...")return;
+    else {
+      setCharCount(count);
+    }
+  }, []);
+
   const handleTextChange = (text) => {
     setCharCount(text.length); // Contamos los caracteres del texto
     return text;
@@ -34,12 +45,15 @@ export const MultilineTextInput = ({
           <TextInput
             style={{
               height: 150,
+              borderRadius:6,
+              borderColor:!editable ? "blue":null,
+              borderWidth:!editable ? 1:null,
             }}
             autoCorrect={false}
             autoCapitalize="none"
             color={`${error ? "red" : ColorItem.GreenSymphony}`}
             variant="outlined"
-            editable
+            editable={editable}
             placeholder={placeholder}
             placeholderTextColor={ColorItem.DeepFir}
             autoComplete="off"
@@ -54,7 +68,6 @@ export const MultilineTextInput = ({
             value={value}
             numberOfLines={numberOfLines}
             inputContainerStyle={{
-              borderRadius: 8,
               borderBottomColor: error ? "red" : null,
               borderBottomWidth: error ? 2 : null,
             }}
