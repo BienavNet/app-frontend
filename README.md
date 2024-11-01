@@ -126,9 +126,6 @@ npx expo install @react-native-community/datetimepicker
 picker
 npx expo install @react-native-picker/picker
 
-momentjs (valida y manipula fechas y horas en javascript)
-> npm install moment --save
-
 swiper [link:](https://github.com/leecade/react-native-swiper)
 > npm i react-native-swiper --save
 
@@ -161,3 +158,6 @@ install y uso del webscoket
 > npx expo install expo-device
 
 > npm i react-native-multiple-select
+
+momentjs moment-timezone (valida y manipula fechas y horas en javascript)
+> npm i moment-timezone

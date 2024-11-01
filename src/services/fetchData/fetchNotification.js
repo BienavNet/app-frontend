@@ -1,9 +1,9 @@
 import axiosInstance from "../axios";
 
-export const registerNotification = async (mensaje, de, para) => {
+export const registerNotification = async (action, de, para) => {
   try {
     const response = await axiosInstance.post("/notificaciones/guardar", {
-      mensaje,
+      action,
       de,
       para,
     });

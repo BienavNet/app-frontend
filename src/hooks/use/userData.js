@@ -10,9 +10,9 @@ export const userData = () => {
     const CORREO = user?.user;
     const ROL = user?.rol;
     const ID = user?.id;
+    const DIRECTORID = user?.directorId
     const INITIALIZE = isInitialized;
     const ISAUTENTICATED = isAuthenticated;
-    const DIRECTOR = 1003187623
-    return { NOMBRE, CEDULA, CORREO, ROL , ID, INITIALIZE, ISAUTENTICATED, DIRECTOR};
+    return { NOMBRE, CEDULA, CORREO, ROL , ID, INITIALIZE, ISAUTENTICATED, DIRECTORID};
   };
   

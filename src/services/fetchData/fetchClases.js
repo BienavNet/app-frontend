@@ -118,11 +118,3 @@ export const getClasesByDocentes = async (cedula) => {
     return undefined
   }
 }
-export const getfilterByAllDate = async (cedula) => {
-  try {
-    const response = await axiosInstance.get(`/clase/fechadocente/${cedula}`);
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message);
-  }
-};

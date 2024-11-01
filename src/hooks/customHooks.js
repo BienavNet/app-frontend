@@ -14,7 +14,7 @@ import {
 import { getDocenteAll } from "../services/fetchData/fetchDocente";
 import { getNotificationCedulaEstado } from "../services/fetchData/fetchNotification";
 import { getReportAll } from "../services/fetchData/fetchReporte";
-import { getClasesAll, getClasesByDocentes, getClaseSupervisor, getfilterByAllDate } from "../services/fetchData/fetchClases";
+import { getClasesAll, getClasesByDocentes, getClaseSupervisor } from "../services/fetchData/fetchClases";
 import { getComentarioDocenteDocente ,getComentarioDocenteSalon} from "../services/fetchData/fetchComentario";
 
 //fetch Docente
@@ -311,40 +311,3 @@ export const useDocenteComentario = (cedula) => {
 
   return comentarioAll;
 }; // obtiene todos los comentarios
-
-export const useFilterClassDiasCalendar = (cedula) => {
-  const [filtersDateAll, setFiltersDateAll] = useState([]);
-  const fetchFiltersDateAll = useCallback(async () => {
-    try {
-      const res = await getfilterByAllDate(cedula);
-      console.log("res", res);
-      setFiltersDateAll(res);
-    } catch (error) {
-      throw Error(error);
-    }
-  }, [cedula]);
-
-  useEffect(() => {
-    fetchFiltersDateAll();
-  }, [fetchFiltersDateAll]);
-
-  return filtersDateAll;
-}; // obtiene todos los dias de las clases
-
-export const useFilterClassCedulaDate = (cedula, fecha) => {
-  const [filtersDateBy, setFiltersDateBy] = useState([]);
-  const fetchFiltersDateBy = useCallback(async () => {
-    try {
-      const res = await getfilterByDate(cedula, fecha);
-      setFiltersDateBy(res);
-    } catch (error) {
-      throw Error(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchFiltersDateBy();
-  }, [fetchFiltersDateBy]);
-
-  return filtersDateBy;
-}; // obtiene todos los dias de las clases por fecha y cedula del docente

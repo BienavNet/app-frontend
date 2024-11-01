@@ -26,7 +26,9 @@ const TabBarStyle = {
   backgroundColor: ColorItem.MediumGreen,
 };
 export const ModalRegisterReporte = () => {
+
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
+
   const navigation = useNavigation();
   useFocusEffect(
     useCallback(() => {
@@ -37,10 +39,12 @@ export const ModalRegisterReporte = () => {
       };
     }, [navigation])
   );
+
   const router = useRoute();
+
   const { data } = router.params;
-  console.log("data", data)
   const CLASE_ID = data.id;
+  
   const {
     handleSubmit,
     control,

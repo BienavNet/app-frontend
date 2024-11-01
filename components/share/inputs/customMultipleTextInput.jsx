@@ -12,13 +12,12 @@ export const MultilineTextInput = ({
   errors,
   editable = true,
 }) => {
-  console.log("MultilineTextInput", placeholder, name, errors, editable);
   const [charCount, setCharCount] = useState(0);
   const maxLength = 250;
 
   useEffect(() => {
     const count = placeholder.length;
-    if (placeholder === "Escribir reporte...")return;
+    if (placeholder === "Escribir reporte..." || placeholder === "Escribe tu comentario aqui...") return setCharCount(0);
     else {
       setCharCount(count);
     }
@@ -78,7 +77,7 @@ export const MultilineTextInput = ({
             </Text>
           )}
           {/* Contador de caracteres */}
-          <View className="flex-row justify-end">
+          <View className="flex-row justify-end py-4">
             <Text style={{ color: "black", fontSize: 14 }}>
               {charCount} / {maxLength} caracteres
             </Text>
