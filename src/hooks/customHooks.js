@@ -145,13 +145,13 @@ export const useNotificationCedulaEstado = (cedula, estado) => {
     } catch (error) {
       throw Error("Error fetching notifications:", error);
     }
-  }, [estado]);
+  }, [cedula, estado]);
 
   useEffect(() => {
     fetchNotificationsAll();
   }, [fetchNotificationsAll]);
 
-  return notificationCedulaEstado;
+  return { notificationCedulaEstado, fetchNotificationsAll};
 }; // obtiene todas las notificaciones x cedula y estado
 
 //fetch Horarios

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useWindowDimensions, Text, StyleSheet } from "react-native";
+import { useWindowDimensions, Text } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { ReportView_Filter } from "./list";
 import { EstadisticasReportes } from "./reportChart";

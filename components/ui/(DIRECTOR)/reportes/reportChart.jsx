@@ -1,4 +1,4 @@
-import { Text, StyleSheet, Dimensions, ScrollView } from "react-native";
+import { Text, StyleSheet, Dimensions, ScrollView, View } from "react-native";
 import { useCallback, useState } from "react";
 import {
   getDocenteQMasComentariosHaRealizado,
@@ -11,6 +11,7 @@ import {
 import { BarChart, LineChart, PieChart } from "react-native-chart-kit";
 import { useFocusEffect } from "@react-navigation/native";
 import { formatTimeTo12Hour } from "../../../../src/utils/functiones/functions";
+import { useSafeAreaInset } from "../../../../src/utils/utils";
 
 const screenWidth = Dimensions.get("window").width;
 const colors = [
@@ -81,20 +82,6 @@ export const EstadisticasReportes = () => {
     ],
   };
 
-  // Gráfico de Docente con Más Comentarios Realizados
-  const sortedDqmct = dqmct.sort(
-    (a, b) => b.cantidad_comentarios - a.cantidad_comentarios
-  );
-
-  const docenteMasComentariosData = {
-    labels: sortedDqmct.map((docente) => `${docente.cedula}`),
-    datasets: [
-      {
-        data: sortedDqmct.map((docente) => docente.cantidad_comentarios),
-      },
-    ],
-  };
-
   const pieChartData = Array.isArray(hoursmas)
     ? hoursmas.map((hour, index) => ({
         name: `${formatTimeTo12Hour(hour.hora_inicio)} - ${formatTimeTo12Hour(
@@ -111,11 +98,11 @@ export const EstadisticasReportes = () => {
         .map((day) => ({
           dia: day.dia,
           cantidad_repeticiones: day.cantidad_repeticiones,
-        })) // Asegúrate de mantener tanto el día como la cantidad
+        }))
         .sort((a, b) => b.cantidad_repeticiones - a.cantidad_repeticiones) // Ordenar por cantidad_repeticiones
     : [];
 
-  // Construir datos para el gráfico de línea
+  //datos para el gráfico de línea
   const lineChartData = {
     labels: sortedDiasmas.map((day) => day.dia), // Días ordenados
     datasets: [
@@ -139,62 +126,68 @@ export const EstadisticasReportes = () => {
       fontWeight: "bold",
     },
   };
-
+  const insets = useSafeAreaInset();
   return (
     <ScrollView>
-      <Text style={styles.title}> Salon Menos Utilizado</Text>
-      {smasu.length > 0 ? (
-        <BarChart
-          style={styles.chartContainer}
-          data={data}
-          width={screenWidth - 10}
-          height={200}
-          chartConfig={chartConfig}
-        />
-      ) : (
-        <Text style={styles.noDataText}>Sin registro</Text>
-      )}
-      <Text style={styles.title}> Docente con mas Comentarios Realizado</Text>
-      {smasu.length > 0 ? (
-        <BarChart
-          style={styles.chartContainer}
-          data={data}
-          width={screenWidth - 10}
-          height={200}
-          chartConfig={chartConfig}
-        />
-      ) : (
-        <Text style={styles.noDataText}>Sin registro</Text>
-      )}
-      <Text style={styles.title}> Horas del Dia mas Asignada</Text>
-      {pieChartData.length > 0 ? (
-        <PieChart
-          style={styles.chartContainer}
-          data={pieChartData}
-          width={screenWidth - 10}
-          height={200}
-          chartConfig={chartConfig}
-          accessor={"population"}
-          backgroundColor={"#1371C3"}
-          paddingLeft={"-20"}
-          center={[20, 0]}
-        />
-      ) : (
-        <Text style={styles.noDataText}>Sin registro</Text>
-      )}
-      <Text style={styles.title}> Dias de la Semana mas Asignado</Text>
-      {sortedDiasmas.length > 0 ? (
-        <LineChart
-          style={styles.chartContainer}
-          data={lineChartData}
-          width={screenWidth - 10}
-          height={200}
-          chartConfig={chartConfig}
-          bezier
-        />
-      ) : (
-        <Text style={styles.noDataText}>Sin registro</Text>
-      )}
+      <View
+        style={{
+          paddingBottom: insets.bottom + 85,
+        }}
+      >
+        <Text style={styles.title}> Salon Menos Utilizado</Text>
+        {smasu.length > 0 ? (
+          <BarChart
+            style={styles.chartContainer}
+            data={data}
+            width={screenWidth - 10}
+            height={200}
+            chartConfig={chartConfig}
+          />
+        ) : (
+          <Text style={styles.noDataText}>Sin registro</Text>
+        )}
+        <Text style={styles.title}> Docente con mas Comentarios Realizado</Text>
+        {smasu.length > 0 ? (
+          <BarChart
+            style={styles.chartContainer}
+            data={data}
+            width={screenWidth - 10}
+            height={200}
+            chartConfig={chartConfig}
+          />
+        ) : (
+          <Text style={styles.noDataText}>Sin registro</Text>
+        )}
+        <Text style={styles.title}> Horas del Dia mas Asignada</Text>
+        {pieChartData.length > 0 ? (
+          <PieChart
+            style={styles.chartContainer}
+            data={pieChartData}
+            width={screenWidth - 10}
+            height={200}
+            chartConfig={chartConfig}
+            accessor={"population"}
+            backgroundColor={"#1371C3"}
+            paddingLeft={"-20"}
+            center={[20, 0]}
+          />
+        ) : (
+          <Text style={styles.noDataText}>Sin registro</Text>
+        )}
+        <Text style={styles.title}> Dias de la Semana mas Asignado</Text>
+        {sortedDiasmas.length > 0 ? (
+          <LineChart
+            style={styles.chartContainer}
+            data={lineChartData}
+            width={screenWidth - 10}
+            height={200}
+            chartConfig={chartConfig}
+            bezier
+          />
+        ) : (
+          <Text style={styles.noDataText}>Sin registro</Text>
+        )}
+      </View>
     </ScrollView>
   );
 };

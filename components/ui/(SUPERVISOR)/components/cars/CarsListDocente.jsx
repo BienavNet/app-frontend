@@ -17,6 +17,7 @@ import { useNavigation } from "expo-router";
 import { refreshControl } from "../../../../../src/utils/functiones/refresh";
 import { userData } from "../../../../../src/hooks/use/userData";
 import { useClaseSupervisor } from "../../../../../src/hooks/customHooks";
+import { useSafeAreaInset } from "../../../../../src/utils/utils";
 
 export const CarListDocentes = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -34,13 +35,15 @@ export const CarListDocentes = () => {
     setRefreshing(false);
   }, [fetchClaseSupervisor]);
 
+  const insert = useSafeAreaInset();
   return (
-    <View style={{ height:"100%", backgroundColor:"transparent" }}>
       <ScrollView
       refreshControl={refreshControl(refreshing, onRefresh)}
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
-      style={{ marginBottom: 170 }}
+      contentContainerStyle={{
+        paddingBottom:insert.bottom + 135
+      }}
     >
       {claseSupervisor.map((item, index) => (
         <View
@@ -148,7 +151,6 @@ export const CarListDocentes = () => {
         </View>
       ))}
     </ScrollView>
-    </View>
   );
 };
 

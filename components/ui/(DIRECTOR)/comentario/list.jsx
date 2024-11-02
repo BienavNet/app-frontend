@@ -18,7 +18,7 @@ import { ListFilterComentarioSalon } from "./components/listFilterSalon";
 import { useDocenteAll, useSalonAll } from "../../../../src/hooks/customHooks";
 import { ModalComponente } from "../../Components/customModal";
 import { CustomSeachBar } from "./components/seachBar";
-import { ChildFilterOutline } from "../../(SUPERVISOR)/components/chid/chidFilter";
+import { ChildFilter, ChildFilterOutline } from "../../(SUPERVISOR)/components/chid/chidFilter";
 import { NofilterSelected } from "../../Components/unregistered/noRegistration";
 import { FontAwesome5, MaterialCommunityIcons} from "@expo/vector-icons";
 
@@ -131,7 +131,7 @@ export const ListComentario = () => {
         {selectedItem && (
           <>
             {selectedOption && additionalData && (
-              <ChildFilterOutline
+              <ChildFilter
                 title={selectedOption}
                 selectedItem={selectedItem}
                 action={handleSearchBarClear}

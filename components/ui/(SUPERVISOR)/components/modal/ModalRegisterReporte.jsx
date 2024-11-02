@@ -20,7 +20,6 @@ const TabBarStyle = {
   bottom: 10,
   left: 15,
   right: 15,
-  elevation: 0,
   borderRadius: 12,
   height: 60,
   backgroundColor: ColorItem.MediumGreen,

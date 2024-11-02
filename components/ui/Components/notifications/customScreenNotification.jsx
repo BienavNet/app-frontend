@@ -7,10 +7,11 @@ import { DateChip } from "../../(DIRECTOR)/reportes/components/DateChip";
 import { ColorItem } from "../../../styles/StylesGlobal";
 import { useNotificationCedulaEstado } from "../../../../src/hooks/customHooks";
 
-const handleEditNotification = async (id) => {
+const handleEditNotification = async (id, fetchNotificationsAll) => {
   const LEIDA = "leida";
   try {
     await updateNotificationId(id, LEIDA);
+    await fetchNotificationsAll();
   } catch (error) {
     throw Error(error);
   }
@@ -18,26 +19,26 @@ const handleEditNotification = async (id) => {
 
 export const ContentNofitications = ({ cedula, estado = "todas" }) => {
   const navigation = useNavigation();
-  const notificationall = useNotificationCedulaEstado(cedula, estado);
+  const { notificationCedulaEstado, fetchNotificationsAll } =
+    useNotificationCedulaEstado(cedula, estado);
 
   const handleUpdateStatus = (item) => {
     const NOLEIDA = "no leida";
 
     if (item.estado === NOLEIDA) {
-      handleEditNotification(item.id);
+      handleEditNotification(item.id, fetchNotificationsAll);
     }
   };
-
 
   const handlePressNotification = (item) => {
     handleUpdateStatus(item);
     navigation.navigate("NotificationView", { notification: item });
   };
-  
+
   return (
     <ScrollView>
       <>
-        {notificationall.map((item, index) => (
+        {notificationCedulaEstado.map((item, index) => (
           <TouchableOpacity
             onPress={() => handlePressNotification(item)}
             key={index}

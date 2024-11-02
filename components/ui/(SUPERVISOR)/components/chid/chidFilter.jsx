@@ -1,6 +1,7 @@
 import { Chip } from "@rneui/themed";
 import { ColorItem } from "../../../../styles/StylesGlobal";
 import { ScrollView, View } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 // cuando se maneja varios filtros
 export const ChipMultipleFilter = ({ title, selectedItem, action }) => {
@@ -41,13 +42,17 @@ export const ChildFilter = ({ title, selectedItem, action }) => {
         backgroundColor: "transparent",
       }}
     >
-      <View style={{
-        width: 130,
-      }}>
+      <View
+        style={{
+          width: 125,
+          marginHorizontal: 10,
+        }}
+      >
         <Chip
           size="md"
           titleStyle={{
-            fontSize: 16,
+            paddingRight:10,
+            fontSize: 17,
             fontWeight: "bold",
             color: selectedItem ? "white" : ColorItem.TarnishedSilver,
           }}
@@ -56,6 +61,7 @@ export const ChildFilter = ({ title, selectedItem, action }) => {
           title={title}
           color={selectedItem ? "primary" : "lightgray"}
           containerStyle={{ marginVertical: 10 }}
+          icon={<FontAwesome name="close" size={16} color="white" />}
         />
       </View>
     </ScrollView>
