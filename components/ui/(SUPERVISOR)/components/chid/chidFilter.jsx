@@ -68,6 +68,7 @@ export const ChildFilter = ({ title, selectedItem, action }) => {
   );
 };
 
+// filtros con el stylo de borrar filtro
 export const ChildFilterOutline = ({ opciones, handleOptionSelect }) => {
   return (
     <>

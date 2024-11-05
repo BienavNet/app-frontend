@@ -38,16 +38,11 @@ export const ListComentario = () => {
     setSearchText("");
     setSelectedItem(null);
     setShowSearchBar(true);
-    switch (selectedOption) {
-      case "docente":
-        setList(docenteall);
-        break;
-      case "salon":
-        setList(salonAll);
-        break;
-      default:
-        setList([]);
+    const Mapping ={
+      docente:docenteall,
+      salon:salonAll
     }
+    setList(Mapping[option] || []);
     setShowModal(true);
   };
 
@@ -106,6 +101,7 @@ export const ListComentario = () => {
     };
     fetchAdditionalData();
   }, [selectedItem, selectedOption]);
+  
   const filDocenClass = [
     {
       title: "docente",

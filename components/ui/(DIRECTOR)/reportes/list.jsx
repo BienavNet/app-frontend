@@ -16,7 +16,7 @@ import {
   useSalonAll,
 } from "../../../../src/hooks/customHooks";
 import { ModalComponente } from "../../Components/customModal";
-import { ChildFilterOutline } from "../../(SUPERVISOR)/components/chid/chidFilter";
+import { ChildFilter, ChildFilterOutline } from "../../(SUPERVISOR)/components/chid/chidFilter";
 import { CustomSeachBar } from "../comentario/components/seachBar";
 import { NofilterSelected } from "../../Components/unregistered/noRegistration";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -38,16 +38,11 @@ export const ReportView_Filter = () => {
     setSearchText("");
     setSelectedItem(null);
     setShowSearchBar(true);
-    switch (selectedOption) {
-      case "salones":
-        setList(salonAll);
-        break;
-      case "clases":
-        setList(classAll);
-        break;
-      default:
-        setList([]);
+    const maping = {
+      salones: salonAll,
+      clases: classAll,
     }
+    setList(maping[option] || []);
     setShowModal(true);
   };
 
@@ -113,6 +108,7 @@ export const ReportView_Filter = () => {
   }, [selectedItem, selectedOption]);
   const filClassRoom = [
     {
+      id:"clases",
       title: "clases",
       icon: (
         <MaterialCommunityIcons
@@ -124,6 +120,7 @@ export const ReportView_Filter = () => {
       action: () => handleOptionSelect("clases"),
     },
     {
+      id:"salones",
       title: "salones",
       icon: (
         <MaterialCommunityIcons name="home-modern" size={24} color="black" />
@@ -138,7 +135,7 @@ export const ReportView_Filter = () => {
         {selectedItem && (
           <>
             {selectedOption && additionalData && (
-              <ChildFilterOutline
+              <ChildFilter
                 title={selectedOption}
                 selectedItem={selectedItem}
                 action={handleSearchBarClear}

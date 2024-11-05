@@ -8,8 +8,7 @@ export const ScrollMultipleFilterClass = ({ opciones, handleOptionSelect }) => {
       horizontal={true}
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{
-        flexDirection: "row",
-        backgroundColor: "transparent",
+        backgroundColor: "white",
         minWidth: "100%",
       }}
     >

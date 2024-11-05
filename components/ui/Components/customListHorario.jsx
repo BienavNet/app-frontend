@@ -1,6 +1,6 @@
-import { ScrollView, Alert } from "react-native";
+import { ScrollView, Alert, Text } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -16,9 +16,13 @@ import { ScreenDetailHour } from "../(DIRECTOR)/horarios/screenDetailhorario";
 import moment, { Today } from "../../../src/utils/InstanceMoment";
 import { NotRegistration } from "./unregistered/noRegistration";
 import { ColorItem } from "../../styles/StylesGlobal";
+import { ScrollMultipleFilterClass } from "../(SUPERVISOR)/clases/components/carouselFilter/CarouselFilter";
 
 export const ListItemComponentHorario = ({
-  filteredData,
+  additionalData,
+  opciones,
+  handleOptionSelect,
+  multipleSelectedItem,
   getDataAll,
   getDataOne,
   deleteData,
@@ -26,45 +30,44 @@ export const ListItemComponentHorario = ({
   navigateToFormScreen,
   modalTitle = "Info",
 }) => {
-  // console.log("fiterredData >>>>>>>>>><XXXXX", filteredData);
+  console.log("additionalData ", additionalData );
+
   const [modalVisible, setModalVisible] = useState(false); // primer modal
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
-  // console.log(
-  //   items,
-  //   ">>>>>>>>><<<<<<<<WWWW items por default de la list horario"
-  // );
+  console.log("setItems", items);
   const [selectedItem, setSelectedItem] = useState(null);
   const today = Today();
   const [value, setValue] = useState(today);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
 
+ 
   const fetchItems = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getDataAll();
-      setItems(res);
-      // if (filteredData.length > 0) {
-      //   setItems(filteredData);
-      // } else {
-       
-      // }
+      if (Array.isArray(additionalData) && additionalData.length > 0) {
+alert("entrando a additional data", additionalData)
+      }
+
+      if (additionalData.length > 0) {
+        alert("entrando a additional data 2", additionalData)
+        setItems(additionalData);
+      } else {
+        const res = await getDataAll();
+        setItems(res);
+      }
     } catch (error) {
       throw new Error("Error fetching items:", error);
     } finally {
       setLoading(false);
     }
-  }, [getDataAll]);
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchItems();
-    }, [fetchItems])
-  );
+  }, [getDataAll, additionalData]);
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
 
   const handleInfoPress = async (id) => {
-    console.log("id", id);
     try {
       setModalVisible(true);
       const res = await getDataOne(id);
@@ -97,23 +100,16 @@ export const ListItemComponentHorario = ({
           onPress: async () => {
             try {
               const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
-              console.log("detailhorarioD", detailhorarioD);
               await Promise.all(
                 detailhorarioD.map(async (detail_horario) => {
                   await deleteDataAsociated(detail_horario.id);
-                  console.log(
-                    "Detalle de horario eliminado ID:",
-                    detail_horario.id
-                  );
                 })
               );
               Alert.alert("Eliminando......", "ya casi damos por hecho");
               const claseD = await getClassesByHorarioID(itemId);
-              console.log("claseD", claseD);
               await Promise.all(
                 claseD.map(async (clase) => {
                   await DeleteClasesOne(clase.id);
-                  console.log("Clase eliminada ID:", clase.id);
                 })
               );
               await deleteData(itemId);
@@ -147,80 +143,84 @@ export const ListItemComponentHorario = ({
         const currentMonth = moment().month(); // Se obtiene el mes actual usando moment
         return horarios.month() === currentMonth; // Solo comparamos el mes
       });
-
     return allHorariosSelected;
   };
 
   return (
-    <>
-      <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
-        {loading ? (
-          <Loading />
-        ) : items.length === 0 ? (
-          <NotRegistration />
-        ) : (
-          items.map((item, index) => (
-            <ListItem.Swipeable
-              // containerStyle={{
-              //   backgroundColor:
-              //     filteredData.length > 0 ? ColorItem.OceanCrest : "white",
-              // }}
-              key={`${item.id}-${index}`}
-              leftContent={(reset) => (
-                <Button
-                  title="Info"
-                  onPress={async () => {
-                    reset();
-                    await handleInfoPress(item.id);
-                  }}
-                  icon={{ name: "info", color: "white" }}
-                  buttonStyle={{ minHeight: "100%" }}
-                />
-              )}
-              rightContent={(reset) => (
-                <Button
-                  title="Delete"
-                  onPress={() => {
-                    reset();
-                    handleDeletePress(item.id);
-                  }}
-                  icon={{ name: "delete", color: "white" }}
-                  buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
-                />
-              )}
-            >
-              <Ionicons name="calendar" size={25} color="black" />
-              <ListItem.Content>
-                <ListItem.Title>
-                  <TouchableOpacity
-                    className="flex-row"
-                    onPress={() =>
-                      navigateToFormScreen
-                        ? navigateToFormScreen(navigation, item.id)
-                        : navigation.navigate("FormScreen", {
-                            id: item.id,
-                          })
-                    }
-                  >
-                    <ViewHorario item={item} />
-                  </TouchableOpacity>
-                </ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem.Swipeable>
-          ))
-        )}
-
-        <ScreenDetailHour
-          handleDateChange={handleDateChange}
-          handleDateSelected={handleDateSelected}
-          value={value}
-          selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
-          setModalVisible={setModalVisible}
-          modalVisible={modalVisible}
+    <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
+      {Object.keys(multipleSelectedItem).length > 0 && additionalData && (
+        <ScrollMultipleFilterClass
+          opciones={opciones}
+          handleOptionSelect={handleOptionSelect}
         />
-      </ScrollView>
-    </>
+      )}
+
+      {loading ? (
+        <Loading />
+      ) : items.length === 0 ? (
+        <NotRegistration />
+      ) : (
+        items.map((item, index) => (
+          <ListItem.Swipeable
+            containerStyle={{
+              backgroundColor:
+                additionalData.length > 0 ? ColorItem.OceanCrest : "white",
+            }}
+            key={`${item.id}-${index}`}
+            leftContent={(reset) => (
+              <Button
+                title="Info"
+                onPress={async () => {
+                  reset();
+                  await handleInfoPress(item.id);
+                }}
+                icon={{ name: "info", color: "white" }}
+                buttonStyle={{ minHeight: "100%" }}
+              />
+            )}
+            rightContent={(reset) => (
+              <Button
+                title="Delete"
+                onPress={() => {
+                  reset();
+                  handleDeletePress(item.id);
+                }}
+                icon={{ name: "delete", color: "white" }}
+                buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
+              />
+            )}
+          >
+            <Ionicons name="calendar" size={25} color="black" />
+            <ListItem.Content>
+              <ListItem.Title>
+                <TouchableOpacity
+                  className="flex-row"
+                  onPress={() =>
+                    navigateToFormScreen
+                      ? navigateToFormScreen(navigation, item.id)
+                      : navigation.navigate("FormScreen", {
+                          id: item.id,
+                        })
+                  }
+                >
+                  <ViewHorario item={item} />
+                </TouchableOpacity>
+              </ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem.Swipeable>
+        ))
+      )}
+
+      <ScreenDetailHour
+        handleDateChange={handleDateChange}
+        handleDateSelected={handleDateSelected}
+        value={value}
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+        setModalVisible={setModalVisible}
+        modalVisible={modalVisible}
+      />
+    </ScrollView>
   );
 };

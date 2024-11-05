@@ -82,6 +82,7 @@ export const ListClassView = () => {
   const handleOptionSelect = (option) => {
     setSearchText("");
     setSelectedOption(option);
+
     setMultipleSelectedOption((prev) => {
       if (prev.includes(option) && multipleSelectedItem[option]) {
         return prev; // Si ambas condiciones son verdaderas, no elimina la opción
@@ -89,11 +90,13 @@ export const ListClassView = () => {
         return [...prev, option]; // Si alguna de las condiciones no se cumple, la añade
       }
     });
+
     const optionMapping = {
       salones: salonAll,
       dia: diall,
       horarios: horarioAll,
     };
+
     setList(optionMapping[option] || []);
     setModalSelect(true);
   };
@@ -104,6 +107,7 @@ export const ListClassView = () => {
       [selectedOption]: isSelected ? item : null,
     }));
   };
+
   const removeFilter = (Idkey) => {
     // Actualizamos las opciones (marcamos como no seleccionadas)
     const updatedOpciones = opciones.map((opt) =>
@@ -117,9 +121,10 @@ export const ListClassView = () => {
         delete updated[Idkey];
       }
       const updatedFilters = {
-        salon: updated.salones && updated.salones.id ? updated.salones.id : 0,  
-        dia: updated.dia && updated.dia.id ? updated.dia.id : 0,  
-        horario: updated.horarios && updated.horarios.id ? updated.horarios.id : 0, 
+        salon: updated.salones && updated.salones.id ? updated.salones.id : 0,
+        dia: updated.dia && updated.dia.id ? updated.dia.id : 0,
+        horario:
+          updated.horarios && updated.horarios.id ? updated.horarios.id : 0,
       };
       setFilters(updatedFilters);
       setOpciones(updatedOpciones);
@@ -155,25 +160,20 @@ export const ListClassView = () => {
 
       setOpciones(updatedOpciones);
       setFilters(updatedFilters);
-      fetchFilteredClasses(); 
-      setModalSelect(false); 
-      setTemporalSelectedItem({}); 
+      fetchFilteredClasses();
+      setModalSelect(false);
+      setTemporalSelectedItem({});
     } else {
       alert("Debe seleccionar al menos un filtro antes de aplicar.");
     }
   };
-//
+
   return (
     <SafeAreaView style={styles.container}>
-      <View className="flex-row">
-        {/* Aqui es donde se debe de editar para arreglar los filtros de las clases de los supervisores */}
         <ScrollMultipleFilterClass
           opciones={opciones}
           handleOptionSelect={handleOptionSelect}
-          removeFilter={removeFilter}
-        /> 
-      </View>
-
+        />
       {/* Información mostrada por defecto */}
       {!Object.keys(multipleSelectedItem).length && (
         <FlatList
@@ -203,8 +203,7 @@ export const ListClassView = () => {
       >
         {multipleSelectedOption.length > 0 &&
           list.length > 0 &&
-          list.map((item) => {
-            return (
+          list.map((item) =>(
               <ListSelectItemFilterClases
                 temporalSelectedItem={temporalSelectedItem}
                 multipleSelectedItems={multipleSelectedItem}
@@ -213,8 +212,8 @@ export const ListClassView = () => {
                 selectedOption={selectedOption}
                 onPress={handleItemPress}
               />
-            );
-          })}
+            )
+          )}
       </ClassFilter>
 
       {/* Información filtrada */}

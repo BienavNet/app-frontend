@@ -20,6 +20,7 @@ const colors = [
   "rgba(255, 159, 64, 1)", // Naranja
 ];
 export const EstadisticasReportes = () => {
+  const insets = useSafeAreaInset();
   const [dqmct, setDqmct] = useState([]); //docent con mas comentario realizado
   const [sqmct, setSqmct] = useState(null); // salon que mas comentario tiene
   const [smasu, setSmasU] = useState([]); // salo mas utilizado
@@ -126,7 +127,7 @@ export const EstadisticasReportes = () => {
       fontWeight: "bold",
     },
   };
-  const insets = useSafeAreaInset();
+
   return (
     <ScrollView>
       <View
