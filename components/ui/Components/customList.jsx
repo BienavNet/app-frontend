@@ -10,6 +10,9 @@ import { InfoDS } from "../(DIRECTOR)/components/info";
 import { ViewDS } from "../(DIRECTOR)/components/view";
 import { NotRegistration } from "./unregistered/noRegistration";
 import { Snackbar } from "@react-native-material/core";
+import { useSupervisorDefault } from "../../../src/hooks/customHooks";
+import { updateSupervisorDefault } from "../../../src/services/fetchData/fetchSupervisor";
+import { ColorItem } from "../../styles/StylesGlobal";
 export const ListItemComponent = ({
   getDataAll,
   getDataOne,
@@ -24,9 +27,24 @@ export const ListItemComponent = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+
   const [selectedItemId, setSelectedItemId] = useState(null);
+  console.log(selectedItemId, "selectedItemId");
+  const supervisordefault = useSupervisorDefault();
+
+  useEffect(() => {
+    if (
+      supervisordefault &&
+      supervisordefault.data &&
+      supervisordefault.data.length > 0
+    ) {
+      setSelectedItemId(supervisordefault.data[0].persona);
+    }
+  }, [supervisordefault]);
+
   const [snackbarVisible, setSnackbarVisible] = useState(false); // Estado para controlar la visibilidad del Snackbar
   const [selectedItemForSnackbar, setSelectedItemForSnackbar] = useState(null); // Estado para guardar el item que activó el Snackbar
+  console.log(selectedItemForSnackbar, "selectedItemForSnackbar");
 
   const fetchItems = useCallback(async () => {
     const res = await getDataAll();
@@ -95,25 +113,22 @@ export const ListItemComponent = ({
     }
   }, [fetchItems]);
 
-  useEffect(() => {
-    if (items && items.length > 0) {
-      setSelectedItemId(items[0].id);
-    }
-  }, [items]);
-
   const handleLongPress = (itemId) => {
     if (selectedItemId === itemId) return;
-    alert("aplico");
     setSnackbarVisible(true);
     setSelectedItemForSnackbar(itemId);
   };
 
-  const handleSnackbarDismiss = () => {
-    alert("aplicoxxx");
+  const handleSnackbarDismiss = async () => {
     if (selectedItemForSnackbar) {
-      setSelectedItemId(selectedItemForSnackbar);
+      try {
+        await updateSupervisorDefault(selectedItemForSnackbar);
+        setSelectedItemId(selectedItemForSnackbar);
+        setSnackbarVisible(false);
+      } catch (error) {
+        console.error("Error al actualizar el supervisor por defecto:", error);
+      }
     }
-    setSnackbarVisible(false);
   };
   return (
     <>
@@ -182,7 +197,7 @@ export const ListItemComponent = ({
                 <MaterialCommunityIcons
                   name="checkbox-multiple-marked-circle-outline"
                   size={20}
-                  color="black"
+                  color={ColorItem.DeepSkyBlue}
                 />
               )}
               <ListItem.Chevron />

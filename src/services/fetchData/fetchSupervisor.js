@@ -60,3 +60,22 @@ export const getSupervisorCedula = async (cedula) => {
         throw new Error(error.response.data.message)
     }
 }
+
+export const getSupervisorDefault = async () => {
+    try {
+        const response = await axiosInstance.get("/supervisor/defaultItem/");
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message)
+    }
+}
+
+export const updateSupervisorDefault = async (id ) => {
+    try {
+        const response = await axiosInstance.patch(`/supervisor/update/defaultItem/${id}`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message)
+    }
+}
+

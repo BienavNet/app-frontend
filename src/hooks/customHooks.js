@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import {
   getSupervisor,
   getSupervisorCedula,
+  getSupervisorDefault,
 } from "../services/fetchData/fetchSupervisor";
 import { getCategorySalon, getSalon } from "../services/fetchData/fetchSalon";
 import {
@@ -81,6 +82,28 @@ export const useSupervisorCedula = (CEDULA) => {
 
   return supervisorCedula;
 }; //obtener todos los supervisores x cedula
+
+export const useSupervisorDefault = () => {
+  const [supervisordefault, setSupervisorDefault] = useState([]);
+  
+  const fetchSupervisorDefault = useCallback(async () => {
+    try {
+      const res = await getSupervisorDefault();
+      console.log(res, "res supervisor default");
+      setSupervisorDefault(res);
+    } catch (error) {
+      setSupervisorDefault([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchSupervisorDefault();
+  }, [fetchSupervisorDefault]);
+
+  return supervisordefault;
+}; //obtener el supervisor por defecto
+
+
 
 // fetch Salones
 export const useSalonAll = () => {
