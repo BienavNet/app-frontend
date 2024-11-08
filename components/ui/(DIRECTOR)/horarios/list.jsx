@@ -14,7 +14,6 @@ import { ListItemComponentHorario } from "../../Components/customListHorario";
 import { ListItemSelectHorario } from "./component/listSelect";
 import { ModalComponente } from "../../Components/customModal";
 import { CustomSeachBar } from "../comentario/components/seachBar";
-import { ScrollMultipleFilterClass } from "../../(SUPERVISOR)/clases/components/carouselFilter/CarouselFilter";
 import { View, Alert } from "react-native";
 import { Reset_Filter } from "../../(SUPERVISOR)/components/button/buttonReset&Filter";
 import { ColorItem } from "../../../styles/StylesGlobal";
@@ -43,7 +42,7 @@ export const ListHorario = ({
     let { docente, horario, dia } = filters;
 
     try {
-      let filteredData ;
+      let filteredData;
       if (
         selectedOption === "docente" &&
         multipleSelectedItem[selectedOption]
@@ -61,7 +60,7 @@ export const ListHorario = ({
       }
       setAdditionalData(filteredData || []);
     } catch (error) {
-      throw new Error('Error: ' + error.message);
+      throw new Error("Error: " + error.message);
     }
   };
 

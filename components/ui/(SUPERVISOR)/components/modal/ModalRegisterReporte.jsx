@@ -275,6 +275,7 @@ export const ModalRegisterReporte = () => {
               style={{
                 backgroundColor: ColorItem.DeepSkyBlue,
               }}
+              disabled={data.cometario?.length === 0}
               className={"w-11/12 self-center p-3 rounded-lg"}
             >
               <Text className="text-white text-center font-bold text-xl">

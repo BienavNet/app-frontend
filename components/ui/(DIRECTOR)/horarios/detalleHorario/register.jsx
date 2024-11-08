@@ -2,7 +2,10 @@ import { View, ScrollView, Alert, TouchableOpacity, Text } from "react-native";
 import { HeaderTitle } from "../../../../share/titulos/headerTitle";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { detailHorarioRegister, EditingdetailHorarioRegister } from "../../../../../src/utils/schemas/horarioSchema";
+import {
+  detailHorarioRegister,
+  EditingdetailHorarioRegister,
+} from "../../../../../src/utils/schemas/horarioSchema";
 import { CustomTimePicker } from "../../../../share/inputs/customDateTimePicker";
 import { diasArray } from "../../../../../src/utils/schemas/horarioSchema";
 import { CustomFlatList } from "../../../../share/inputs/customFlatList";
@@ -14,7 +17,6 @@ import {
 } from "../../../../../src/services/fetchData/fetchDetailHorario";
 import {
   registerClase,
-  getClasesAll,
   updateClase,
 } from "../../../../../src/services/fetchData/fetchClases";
 import { useEffect, useState } from "react";
@@ -23,6 +25,7 @@ import Loading from "../../../../share/loading";
 import { SubmitButton } from "../../../../share/button/submitButton";
 import useToastMessage from "../../../../share/ToasNotification";
 import {
+  useClasesAll,
   useSalonAll,
   useSupervisorAll,
 } from "../../../../../src/hooks/customHooks";
@@ -41,7 +44,9 @@ export const RegisterDetailHorario = ({
     watch,
     formState: { errors, isDirty },
   } = useForm({
-    resolver: yupResolver(editing ? EditingdetailHorarioRegister :detailHorarioRegister ),
+    resolver: yupResolver(
+      editing ? EditingdetailHorarioRegister : detailHorarioRegister
+    ),
   });
   const supervisors = useSupervisorAll();
   const [loading, setLoading] = useState(false);
@@ -49,7 +54,7 @@ export const RegisterDetailHorario = ({
   const [horainicio, setHoraInicio] = useState(new Date());
   const [horafin, setHoraFin] = useState(new Date());
   const mapSalones = useSalonAll();
-
+  const isDisabled = editing && !isDirty;
   const salones = mapSalones.map((item) => ({
     id: item.id.toString(),
     label: `${item.numero_salon} ${item.nombre} `,
@@ -59,29 +64,56 @@ export const RegisterDetailHorario = ({
     id: d,
     label: d,
   }));
+  
+  useEffect(() => {
+    navigation.setOptions({
+      headerBackTitleVisible: true, 
+    });
+  }, [navigation]);
+  
 
-  const countClassesForSupervisors = async () => {
+  const checkSupervisorsAvailable = () => {
     if (supervisors.length === 0) {
-      throw new Error("No supervisors available.");
+      Alert.alert(
+        "No hay supervisores disponibles", 
+        "No puedes registrar el detalle de horario.",[
+          {
+            text: "Terminar", 
+            onPress: () =>  navigation.navigate("ListScreen")
+          },
+          {
+            text: "Ir a Registrar Supervisor", 
+            onPress: () => navigation.navigate('Supervisor', { screen: 'FormScreen' }),
+          }
+        ]
+      );
+      reset({
+        salon: "",
+        dia: "",
+      });
+      setHoraInicio(new Date()); 
+      setHoraFin(new Date());
+      return false;
     }
+    return true;
+  };
+
+  const countClassesForSupervisors = () => {
+    checkSupervisorsAvailable();
     const counts = {};
     supervisors.forEach((s) => {
       counts[s.supervisor_id] = 0;
     });
-    try {
-      const classes = await getClasesAll();
-      if (classes.length === 0) {
-        return counts;
-      }
-      classes.forEach((classItem) => {
-        if (counts[classItem.supervisor_id] !== undefined) {
-          counts[classItem.supervisor_id] += 1;
-        }
-      });
+    const classes = useClasesAll();
+    if (classes.length === 0) {
       return counts;
-    } catch (error) {
-      throw new Error("Error fetching classes:", error.message);
     }
+    classes.forEach((classItem) => {
+      if (counts[classItem.supervisor_id] !== undefined) {
+        counts[classItem.supervisor_id] += 1;
+      }
+    });
+    return counts;
   };
 
   const getRandomSupervisor = (supervisors) => {
@@ -91,27 +123,22 @@ export const RegisterDetailHorario = ({
   };
 
   const assignSupervisors = async () => {
-    const classCounts = await countClassesForSupervisors();
-
+    const classCounts = countClassesForSupervisors();
     if (isFirstAssignment) {
       setIsFirstAssignment(false);
       return getRandomSupervisor(supervisors);
     }
-
     if (Object.keys(classCounts).length === 0) {
       return getRandomSupervisor(supervisors);
     }
-
     let minClasses = Infinity;
     let selectedSupervisor = null;
-
     supervisors.forEach((supervisor) => {
       if (classCounts[supervisor.supervisor_id] < minClasses) {
         minClasses = classCounts[supervisor.supervisor_id];
         selectedSupervisor = supervisor;
       }
     });
-
     return selectedSupervisor
       ? selectedSupervisor.supervisor_id
       : getRandomSupervisor(supervisors);
@@ -143,53 +170,42 @@ export const RegisterDetailHorario = ({
       }
     }
   }, [route.params]);
-  
-  const isDisabled = editing && !isDirty;
 
   useEffect(() => {
-    if (supervisors.length > 0) {
-      const countClasses = async () => {
-        try {
-          await countClassesForSupervisors();
-        } catch (error) {
-          throw new Error("Error counting classes:", error);
-        }
-      };
-      countClasses();
-    }
+    (async () => {
+      if (supervisors.length > 0) return countClassesForSupervisors();
+    })();
   }, [supervisors]);
 
   const onsubmit = async (data) => {
-    console.log(data , "data al presionar onsubmit");
     const { salon, dia, hora_inicio, hora_fin } = data;
     const ESTADO = "pendiente";
     const TOTAL_MESES = 6;
     const startDate = new Date(); // Fecha de inicio
     const endDate = new Date(startDate); // Fecha de final
-    try {
-      showToast({
-        message: STATUS_MESSAGES[APP_STATUS.REGISTERING],
-        type: "success",
-        id: APP_STATUS.REGISTERING,
-      });
-      if (!editing) {
-        let horario = idhorario;
-        await registerDetailHorario(horario, dia, hora_inicio, hora_fin);
-        endDate.setMonth(endDate.getMonth() + TOTAL_MESES);
-        const classCounts = await countClassesForSupervisors();
-        if (!classCounts) throw new Error("Error counting classes");
-        
-        showToast({
-          message: STATUS_MESSAGES[APP_STATUS.LOADED_SUCCESSFULLY],
-          type: "warning",
-          id: APP_STATUS.LOADED_SUCCESSFULLY,
-        });
 
+    if (!checkSupervisorsAvailable()) {
+      return;
+    }
+
+    showToast({
+      message: STATUS_MESSAGES[APP_STATUS.REGISTERING],
+      type: "success",
+      id: APP_STATUS.REGISTERING,
+    });
+
+    try {
+      if (!editing) {
+        const supervisorID = await assignSupervisors();
+        if (!supervisorID) {
+          alert("No se pudo asignar un supervisor. Vuelva a intentarlo");
+          reset();
+          return false;
+        }
+        await registerDetailHorario(idhorario, dia, hora_inicio, hora_fin);
+        endDate.setMonth(endDate.getMonth() + TOTAL_MESES);
         const classesToRegister = await Promise.all(
           generateClassDates(dia, startDate, endDate).map(async (clase) => {
-            const supervisorID = await assignSupervisors();
-            if (!supervisorID)
-              throw new Error("No se pudo asignar un supervisor");
             return {
               horario: idhorario,
               salon,
@@ -200,7 +216,7 @@ export const RegisterDetailHorario = ({
           })
         );
         try {
-          Alert.alert("Successfull", "Registro exitoso ✔︎ ✔︎");
+          alert("Successfull", "Registro exitoso ✔︎ ✔︎");
           await Promise.all(
             classesToRegister.map((clase) =>
               registerClase(
@@ -212,7 +228,7 @@ export const RegisterDetailHorario = ({
               )
             )
           );
-          Alert.alert("Redirigiendo....");
+          alert("Redirigiendo....");
           handleCloseModal();
           navigation.navigate("ListScreen");
         } catch (error) {
@@ -223,20 +239,18 @@ export const RegisterDetailHorario = ({
             id: APP_STATUS.ERROR,
           });
         }
-      } 
-      else {
-        console.log("entrando a editing...");
+      } else {
+        // Si está en modo edición, actualizar el detalle de horario
         showToast({
           message: STATUS_MESSAGES[APP_STATUS.LOADING],
           type: "danger",
           id: APP_STATUS.LOADING,
         });
-        console.log("id del cambiante", route.params.id);
-        console.log("Loading... dia, hora_inicio", dia, hora_inicio, hora_fin);
+
         const updateDetail = updateDetailHorario(route.params.id, {
-          dia:dia,
-          hora_inicio:hora_inicio,
-          hora_fin:hora_fin,
+          dia: dia,
+          hora_inicio: hora_inicio,
+          hora_fin: hora_fin,
         });
 
         const updateClasses = Promise.all(
@@ -249,9 +263,7 @@ export const RegisterDetailHorario = ({
               };
             })
             .map(async (clase) => {
-              await updateClase(
-                clase.salon,
-              );
+              await updateClase(clase.salon);
             })
         );
 
@@ -280,8 +292,6 @@ export const RegisterDetailHorario = ({
     }
   };
 
-  console.log(onsubmit, "onSubmit");
-  console.log(handleSubmit, "handleSubmit");
   return (
     <>
       <HeaderTitle
@@ -289,7 +299,6 @@ export const RegisterDetailHorario = ({
         updateText="Actualizar detalles del horario"
         editing={editing}
       />
-
       <ScrollView className="pt-1" contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex pb-5 h-full">
           {loading ? (
@@ -318,10 +327,13 @@ export const RegisterDetailHorario = ({
                   data={salones}
                 />
               </View>
-              <View className="flex-row" style={{
-                marginHorizontal:10,
-                marginVertical:25,
-              }}>
+              <View
+                className="flex-row"
+                style={{
+                  marginHorizontal: 10,
+                  marginVertical: 25,
+                }}
+              >
                 <View className="w-1/2 items-center">
                   <CustomTimePicker
                     name="hora_inicio"
@@ -378,17 +390,20 @@ export const RegisterDetailHorario = ({
                 />
               </View>
 
-              <View className="flex-row" style={{
-                marginHorizontal:10,
-                marginVertical:25,
-              }}>
+              <View
+                className="flex-row"
+                style={{
+                  marginHorizontal: 10,
+                  marginVertical: 25,
+                }}
+              >
                 <View className="w-1/2 items-center">
                   <CustomTimePicker
-                  errors={errors.hora_inicio}
+                    errors={errors.hora_inicio}
                     name="hora_inicio"
                     editing={editing}
                     control={control}
-                     title="Hora ini..."
+                    title="Hora ini..."
                     testID="hora_inicio"
                     mode="time"
                     initialValue={watch("hora_inicio")}
@@ -410,7 +425,7 @@ export const RegisterDetailHorario = ({
                     testID="hora_fin"
                     initialValue={watch("hora_fin")}
                     mode="time"
-                    display="clock" 
+                    display="clock"
                     is24Hour={true}
                     onTimeSelected={(formattedTime) =>
                       setHoraFin(formattedTime)
@@ -421,14 +436,13 @@ export const RegisterDetailHorario = ({
             </View>
           )}
           <View className="flex-row-reverse w-full justify-center">
-          
             <View className={editing ? "w-[40%]" : "w-[85%]"}>
               <SubmitButton
-               onPress={() => {
-                console.log("Botón presionado");
-                handleSubmit(onsubmit)();
-                console.log("Botón presionado2");
-              }}
+                onPress={() => {
+                  console.log("Botón presionado");
+                  handleSubmit(onsubmit)();
+                  console.log("Botón presionado2");
+                }}
                 editing={editing}
                 isDisabled={isDisabled}
               />

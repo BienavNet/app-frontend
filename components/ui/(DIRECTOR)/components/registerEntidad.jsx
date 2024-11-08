@@ -1,5 +1,5 @@
 import { CustomInput } from "../../../share/inputs/customInput";
-import { View, ScrollView, Alert } from "react-native";
+import { View, ScrollView } from "react-native";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -23,14 +23,15 @@ export const RegistrarEntidad = ({
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const [editing, setEditing] = useState(false);
   const [initialValues, setInitialValues] = useState({}); 
-  const { handleSubmit, control, reset,formState:{
+  
+  const { handleSubmit, control, reset, formState:{
     errors, isDirty
   } } = useForm({
     resolver: yupResolver(editing ? update : register),
   });
+  const isDisabled = editing && !isDirty;
   useEffect(() => {
     if (route.params && route.params.cedula) {
-      console.log("router parmas cedula", route.params.cedula);
       setEditing(true);
       navigation.setOptions({ headerTitle: `Actualizar ${tipoEntidad}` });
       (async () => {
@@ -55,12 +56,9 @@ export const RegistrarEntidad = ({
       })();
     }
   }, [route.params]);
-  const isDisabled = editing && !isDirty;
-
 
   const onsubmit = async (data) => {
     const { nombre, apellido, correo, cedula, contrasena } = data;
-    console.log("data", nombre, apellido, correo, cedula, contrasena);
     try {
       if (!editing) {
         showToast({

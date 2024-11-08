@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text } from "react-native";
 import { Button } from "@react-native-material/core";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Controller } from "react-hook-form";
@@ -19,37 +19,19 @@ export const CustomTimePicker = ({
   initialValue,
   onTimeSelected,
   title,
-  editing= false,
+  editing = false,
 }) => {
-  console.log("initialize value: " + initialValue)
   const [showPicker, setShowPicker] = useState(false);
   const initialEditing = new Date();
-  const initalRegistering = initialValue || new Date()
-  const [selectedTime, setSelectedTime] = useState(editing ? initialEditing : initalRegistering);
-  const [titleSelected, setTitleSelected] = useState(title);  
+  const initalRegistering = initialValue || new Date();
+  const [selectedTime, setSelectedTime] = useState(
+    editing ? initialEditing : initalRegistering
+  );
+  const [titleSelected, setTitleSelected] = useState(title);
 
   useEffect(() => {
-    if (editing && initialValue) {
-      const timeParts = initialValue.split(":");
-      if (timeParts.length >= 2) { 
-        const newTime = new Date();
-        newTime.setHours(parseInt(timeParts[0]), parseInt(timeParts[1]));
-        // setSelectedTime(newTime);
-        // setTitleSelected(formatHourHHMM(newTime));
-        const formattedTime = formatHourHHMM(newTime); // HH:mm
-        const formattedTimeTime = formatHourHHMMTime(newTime); // HH:mm AM/PM
-        setSelectedTime(newTime); // Mantiene el objeto Date en el estado
-        setTitleSelected(formattedTimeTime); // Actualiza el título mostrado en el botón
-        onTimeSelected(formattedTime); // Retorna el tiempo formateado al padre
-        // onChange(formattedTime);
-      }
-    }
-  }, [editing, initialValue]);
-
-
-  const handlePress = () => {
-    setShowPicker(true);
-  };
+    if (typeof initialValue === "object") return setTitleSelected(title);
+  }, [initialValue]);
 
   const handleChange = (e, newTime, onChange) => {
     if (e.type === "dismissed") {
@@ -66,7 +48,25 @@ export const CustomTimePicker = ({
       onTimeSelected(formattedTime); // Retorna el tiempo formateado al padre
       onChange(formattedTime);
     }
-    setShowPicker(false);
+  };
+
+  useEffect(() => {
+    if (editing && initialValue) {
+      const timeParts = initialValue.split(":");
+      if (timeParts.length >= 2) {
+        const newTime = new Date();
+        newTime.setHours(parseInt(timeParts[0]), parseInt(timeParts[1]));
+        const formattedTime = formatHourHHMM(newTime); // HH:mm
+        const formattedTimeTime = formatHourHHMMTime(newTime); // HH:mm AM/PM
+        setSelectedTime(newTime); // Mantiene el objeto Date en el estado
+        setTitleSelected(formattedTimeTime); // Actualiza el título mostrado en el botón
+        onTimeSelected(formattedTime); // Retorna el tiempo formateado al padre
+      }
+    }
+  }, [editing, initialValue]);
+
+  const handlePress = () => {
+    setShowPicker(true);
   };
 
   return (
@@ -98,11 +98,15 @@ export const CustomTimePicker = ({
               mode={mode}
               is24Hour={is24Hour}
               display={display}
-              onChange={(e, newTime) => {handleChange(e, newTime, onChange);}}
+              onChange={(e, newTime) => {
+                handleChange(e, newTime, onChange);
+              }}
             />
           )}
           {errors && (
-            <Text style={{ color: "red", fontSize: 13, marginHorizontal:10 }}>{errors.message}</Text>
+            <Text style={{ color: "red", fontSize: 13, marginHorizontal: 10 }}>
+              {errors.message}
+            </Text>
           )}
         </>
       )}

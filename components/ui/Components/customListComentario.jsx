@@ -10,11 +10,7 @@ import Loading from "../../share/loading";
 import { NotRegistration } from "./unregistered/noRegistration";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { styles } from "../../styles/StylesGlobal";
-import {
-  DeleteComentarioOne,
-} from "../../../src/services/fetchData/fetchComentario";
-
-// import { DeleteConfirmation } from "../../share/deletePress";
+import { DeleteComentarioOne } from "../../../src/services/fetchData/fetchComentario";
 export const ListItemComentario = ({
   getDataAll,
   getDataOne,
@@ -37,7 +33,8 @@ export const ListItemComentario = ({
       const res = await getDataAll();
       setItems(res);
     } catch (error) {
-      throw new Error("Error fetching items:", error);
+      setLoading(false);
+      setItems([]);
     } finally {
       setLoading(false);
     }
@@ -99,9 +96,12 @@ export const ListItemComentario = ({
   };
 
   const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await fetchItems();
-    setRefreshing(false);
+    try {
+      setRefreshing(true);
+      await fetchItems();
+    } catch {
+      setRefreshing(false);
+    }
   }, [fetchItems]);
 
   useEffect(() => {
@@ -154,9 +154,7 @@ export const ListItemComentario = ({
             />
             <ListItem.Content>
               <ListItem.Title>
-                <TouchableOpacity
-                  className="flex-row"
-                >
+                <TouchableOpacity className="flex-row">
                   <Text className="font-extrabold text-lg">
                     {capitalizeFirstLetter(item.nombre)}
                     {" - "}

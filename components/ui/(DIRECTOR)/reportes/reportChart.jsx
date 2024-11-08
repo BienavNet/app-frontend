@@ -56,7 +56,7 @@ export const EstadisticasReportes = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      throw Error("Error fetching data:", error);
+      return;
     }
   }, []);
 
@@ -200,7 +200,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 8,
   },
-
+  noDataText:{
+    padding:10,
+    textTransform:"uppercase",
+    fontSize:16,
+    color:"red",
+    textAlign: "center",
+  },
   chartContainer: {
     marginVertical: 5,
     marginHorizontal: 5,

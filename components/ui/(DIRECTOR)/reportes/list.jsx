@@ -16,9 +16,12 @@ import {
   useSalonAll,
 } from "../../../../src/hooks/customHooks";
 import { ModalComponente } from "../../Components/customModal";
-import { ChildFilter, ChildFilterOutline } from "../../(SUPERVISOR)/components/chid/chidFilter";
+import { ChildFilter } from "../../(SUPERVISOR)/components/chid/chidFilter";
 import { CustomSeachBar } from "../comentario/components/seachBar";
-import { NofilterSelected } from "../../Components/unregistered/noRegistration";
+import {
+  NofilterSelected,
+  NotRegistration,
+} from "../../Components/unregistered/noRegistration";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export const ReportView_Filter = () => {
@@ -41,7 +44,7 @@ export const ReportView_Filter = () => {
     const maping = {
       salones: salonAll,
       clases: classAll,
-    }
+    };
     setList(maping[option] || []);
     setShowModal(true);
   };
@@ -71,7 +74,6 @@ export const ReportView_Filter = () => {
       );
     }
   }, [searchText, selectedOption]);
-
 
   const handleSearchBarClear = () => {
     setSearchText("");
@@ -108,7 +110,7 @@ export const ReportView_Filter = () => {
   }, [selectedItem, selectedOption]);
   const filClassRoom = [
     {
-      id:"clases",
+      id: "clases",
       title: "clases",
       icon: (
         <MaterialCommunityIcons
@@ -120,7 +122,7 @@ export const ReportView_Filter = () => {
       action: () => handleOptionSelect("clases"),
     },
     {
-      id:"salones",
+      id: "salones",
       title: "salones",
       icon: (
         <MaterialCommunityIcons name="home-modern" size={24} color="black" />
@@ -190,7 +192,7 @@ export const ReportView_Filter = () => {
           data={reportAll}
           renderItem={({ item }) => <ListViewDefault data={item} />}
           keyExtractor={(item) => item.reporte_id.toString()}
-          ListEmptyComponent={<NofilterSelected />}
+          ListEmptyComponent={<NotRegistration />}
         />
       )}
 

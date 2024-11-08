@@ -1,14 +1,15 @@
-import { ScrollView, Alert,  RefreshControl } from "react-native";
+import { ScrollView, Alert, RefreshControl, View } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { useCallback, useState } from "react";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { InfoDS } from "../(DIRECTOR)/components/info";
 import { ViewDS } from "../(DIRECTOR)/components/view";
 import { NotRegistration } from "./unregistered/noRegistration";
-
+import { Snackbar } from "@react-native-material/core";
 export const ListItemComponent = ({
   getDataAll,
   getDataOne,
@@ -16,14 +17,16 @@ export const ListItemComponent = ({
   navigateToFormScreen,
   itemIcon = "account",
   modalTitle = "Info",
+  isSupervisor = false,
 }) => {
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
-  console.log(items, "items", setItems, "setItems");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  console.log(selectedItem, "setSelectedItem");
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [snackbarVisible, setSnackbarVisible] = useState(false); // Estado para controlar la visibilidad del Snackbar
+  const [selectedItemForSnackbar, setSelectedItemForSnackbar] = useState(null); // Estado para guardar el item que activó el Snackbar
 
   const fetchItems = useCallback(async () => {
     const res = await getDataAll();
@@ -40,13 +43,10 @@ export const ListItemComponent = ({
     try {
       setModalVisible(true);
       const res = await getDataOne(cedula);
-      console.log(res, "response res de handleInfoPress");
       const itemselected = res.find((value) => value.cedula === cedula);
-      console.log(itemselected, "<--- item selected");
       if (itemselected) {
         setSelectedItem(itemselected);
       } else {
-        console.error("Docente no encontrado");
         setSelectedItem(null);
       }
     } catch (error) {
@@ -86,76 +86,115 @@ export const ListItemComponent = ({
   };
 
   const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await fetchItems();
-    setRefreshing(false);
+    try {
+      setRefreshing(true);
+      await fetchItems();
+      setRefreshing(false);
+    } catch {
+      setRefreshing(false);
+    }
   }, [fetchItems]);
 
+  useEffect(() => {
+    if (items && items.length > 0) {
+      setSelectedItemId(items[0].id);
+    }
+  }, [items]);
+
+  const handleLongPress = (itemId) => {
+    if (selectedItemId === itemId) return;
+    alert("aplico");
+    setSnackbarVisible(true);
+    setSelectedItemForSnackbar(itemId);
+  };
+
+  const handleSnackbarDismiss = () => {
+    alert("aplicoxxx");
+    if (selectedItemForSnackbar) {
+      setSelectedItemId(selectedItemForSnackbar);
+    }
+    setSnackbarVisible(false);
+  };
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          colors={["#78e08f"]}
-          onRefresh={onRefresh}
-          progressBackgroundColor="#1371C3"
-        />
-      }
-    >
-      {items.length === 0 ? (
-        <NotRegistration/>
-      ) : (
-        items.map((item, index) => (
-          <ListItem.Swipeable
-            key={item.id || index}
-            leftContent={(reset) => (
-              <Button
-                title="Info"
-                onPress={async () => {
-                  reset();
-                  await handleInfoPress(item.cedula);
-                }}
-                icon={{ name: "info", color: "white" }}
-                buttonStyle={{ minHeight: "100%" }}
-              />
-            )}
-            rightContent={(reset) => (
-              <Button
-                title="Delete"
-                onPress={() => {
-                  reset();
-                  handleDeletePress(item.cedula);
-                }}
-                icon={{ name: "delete", color: "white" }}
-                buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
-              />
-            )}
-          >
-            <Icon name={itemIcon} size={25} color="black" />
-            <ListItem.Content>
-              <ListItem.Title>
-                <TouchableOpacity
-                  className="flex-row"
-                  onPress={() =>
-                    navigateToFormScreen
-                      ? navigateToFormScreen(navigation, item.cedula)
-                      : navigation.navigate("FormScreen", {
-                          cedula: item.cedula,
-                        })
-                  }
-                >
-                  <ViewDS item={item} />
-                </TouchableOpacity>
-              </ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem.Swipeable>
-        ))
-      )}
+    <>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            colors={["#78e08f"]}
+            onRefresh={onRefresh}
+            progressBackgroundColor="#1371C3"
+          />
+        }
+      >
+        {items.length === 0 ? (
+          <NotRegistration />
+        ) : (
+          items.map((item, index) => (
+            <ListItem.Swipeable
+              key={item.id || index}
+              leftContent={(reset) => (
+                <Button
+                  title="Info"
+                  onPress={async () => {
+                    reset();
+                    await handleInfoPress(item.cedula);
+                  }}
+                  icon={{ name: "info", color: "white" }}
+                  buttonStyle={{ minHeight: "100%" }}
+                />
+              )}
+              rightContent={(reset) => (
+                <Button
+                  title="Delete"
+                  onPress={() => {
+                    reset();
+                    handleDeletePress(item.cedula);
+                  }}
+                  icon={{ name: "delete", color: "white" }}
+                  buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
+                />
+              )}
+            >
+              <Icon name={itemIcon} size={25} color="black" />
+              <ListItem.Content>
+                <ListItem.Title>
+                  <TouchableOpacity
+                    onLongPress={() => {
+                      if (isSupervisor) {
+                        handleLongPress(item.id);
+                      }
+                    }}
+                    className="flex-row"
+                    onPress={() =>
+                      navigateToFormScreen
+                        ? navigateToFormScreen(navigation, item.cedula)
+                        : navigation.navigate("FormScreen", {
+                            cedula: item.cedula,
+                          })
+                    }
+                  >
+                    <ViewDS item={item} />
+                  </TouchableOpacity>
+                </ListItem.Title>
+              </ListItem.Content>
+              {isSupervisor && selectedItemId === item.id && (
+                <MaterialCommunityIcons
+                  name="checkbox-multiple-marked-circle-outline"
+                  size={20}
+                  color="black"
+                />
+              )}
+              <ListItem.Chevron />
+            </ListItem.Swipeable>
+          ))
+        )}
+      </ScrollView>
+
       <ModalComponente
         transparent={true}
         modalStyle={{
-        height:"70%"
+          height: "70%",
         }}
         animationType={"slider"}
         modalVisible={modalVisible}
@@ -166,9 +205,36 @@ export const ListItemComponent = ({
         {selectedItem ? (
           <InfoDS selectedItem={selectedItem} />
         ) : (
-          <NotRegistration/>
+          <NotRegistration />
         )}
       </ModalComponente>
-    </ScrollView>
+      {isSupervisor && snackbarVisible && (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "red",
+          }}
+        >
+          <Snackbar
+            message="¿Quieres seleccionar este ítem?"
+            action={
+              <Button
+                onPress={() => {
+                  handleSnackbarDismiss(); // Ejecutar la función al presionar el botón
+                }}
+                title="Seleccionar"
+                color="primary"
+              />
+            }
+            style={{
+              position: "absolute",
+              start: 16,
+              end: 16,
+              bottom: 16,
+            }}
+          />
+        </View>
+      )}
+    </>
   );
 };

@@ -8,6 +8,7 @@ import {
 export const ListSupervisor = () => {
   return (
     <ListItemComponent
+    isSupervisor={true}
       getDataAll={getSupervisor}
       getDataOne={getSupervisorOne}
       deleteData={deleteSupervisorOne}

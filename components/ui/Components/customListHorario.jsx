@@ -1,7 +1,7 @@
 import { ScrollView, Alert, Text } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useEffect, useState } from "react";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Loading from "../../share/loading";
@@ -30,39 +30,32 @@ export const ListItemComponentHorario = ({
   navigateToFormScreen,
   modalTitle = "Info",
 }) => {
-  console.log("additionalData ", additionalData );
-
   const [modalVisible, setModalVisible] = useState(false); // primer modal
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
-  console.log("setItems", items);
   const [selectedItem, setSelectedItem] = useState(null);
   const today = Today();
   const [value, setValue] = useState(today);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
 
- 
   const fetchItems = useCallback(async () => {
     setLoading(true);
     try {
-      if (Array.isArray(additionalData) && additionalData.length > 0) {
-alert("entrando a additional data", additionalData)
-      }
-
       if (additionalData.length > 0) {
-        alert("entrando a additional data 2", additionalData)
         setItems(additionalData);
       } else {
         const res = await getDataAll();
         setItems(res);
       }
-    } catch (error) {
-      throw new Error("Error fetching items:", error);
+    } catch (e) {
+      setLoading(false);
+      return;
     } finally {
       setLoading(false);
     }
   }, [getDataAll, additionalData]);
+
   useEffect(() => {
     fetchItems();
   }, [fetchItems]);
@@ -124,9 +117,12 @@ alert("entrando a additional data", additionalData)
     );
   };
   const onRefresh = useCallback(async () => {
+   try {
     setRefreshing(true);
     await fetchItems();
+   } catch (error) {
     setRefreshing(false);
+   }
   }, [fetchItems]);
 
   const handleDateChange = (date) => {

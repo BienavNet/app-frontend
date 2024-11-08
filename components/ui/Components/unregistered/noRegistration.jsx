@@ -2,7 +2,7 @@ import { Text, View } from "react-native";
 
 export const NotRegistration = () => {
   return (
-    <Text style={{ textAlign: "center", marginTop: 20 }}>Ningún registro</Text>
+  <Text style={{ textAlign: "center", marginTop: 20, color:"#ea2a3b", fontSize:16 }}>Ningún registro</Text>
   );
 };
 

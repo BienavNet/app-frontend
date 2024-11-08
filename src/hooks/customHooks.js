@@ -14,8 +14,15 @@ import {
 import { getDocenteAll } from "../services/fetchData/fetchDocente";
 import { getNotificationCedulaEstado } from "../services/fetchData/fetchNotification";
 import { getReportAll } from "../services/fetchData/fetchReporte";
-import { getClasesAll, getClasesByDocentes, getClaseSupervisor } from "../services/fetchData/fetchClases";
-import { getComentarioDocenteDocente ,getComentarioDocenteSalon} from "../services/fetchData/fetchComentario";
+import {
+  getClasesAll,
+  getClasesByDocentes,
+  getClaseSupervisor,
+} from "../services/fetchData/fetchClases";
+import {
+  getComentarioDocenteDocente,
+  getComentarioDocenteSalon,
+} from "../services/fetchData/fetchComentario";
 
 //fetch Docente
 export const useDocenteAll = () => {
@@ -25,7 +32,7 @@ export const useDocenteAll = () => {
       const res = await getDocenteAll();
       setDocenteAll(res);
     } catch (error) {
-      setDocenteAll([])
+      setDocenteAll([]);
     }
   }, []);
 
@@ -45,7 +52,7 @@ export const useSupervisorAll = () => {
       const res = await getSupervisor();
       setSupervisors(res);
     } catch (error) {
-      setSupervisors([])
+      setSupervisors([]);
     }
   }, []);
 
@@ -64,7 +71,7 @@ export const useSupervisorCedula = (CEDULA) => {
       const res = await getSupervisorCedula(CEDULA);
       setSupervisorCedula(res);
     } catch (error) {
-      setSupervisorCedula([])
+      setSupervisorCedula([]);
     }
   }, []);
 
@@ -83,7 +90,7 @@ export const useSalonAll = () => {
       const res = await getSalon();
       setSalonAll(res);
     } catch (error) {
-      setSalonAll([])
+      setSalonAll([]);
     }
   }, []);
 
@@ -102,7 +109,7 @@ export const useHorarioAll = () => {
       const res = await getHorarioAll();
       setHorarioAll(res);
     } catch (error) {
-      throw Error("Failted to get horariosId", error);
+      setHorarioAll([]);
     }
   }, []);
 
@@ -123,7 +130,7 @@ export const useCategoriaxSalon = () => {
       const res = await getCategorySalon();
       setCategorySalon(res);
     } catch (error) {
-      throw Error("Failted to get horariosId", error);
+      setCategorySalon([]);
     }
   }, []);
 
@@ -135,15 +142,13 @@ export const useCategoriaxSalon = () => {
 
 //fetch notifications
 export const useNotificationCedulaEstado = (cedula, estado) => {
-  console.log(estado);
   const [notificationCedulaEstado, setNotificationCedulaEstado] = useState([]);
-
   const fetchNotificationsAll = useCallback(async () => {
     try {
       const res = await getNotificationCedulaEstado(cedula, estado);
       setNotificationCedulaEstado(res);
     } catch (error) {
-      throw Error("Error fetching notifications:", error);
+      setNotificationCedulaEstado([]);
     }
   }, [cedula, estado]);
 
@@ -151,7 +156,7 @@ export const useNotificationCedulaEstado = (cedula, estado) => {
     fetchNotificationsAll();
   }, [fetchNotificationsAll]);
 
-  return { notificationCedulaEstado, fetchNotificationsAll};
+  return { notificationCedulaEstado, fetchNotificationsAll };
 }; // obtiene todas las notificaciones x cedula y estado
 
 //fetch Horarios
@@ -182,7 +187,7 @@ export const useComentarioDocenteSalon = (cedula, salon) => {
       const res = await getComentarioDocenteSalon(cedula, salon);
       setComentarioDocenteSalon(res);
     } catch (error) {
-      setComentarioDocenteSalon([])
+      setComentarioDocenteSalon([]);
     }
   }, [salon]);
 
@@ -201,7 +206,7 @@ export const useClasesAll = () => {
       const res = await getClasesAll();
       setClassAll(res);
     } catch (error) {
-      throw Error(error);
+      setClassAll([]);
     }
   }, []);
 
@@ -212,14 +217,14 @@ export const useClasesAll = () => {
   return clasesAll;
 }; // obtiene todos las Clases
 
-export const useClaseSupervisor= (cedula) => {
+export const useClaseSupervisor = (cedula) => {
   const [claseSupervisor, setClaseSupervisor] = useState([]);
   const fetchClaseSupervisor = useCallback(async () => {
     try {
       const res = await getClaseSupervisor(cedula);
       setClaseSupervisor(res);
     } catch (error) {
-      throw Error(error);
+      setClaseSupervisor([]);
     }
   }, [cedula]);
 
@@ -227,12 +232,8 @@ export const useClaseSupervisor= (cedula) => {
     fetchClaseSupervisor();
   }, [fetchClaseSupervisor]);
 
-  return { claseSupervisor, fetchClaseSupervisor};
+  return { claseSupervisor, fetchClaseSupervisor };
 }; // obtiene todos las clases x supervisor
-
-
-
-
 
 //fetch Reporte
 export const useReporteAll = () => {
@@ -242,7 +243,7 @@ export const useReporteAll = () => {
       const res = await getReportAll();
       setReporteoAll(res);
     } catch (error) {
-      throw Error("Failted to get horariosId", error);
+      setReporteoAll([]);
     }
   }, []);
 
@@ -283,7 +284,7 @@ export const useClaseDocentes = (cedula) => {
       const res = await getClasesByDocentes(cedula);
       setClaseAll(res);
     } catch (error) {
-      throw Error("Failted to get docenteClasses", error);
+      setClaseAll([]);
     }
   }, []);
 
@@ -301,7 +302,7 @@ export const useDocenteComentario = (cedula) => {
       const res = await getComentarioDocenteDocente(cedula);
       setComentarioAll(res);
     } catch (error) {
-      throw Error("Failted to get docenteClasses", error);
+      setComentarioAll([]);
     }
   }, []);
 
