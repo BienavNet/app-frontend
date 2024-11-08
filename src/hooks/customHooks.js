@@ -51,6 +51,7 @@ export const useSupervisorAll = () => {
   const fetchSupervisorAll = useCallback(async () => {
     try {
       const res = await getSupervisor();
+      console.log(res, "Supervisor");
       setSupervisors(res);
     } catch (error) {
       setSupervisors([]);
@@ -89,7 +90,6 @@ export const useSupervisorDefault = () => {
   const fetchSupervisorDefault = useCallback(async () => {
     try {
       const res = await getSupervisorDefault();
-      console.log(res, "res supervisor default");
       setSupervisorDefault(res);
     } catch (error) {
       setSupervisorDefault([]);
@@ -228,7 +228,7 @@ export const useClasesAll = () => {
     try {
       const res = await getClasesAll();
       setClassAll(res);
-    } catch (error) {
+    } catch {
       setClassAll([]);
     }
   }, []);

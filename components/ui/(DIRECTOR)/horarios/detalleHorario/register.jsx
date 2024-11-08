@@ -55,6 +55,7 @@ export const RegisterDetailHorario = ({
   const [horafin, setHoraFin] = useState(new Date());
   const mapSalones = useSalonAll();
   const isDisabled = editing && !isDirty;
+  const classes = useClasesAll();
   const salones = mapSalones.map((item) => ({
     id: item.id.toString(),
     label: `${item.numero_salon} ${item.nombre} `,
@@ -104,7 +105,7 @@ export const RegisterDetailHorario = ({
     supervisors.forEach((s) => {
       counts[s.supervisor_id] = 0;
     });
-    const classes = useClasesAll();
+
     if (classes.length === 0) {
       return counts;
     }
