@@ -95,7 +95,9 @@ export const ListItemComponent = ({
               setItems(items.filter((item) => item.cedula !== itemId));
               Alert.alert(`${modalTitle} eliminado con éxito`);
             } catch (error) {
-              Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
+              const a = isSupervisor ? error.message : null;
+              Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`,
+                      a);
             }
           },
         },
@@ -226,11 +228,11 @@ export const ListItemComponent = ({
       {isSupervisor && snackbarVisible && (
         <View
           style={{
-            flex: 1,
-            backgroundColor: "red",
+            height:80,
           }}
         >
           <Snackbar
+           
             message="¿Quieres seleccionar este ítem?"
             action={
               <Button

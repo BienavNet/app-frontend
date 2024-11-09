@@ -12,7 +12,6 @@ import {
   useDocenteAll,
   useHorarioAll,
 } from "../../../../src/hooks/customHooks";
-import diasArray from "./json/dias.json";
 
 export const IndexHorario = () => {
   const horarioAll = useHorarioAll();
@@ -26,11 +25,8 @@ export const IndexHorario = () => {
   const [list, setList] = useState([]);
   // manejo de selecciones
   const [multipleSelectedOption, setMultipleSelectedOption] = useState([]);
-  console.log(multipleSelectedOption, " multipleSelectedOption screen Horario");
   const [selectedOption, setSelectedOption] = useState(null);
-  console.log(selectedOption, " selectedOption screen Horario");
   const [multipleSelectedItem, setMultipleSelectedItem] = useState({});
-  console.log(multipleSelectedItem, " multipleSelectedItem screen Horario");
   const [temporalSelectedItem, setTemporalSelectedItem] = useState({});
 
   const [opciones, setOpciones] = useState([

@@ -64,7 +64,7 @@ export const RegistrarEntidad = ({
         showToast({
           message: STATUS_MESSAGES[APP_STATUS.SUCCESS],
           type: "success",
-          id: APP_STATUS.SUCCESS,
+          id: `success_type${tipoEntidad}`,
         });
         await registerEntidad(nombre, apellido, cedula, correo, contrasena);
         reset();
@@ -72,7 +72,7 @@ export const RegistrarEntidad = ({
         showToast({
           message: STATUS_MESSAGES[APP_STATUS.UPDATING],
           type: "success",
-          id: APP_STATUS.UPDATING,
+          id: `update_type${tipoEntidad}`,
         });
         await updateEntidad(route.params.cedula, data);
         reset();
@@ -80,7 +80,7 @@ export const RegistrarEntidad = ({
       showToast({
         message: STATUS_MESSAGES[APP_STATUS.REDIRECTING],
         type: "warning",
-        id: APP_STATUS.REDIRECTING,
+        id:`redirect_type${tipoEntidad}`,
         onClose: () => {
           navigation.navigate("ListScreen");
         },
@@ -91,7 +91,7 @@ export const RegistrarEntidad = ({
       showToast({
         message: STATUS_MESSAGES[APP_STATUS.ERROR],
         type: "danger",
-        id: APP_STATUS.ERROR,
+        id: `danger_type${tipoEntidad}+${error}`,
       });
     }
   };
