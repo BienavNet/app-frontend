@@ -88,11 +88,60 @@ export const deleteReportID = async (id) => {
 };
 
 // endpoints for reporting statistics
+export const getSalonMasUtilizado = async () => {
+  try {
+    const response = await axiosInstance.get(
+      "/reporte/statistics/salon-mas-utilizado"
+    ); //✔️
+    console.log("response.data getSalonMasUtilizado", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message);
+  }
+};
+
+export const getSalonMenosUtilizado = async () => {
+  try {
+    const response = await axiosInstance.get(
+      "/reporte/statistics/salon-menos-utilizado"
+    );//✔️
+    console.log("response.data getSalonMenosUtilizado", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message);
+  }
+};
+
+export const getCantidadDiaMasAsignado = async () => {
+  try {
+    const response = await axiosInstance.get(
+      "/reporte/statistics/cantidad-dias-asignado"
+    ); //✔️
+    console.log("response.data getCantidadDiaMasAsignado", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message);
+  }
+};
+
+export const getRangeHoursMasFrecuente = async () => {
+  try {
+    const response = await axiosInstance.get(
+      "/reporte/statistics/hours-mas-frecuente"
+    );//✔️
+    console.log("response.data getRangeHoursMasFrecuente", response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message);
+  }
+};
+
 export const getDocenteQMasComentariosHaRealizado = async () => {
   try {
     const response = await axiosInstance.get(
       "/reporte/statistics/docente-mas-comentarios"
     );
+    console.log("response.data getDocenteQMasComentariosHaRealizado", response.data);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message);
@@ -104,50 +153,7 @@ export const getsalonMasComentarioTiene = async () => {
     const response = await axiosInstance.get(
       "/reporte/statistics/salon-mas-comentarios"
     );
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message);
-  }
-};
-
-export const getSalonMasUtilizado = async () => {
-  try {
-    const response = await axiosInstance.get(
-      "/reporte/statistics/salon-mas-utilizado"
-    );
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message);
-  }
-};
-
-export const getSalonMenosUtilizado = async () => {
-  try {
-    const response = await axiosInstance.get(
-      "/reporte/statistics/salon-menos-utilizado"
-    );
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message);
-  }
-};
-
-export const getCantidadDiaMasAsignado = async () => {
-  try {
-    const response = await axiosInstance.get(
-      "/reporte/statistics/cantidad-dias-asignado"
-    );
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message);
-  }
-};
-
-export const getRangeHoursMasFrecuente = async () => {
-  try {
-    const response = await axiosInstance.get(
-      "/reporte/statistics/hours-mas-frecuente"
-    );
+    console.log("response.data getsalonMasComentarioTiene", response.data);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message);

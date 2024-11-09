@@ -105,7 +105,8 @@ export const RegisterDetailHorario = ({
     supervisors.forEach((s) => {
       counts[s.supervisor_id] = 0;
     });
-
+     try {
+      
     if (classes.length === 0) {
       return counts;
     }
@@ -115,6 +116,9 @@ export const RegisterDetailHorario = ({
       }
     });
     return counts;
+     } catch (error) {
+      throw new Error("Error fetching classes:", error.message);
+     }
   };
 
   const getRandomSupervisor = (supervisors) => {
@@ -134,6 +138,7 @@ export const RegisterDetailHorario = ({
     }
     let minClasses = Infinity;
     let selectedSupervisor = null;
+
     supervisors.forEach((supervisor) => {
       if (classCounts[supervisor.supervisor_id] < minClasses) {
         minClasses = classCounts[supervisor.supervisor_id];
@@ -172,12 +177,19 @@ export const RegisterDetailHorario = ({
     }
   }, [route.params]);
 
-  useEffect(() => {
-    (async () => {
-      if (supervisors.length > 0) return countClassesForSupervisors();
-    })();
-  }, [supervisors]);
 
+  useEffect(() => {
+    if (supervisors.length > 0) {
+      const countClasses = () => {
+        try {
+           countClassesForSupervisors();
+        } catch (error) {
+          throw new Error("Error counting classes:", error);
+        }
+      };
+      countClasses();
+    }
+  }, [supervisors]);
   const onsubmit = async (data) => {
     const { salon, dia, hora_inicio, hora_fin } = data;
     const ESTADO = "pendiente";
