@@ -7,14 +7,6 @@ export const registerDocente = async (
   correo,
   contrasena
 ) => {
-  console.log(
-    "registes desde endpoint",
-    nombre,
-    apellido,
-    cedula,
-    correo,
-    contrasena
-  );
   try {
     const response = await axiosInstance.post("/docente/save", {
       nombre,
