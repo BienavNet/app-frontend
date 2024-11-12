@@ -97,7 +97,6 @@ const ListFilterComentario = ({ data }) => {
                       color: "#000000",
                       fontSize: 15
                     }}>
-                      {console.log(data)}
                       {capitalizeFirstLetter(data.nombre_salon)}{" "}{data.numero_salon}
                     </ListItem.Subtitle>
                   </View>

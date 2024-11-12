@@ -8,7 +8,6 @@ import {
 } from "../../../../../src/utils/functiones/functions";
 import { BoxView } from "../../../(DIRECTOR)/components/customBoxView";
 export const ListDocenteHorarioFilters = ({ data, type }) => {
-  console.log("data: ListDocenteHorarioFilters" + JSON.stringify(data));
   const title =
     type === "horarios"
       ? data.asignatura

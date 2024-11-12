@@ -43,10 +43,11 @@ const handlers = {
   },
 };
 
-const reducer = (state, action) => handlers[action.type] ? handlers[action.type](state, action) : state;
+const reducer = (state, action) =>
+  handlers[action.type] ? handlers[action.type](state, action) : state;
 
 export const AuthProvider = (props) => {
-  const {children} = props;
+  const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
   const isMounted = useRef(false);
 
@@ -55,7 +56,6 @@ export const AuthProvider = (props) => {
     const initialize = async () => {
       try {
         const access_token = await AsyncStorage.getItem("access_token");
-        console.log('Access token: ' + access_token)
         if (access_token && validateToken(access_token)) {
           setSession(access_token);
           const response = await axiosInstance.get(`/login/sesion`);
@@ -77,7 +77,6 @@ export const AuthProvider = (props) => {
           });
         }
       } catch (error) {
-        console.log(error);
         dispatch({
           type: "INITIALIZE",
           payload: {
@@ -98,7 +97,7 @@ export const AuthProvider = (props) => {
         contrasena,
         rol,
       });
-      const { access_token } = response.data
+      const { access_token } = response.data;
       setSession(access_token);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message;
@@ -122,7 +121,7 @@ export const AuthProvider = (props) => {
       }
     } catch (error) {
       logout();
-      return Promise.reject(error)
+      return Promise.reject(error);
     }
   };
 
@@ -132,7 +131,6 @@ export const AuthProvider = (props) => {
       type: "LOGOUT",
     });
   };
-
 
   return (
     <AuthContext.Provider

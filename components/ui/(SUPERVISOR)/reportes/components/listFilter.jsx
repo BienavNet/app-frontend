@@ -9,14 +9,11 @@ const ListFilterReport = ({
   selectedOption,
   temporarySelection,
 }) => {
-  console.log("List Filter Report", temporarySelection);
   const isSelected = temporarySelection?.id === data.id;
-
   const handleCheckSelected = () => {
     const newValue = !isSelected;
     onPress(data, newValue);
   };
-
   return (
     <View style={styles.contenCheckbox}>
       <Checkbox

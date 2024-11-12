@@ -4,6 +4,7 @@ import { ColorItem, styles } from "../../styles/StylesGlobal";
 import  moment, { Today } from "../../../src/utils/InstanceMoment";
 import { ViewDatePicker } from "../(DIRECTOR)/horarios/component/viewDatePicker";
 import { NotRegistrationDate } from "./unregistered/noRegistration";
+
 export default function SimpleDatePicker({
   selectedDate,
   onDateChange,
@@ -11,8 +12,7 @@ export default function SimpleDatePicker({
 }) {
   const today = Today();
   const [value, setValue] = useState(null);
-  const formattedSelectedDates = useMemo(() => {return selectedDate.map((date) => moment(date))
-  }, [selectedDate]); 
+  const formattedSelectedDates = useMemo(() => {return selectedDate.map((date) => moment(date))}, [selectedDate]); 
 
  //comparamos si today se encuentra en la lista
  const isTodayInSelectedDates = useMemo(() => {
@@ -50,9 +50,6 @@ export default function SimpleDatePicker({
     }
   };
 
-  // const handleDateSelected = (selectedItem) => {
-  //   return selectedItem?.fecha; // Devuelve la fecha seleccionada
-  // };
   return (
     <View style={styles.container}>
       <View style={styles.picker}>
@@ -97,7 +94,7 @@ export default function SimpleDatePicker({
                       { color: isActive ? "#fff" : "black" }, // Blanco si es activo
                     ]}
                   >
-                    {fecha.date()} {/* Mostrar el día del mes */}
+                    {fecha.date()} 
                   </Text>
                 </View>
               </TouchableWithoutFeedback>

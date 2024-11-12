@@ -1,4 +1,4 @@
-import { Text, ScrollView, View, StyleSheet } from "react-native";
+import { Text, ScrollView, View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useEffect, useState } from "react";
@@ -9,13 +9,7 @@ import {
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import Loading from "../../share/loading";
-import { getDetailHorarioByHorarioID } from "../../../src/services/fetchData/fetchDetailHorario";
-import {
-  DeleteClasesOne,
-  getClassesByHorarioID,
-} from "../../../src/services/fetchData/fetchClases";
 import { NotRegistration } from "../../share/noRegistration";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
 
@@ -31,10 +25,8 @@ export const ListItemReport = ({
   const navigation = useNavigation();
   const [viewedComments, setViewedComments] = useState({});
   const [items, setItems] = useState([]);
-  console.log("items ------------", items);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  console.log("setSelectedItem ------------", selectedItem);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -57,13 +49,10 @@ export const ListItemReport = ({
   );
 
   const handleInfoPress = async (id) => {
-    console.log("id", id);
     try {
       setModalVisible(true);
       const res = await getDataOne(id);
-      console.log(res, "response res de handleInfoPress");
       const itemselected = res.find((value) => value.id === id);
-      console.log(itemselected, "item selected");
       if (itemselected) {
         setSelectedItem(itemselected);
         setViewedComments((prev) => ({ ...prev, [id]: true }));
@@ -84,20 +73,24 @@ export const ListItemReport = ({
   };
 
   const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await fetchItems();
-    setRefreshing(false);
+    try {
+      setRefreshing(true);
+      await fetchItems();
+      setRefreshing(false);
+    } catch {
+      setRefreshing(false);
+    }
   }, [fetchItems]);
 
-  useEffect(() => {
-    if (modalVisible) {
-      setLoading(true);
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [modalVisible]);
+  // useEffect(() => {
+  //   if (modalVisible) {
+  //     setLoading(true);
+  //     const timer = setTimeout(() => {
+  //       setLoading(false);
+  //     }, 1000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [modalVisible]);
   return (
     <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
       {loading ? (

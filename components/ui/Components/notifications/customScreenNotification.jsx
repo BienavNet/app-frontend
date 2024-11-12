@@ -1,11 +1,15 @@
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Avatar } from "@rneui/themed";
 import { updateNotificationId } from "../../../../src/services/fetchData/fetchNotification";
 import { useNavigation } from "@react-navigation/native";
 import { DateChip } from "../../(DIRECTOR)/reportes/components/DateChip";
 import { ColorItem } from "../../../styles/StylesGlobal";
 import { useNotificationCedulaEstado } from "../../../../src/hooks/customHooks";
+import {
+  capitalizeFirstLetter,
+  truncateText,
+} from "../../../../src/utils/functiones/functions";
 
 const handleEditNotification = async (id, fetchNotificationsAll) => {
   const LEIDA = "leida";
@@ -43,10 +47,9 @@ export const ContentNofitications = ({ cedula, estado = "todas" }) => {
             onPress={() => handlePressNotification(item)}
             key={index}
             style={{
-              borderLeftWidth: 0.4,
               borderBottomWidth: 1,
-              borderColor: ColorItem.DeepFir,
-              padding: 10,
+              borderColor: ColorItem.TarnishedSilver,
+              padding: 8,
               backgroundColor: item.estado === "leida" ? "#fff" : "#ecf3ff",
             }}
           >
@@ -57,22 +60,20 @@ export const ContentNofitications = ({ cedula, estado = "todas" }) => {
                 justifyContent: "space-around",
               }}
             >
-              <View style={{ backgroundColor: "transparent" }}>
-                <Avatar
-                  size={60}
-                  rounded
-                  title="notification"
-                  source={require("../../../../assets/png/teacher.png")}
-                />
-              </View>
+              <Avatar
+                size="medium"
+                rounded
+                title="notification"
+                source={require("../../../../assets/png/teacher.png")}
+              />
               <View
                 style={{
-                  width: "80%",
+                  width: "85%",
                   flexDirection: "row",
                   justifyContent: "space-between",
                 }}
               >
-                <View style={{ width: "85%" }}>
+                <View style={{ width: "100%" }}>
                   <Text
                     style={{
                       padding: 5,
@@ -81,7 +82,8 @@ export const ContentNofitications = ({ cedula, estado = "todas" }) => {
                       color: ColorItem.DeepFir,
                     }}
                   >
-                    {item.nombre_de} {item.apellido_de}
+                    {capitalizeFirstLetter(item.nombre_de)}{" "}
+                    {capitalizeFirstLetter(item.apellido_de)}
                   </Text>
                   <Text
                     style={{
@@ -91,7 +93,7 @@ export const ContentNofitications = ({ cedula, estado = "todas" }) => {
                       paddingLeft: 5,
                     }}
                   >
-                    {item.mensaje}
+                    {truncateText(item.mensaje, 50)}
                   </Text>
 
                   <View
@@ -101,7 +103,7 @@ export const ContentNofitications = ({ cedula, estado = "todas" }) => {
                   >
                     <View
                       style={{
-                        width: "50%",
+                        width: "40%",
                       }}
                     >
                       <DateChip
@@ -110,9 +112,9 @@ export const ContentNofitications = ({ cedula, estado = "todas" }) => {
                     </View>
                     <View
                       style={{
-                        width: "15%",
-                        padding: 10,
-                        justifyContent: "flex-start",
+                        width: "50%",
+                        padding: 5,
+                        justifyContent: "flex-end",
                         alignItems: "flex-end",
                       }}
                     >
@@ -123,16 +125,6 @@ export const ContentNofitications = ({ cedula, estado = "todas" }) => {
                       />
                     </View>
                   </View>
-                </View>
-                <View
-                  style={{
-                    width: "15%",
-                    padding: 10,
-                    justifyContent: "flex-start",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Feather name="x" size={24} color="black" />
                 </View>
               </View>
             </View>

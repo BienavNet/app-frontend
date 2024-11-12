@@ -1,5 +1,4 @@
 // ************ status the all that custom hooks functionality ********
-
 import { useEffect, useState, useCallback } from "react";
 import {
   getSupervisor,
@@ -9,7 +8,6 @@ import {
 import { getCategorySalon, getSalon } from "../services/fetchData/fetchSalon";
 import {
   getHorarioAll,
-  getHorarioDocente,
   getHorarioDocenteCedula,
 } from "../services/fetchData/fetchHorarios";
 import { getDocenteAll } from "../services/fetchData/fetchDocente";
@@ -32,7 +30,7 @@ export const useDocenteAll = () => {
     try {
       const res = await getDocenteAll();
       setDocenteAll(res);
-    } catch (error) {
+    } catch {
       setDocenteAll([]);
     }
   }, []);
@@ -51,9 +49,8 @@ export const useSupervisorAll = () => {
   const fetchSupervisorAll = useCallback(async () => {
     try {
       const res = await getSupervisor();
-      console.log(res, "Supervisor");
       setSupervisors(res);
-    } catch (error) {
+    } catch {
       setSupervisors([]);
     }
   }, []);
@@ -91,7 +88,7 @@ export const useSupervisorDefault = () => {
     try {
       const res = await getSupervisorDefault();
       setSupervisorDefault(res);
-    } catch (error) {
+    } catch {
       setSupervisorDefault([]);
     }
   }, []);
@@ -112,7 +109,7 @@ export const useSalonAll = () => {
     try {
       const res = await getSalon();
       setSalonAll(res);
-    } catch (error) {
+    } catch {
       setSalonAll([]);
     }
   }, []);
@@ -131,7 +128,7 @@ export const useHorarioAll = () => {
     try {
       const res = await getHorarioAll();
       setHorarioAll(res);
-    } catch (error) {
+    } catch{
       setHorarioAll([]);
     }
   }, []);
@@ -152,7 +149,7 @@ export const useCategoriaxSalon = () => {
     try {
       const res = await getCategorySalon();
       setCategorySalon(res);
-    } catch (error) {
+    } catch{
       setCategorySalon([]);
     }
   }, []);
@@ -170,7 +167,7 @@ export const useNotificationCedulaEstado = (cedula, estado) => {
     try {
       const res = await getNotificationCedulaEstado(cedula, estado);
       setNotificationCedulaEstado(res);
-    } catch (error) {
+    } catch {
       setNotificationCedulaEstado([]);
     }
   }, [cedula, estado]);
@@ -209,7 +206,7 @@ export const useComentarioDocenteSalon = (cedula, salon) => {
     try {
       const res = await getComentarioDocenteSalon(cedula, salon);
       setComentarioDocenteSalon(res);
-    } catch (error) {
+    } catch  {
       setComentarioDocenteSalon([]);
     }
   }, [salon]);
@@ -219,7 +216,26 @@ export const useComentarioDocenteSalon = (cedula, salon) => {
   }, [fetchComentarioDocenteSalon]);
 
   return comentarioDocenteSalon;
-}; // obtiene todos los comentarios
+}; 
+
+// obtiene todos los comentarios por la cedula del docente
+export const useComentarioDocenteCedula = (cedula) => {
+  const [comentarioDocenteCedula, setComentarioDocenteCedula] = useState([]);
+  const fetchComentarioDocenteCedula = useCallback(async () => {
+    try {
+      const res = await getComentarioDocenteDocente(cedula);
+      setComentarioDocenteCedula(res);
+    } catch{
+      setComentarioDocenteCedula([]);
+    }
+  }, [cedula]);
+
+  useEffect(() => {
+    fetchComentarioDocenteCedula();
+  }, [fetchComentarioDocenteCedula]);
+
+  return comentarioDocenteCedula;
+};
 
 //fetch Clases
 export const useClasesAll = () => {
@@ -246,7 +262,7 @@ export const useClaseSupervisor = (cedula) => {
     try {
       const res = await getClaseSupervisor(cedula);
       setClaseSupervisor(res);
-    } catch (error) {
+    } catch {
       setClaseSupervisor([]);
     }
   }, [cedula]);
@@ -265,7 +281,7 @@ export const useReporteAll = () => {
     try {
       const res = await getReportAll();
       setReporteoAll(res);
-    } catch (error) {
+    } catch {
       setReporteoAll([]);
     }
   }, []);
@@ -306,7 +322,7 @@ export const useClaseDocentes = (cedula) => {
     try {
       const res = await getClasesByDocentes(cedula);
       setClaseAll(res);
-    } catch (error) {
+    } catch {
       setClaseAll([]);
     }
   }, []);
@@ -324,7 +340,7 @@ export const useDocenteComentario = (cedula) => {
     try {
       const res = await getComentarioDocenteDocente(cedula);
       setComentarioAll(res);
-    } catch (error) {
+    } catch {
       setComentarioAll([]);
     }
   }, []);

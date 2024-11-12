@@ -1,27 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, SafeAreaView } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import { View, FlatList, SafeAreaView } from "react-native";
 import { ColorItem, styles } from "../../../../styles/StylesGlobal";
 import { DividerLine } from "../../../Components/dividerline/dividerLine";
-import { useComentarioDocenteSalon, useSalonAll } from "../../../../../src/hooks/customHooks";
-import { getComentarioDocenteDocente } from "../../../../../src/services/fetchData/fetchComentario";
+import { useComentarioDocenteCedula, useComentarioDocenteSalon, useSalonAll } from "../../../../../src/hooks/customHooks";
 import { userData } from "../../../../../src/hooks/use/userData";
 import { ChildFilter } from "../../../(SUPERVISOR)/components/chid/chidFilter";
 import { ModalComponente } from "../../../Components/customModal";
 import { Reset_Filter } from "../../../(SUPERVISOR)/components/button/buttonReset&Filter";
 import { CustomSeachBar } from "../../../(DIRECTOR)/comentario/components/seachBar";
 import { NofilterSelected } from "../../../Components/unregistered/noRegistration";
-import { ListReportDefault } from "../../../(SUPERVISOR)/reportes/components/listDefault";
 import { ListComentarioDocenteSalonDefault } from "./listDefault";
 import ListFilterReport from "../../../(SUPERVISOR)/reportes/components/listFilter";
-import ListSelectItem from "../../../(SUPERVISOR)/reportes/components/listSelectItem";
 import ListFilterComentario from "./filterSalon";
 
 export const IndexComentarioDocente = () => {
   const { CEDULA } = userData();
   const salonAll = useSalonAll();
 
-  const [reportdefault, setReportDefault] = useState([]); // lista que se muestra por defecto
+  const reportdefault = useComentarioDocenteCedula(CEDULA)// lista que se muestra por defecto
+
   const [list, setList] = useState([]); // lista de los datos filtrados
   const [selectedOption, setSelectedOption] = useState(null); //
   const [searchText, setSearchText] = useState(""); // para buscar en searchBar
@@ -30,23 +27,6 @@ export const IndexComentarioDocente = () => {
   const [additionalData, setAdditionalData] = useState([]);
   const [modalSelect, setModalSelect] = useState(false); // estado del modal
   const [temporarySelection, setTemporarySelection] = useState(null); // obtiene el item temporal mientras se le aplica en el boton de filtrar
-
-
-  const fetchComentarioDocenteCedula= useCallback(async () => {
-    try {
-      const res = await getComentarioDocenteDocente(CEDULA);
-      console.log(res, "fetchComentarioDocenteCedula");
-      setReportDefault(res);
-    } catch (error) {
-      setReportDefault([])
-    }
-  }, [CEDULA]);
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchComentarioDocenteCedula();
-    }, [fetchComentarioDocenteCedula])
-  );
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -79,7 +59,6 @@ export const IndexComentarioDocente = () => {
   };
 
   const comentarioDocenteSalon = useComentarioDocenteSalon(CEDULA,selectedItem ? selectedItem.id : 0);
-//revisar bug cuando comentarioDocenteSalon es vacio
   useEffect(() => {
     if (selectedItem && selectedOption === "salon") {
       setAdditionalData(comentarioDocenteSalon);

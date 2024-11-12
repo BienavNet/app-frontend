@@ -1,5 +1,9 @@
 import { Audio } from "expo-av";
-import moment from "moment";
+import moment from "../../../src/utils/InstanceMoment"
+
+export const DatesYYYYMMDD = (fecha)=>{
+  return moment(fecha).format("YYYY-MM-DD");
+}
 
 // Función para reproducir el sonido de notificación
 export default async function playNotificationSound(setSound) {
@@ -7,9 +11,8 @@ export default async function playNotificationSound(setSound) {
     const { sound } = await Audio.Sound.createAsync(require('../../../assets/mp3/Sweet.mp3'));
     setSound(sound);
     await sound.playAsync();
-  } catch (error) {
-    console.error("Error loading or playing sound: VERIFICA SI LA RUTA DEL SONIDO EXISTE", error);
-    return;
+  } catch {
+    return false;
   }
 };
 
@@ -108,29 +111,6 @@ export const formatTimeTo12Hour = (time24) => {
   return `${hour12}:${minute} ${ampm}`;
 };
 
-// Función para obtener las fechas futuras y deshabilitarlas
-export const getFutureDatesDisabled = (minDate) => {
-  const marked = {};
-  const currentDate = moment().format("YYYY-MM-DD"); // Obtener la fecha actual
-  let date = moment(minDate); // Comenzar desde la fecha mínima
-
-  // Iterar desde la fecha mínima hasta la fecha actual
-  while (date.isSameOrBefore(currentDate)) {
-    const dateString = date.format("YYYY-MM-DD"); // Formatear la fecha como string
-    marked[dateString] = { disabled: false }; // Habilitar las fechas hasta hoy
-    date = date.add(1, "days"); // Avanzar un día
-  }
-
-  // Deshabilitar todos los días futuros excepto el día actual
-  const tomorrow = moment().add(1, "days");
-  while (tomorrow.isBefore(moment("2025-01-01"))) {
-    const futureDateString = tomorrow.format("YYYY-MM-DD");
-    marked[futureDateString] = { disabled: true }; // Deshabilitar días futuros
-    tomorrow.add(1, "days"); // Avanzar un día
-  }
-
-  return marked;
-};
 export const timeHHMM = (fecha, hour) =>{
   const time =  new Date(`${fecha.split("T")[0]}T${hour}`).toLocaleTimeString([], {
      hour: "2-digit",
@@ -138,18 +118,3 @@ export const timeHHMM = (fecha, hour) =>{
    });
    return time;
  }
-// devuelve el numero del dia, {lunes:1, martes:2 , etc}
-export const obtenerDiaNumero = (dia) => {
-  console.log(dia, "dia de la funcion obtener dia Numero")
-  const diasSemana = {
-    domingo: 7,
-    lunes: 1,
-    martes: 2,
-    miércoles: 3,
-    jueves: 4,
-    viernes: 5,
-    sábado: 6,
-  };
-  const diaLowerCase = dia.toLowerCase();
-  return diasSemana[diaLowerCase] || 0;
-};

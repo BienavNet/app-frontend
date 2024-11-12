@@ -14,8 +14,6 @@ import { useHorarioDocenteCedula } from "../../../../../src/hooks/customHooks";
 export const IndexHorarioDefault = () => {
   const { CEDULA } = userData();
   const HorarioDocenteCedula = useHorarioDocenteCedula(CEDULA);
-  console.log("HorarioDocenteCedula", HorarioDocenteCedula);
-
   const [expandedId, setExpandedId] = useState(null);
 
   const handlePress = (id) => {

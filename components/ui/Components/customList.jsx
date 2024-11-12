@@ -1,4 +1,4 @@
-import { ScrollView, Alert, RefreshControl, View } from "react-native";
+import { ScrollView, Alert, View } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -13,6 +13,7 @@ import { Snackbar } from "@react-native-material/core";
 import { useSupervisorDefault } from "../../../src/hooks/customHooks";
 import { updateSupervisorDefault } from "../../../src/services/fetchData/fetchSupervisor";
 import { ColorItem } from "../../styles/StylesGlobal";
+import { refreshControl } from "../../../src/utils/functiones/refresh";
 export const ListItemComponent = ({
   getDataAll,
   getDataOne,
@@ -29,7 +30,6 @@ export const ListItemComponent = ({
   const [refreshing, setRefreshing] = useState(false);
 
   const [selectedItemId, setSelectedItemId] = useState(null);
-  console.log(selectedItemId, "selectedItemId");
   const supervisordefault = useSupervisorDefault();
 
   useEffect(() => {
@@ -44,7 +44,6 @@ export const ListItemComponent = ({
 
   const [snackbarVisible, setSnackbarVisible] = useState(false); // Estado para controlar la visibilidad del Snackbar
   const [selectedItemForSnackbar, setSelectedItemForSnackbar] = useState(null); // Estado para guardar el item que activó el Snackbar
-  console.log(selectedItemForSnackbar, "selectedItemForSnackbar");
 
   const fetchItems = useCallback(async () => {
     const res = await getDataAll();
@@ -96,8 +95,10 @@ export const ListItemComponent = ({
               Alert.alert(`${modalTitle} eliminado con éxito`);
             } catch (error) {
               const a = isSupervisor ? error.message : null;
-              Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`,
-                      a);
+              Alert.alert(
+                `Error al eliminar el ${modalTitle.toLowerCase()}`,
+                a
+              );
             }
           },
         },
@@ -134,16 +135,7 @@ export const ListItemComponent = ({
   };
   return (
     <>
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            colors={["#78e08f"]}
-            onRefresh={onRefresh}
-            progressBackgroundColor="#1371C3"
-          />
-        }
-      >
+      <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
         {items.length === 0 ? (
           <NotRegistration />
         ) : (
@@ -228,11 +220,10 @@ export const ListItemComponent = ({
       {isSupervisor && snackbarVisible && (
         <View
           style={{
-            height:80,
+            height: 80,
           }}
         >
           <Snackbar
-           
             message="¿Quieres seleccionar este ítem?"
             action={
               <Button

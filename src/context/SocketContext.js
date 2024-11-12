@@ -1,7 +1,6 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import playNotificationSound from "../../src/utils/functiones/functions";
 import io from "socket.io-client";
-// import { showNotification } from "../utils/PERMISSIONS/push.notification/viewnotification";
 import useNotificationPermissions from "../utils/PERMISSIONS/push.notification/expo.notification";
 import { userData } from "../hooks/use/userData";
 const baseURL = process.env.EXPO_PUBLIC_URLWEBSOCKET;
@@ -21,25 +20,21 @@ export const NotificationProvider = (props) => {
     if (data > totalUnreadNotification) {
       playNotificationSound(setSound);
       setTotalUnreadNotification(data);
-      //  showNotification("Nueva notificación", `Tienes 2 notificaciones no leídas.`);
     } else if (data < totalUnreadNotification) {
       setTotalUnreadNotification(data);
     } else {
-      console.log("No hay nuevas notificaciones");
-      return;
+      return false;
     }
   };
 
   const configreSocketEvents = () => {
     // eventos del websocket
     socket.on("connect", () => {
-      console.log("Conectado al servidor WebSocket", socket.id);
       socket.emit("authenticate", { userId: ID, rol: ROL });
     });
 
     socket.on("count-notification", (data) => {
       handleNewNotification(data);
-      console.log("count-notification data: " + data);
     });
 
     socket.on("disconnect", () => {

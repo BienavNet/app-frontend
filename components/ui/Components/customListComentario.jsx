@@ -99,20 +99,21 @@ export const ListItemComentario = ({
     try {
       setRefreshing(true);
       await fetchItems();
+      setRefreshing(false);
     } catch {
       setRefreshing(false);
     }
   }, [fetchItems]);
 
-  useEffect(() => {
-    if (modalVisible) {
-      setLoading(true);
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [modalVisible]);
+  // useEffect(() => {
+  //   if (modalVisible) {
+  //     setLoading(true);
+  //     const timer = setTimeout(() => {
+  //       setLoading(false);
+  //     }, 1000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [modalVisible]);
 
   return (
     <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>

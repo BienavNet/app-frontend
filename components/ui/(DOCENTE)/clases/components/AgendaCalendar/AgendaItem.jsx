@@ -132,7 +132,7 @@ const AgendaItem = (props) => {
       <View style={styles.item}>
         <View
           style={{
-            width: "50%",
+            width: "45%",
           }}
         >
           <Text style={styles.itemHourText}>
@@ -144,8 +144,7 @@ const AgendaItem = (props) => {
         </View>
         <View
           style={{
-            width: "50%",
-
+            width: "55%",
             flexDirection: "column",
           }}
         >
@@ -156,7 +155,7 @@ const AgendaItem = (props) => {
             }}
           >
             <Text style={styles.itemTitleText}>
-              {truncateText(data.subject, 14)}
+              {truncateText(data.subject, 7)}
             </Text>
           </View>
           <TouchableOpacity

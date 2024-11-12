@@ -1,4 +1,4 @@
-import { ScrollView, Alert, Text } from "react-native";
+import { ScrollView, Alert } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useEffect, useState } from "react";
 import {useNavigation } from "@react-navigation/native";
@@ -120,7 +120,8 @@ export const ListItemComponentHorario = ({
    try {
     setRefreshing(true);
     await fetchItems();
-   } catch (error) {
+    setRefreshing(false);
+   } catch {
     setRefreshing(false);
    }
   }, [fetchItems]);
