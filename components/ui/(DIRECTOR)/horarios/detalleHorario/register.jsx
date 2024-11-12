@@ -31,6 +31,7 @@ import {
 } from "../../../../../src/hooks/customHooks";
 export const RegisterDetailHorario = ({
   navigation,
+  idhorarioDetalle,
   route,
   idhorario,
   editing,
@@ -190,6 +191,7 @@ export const RegisterDetailHorario = ({
       countClasses();
     }
   }, [supervisors]);
+  
   const onsubmit = async (data) => {
     const { salon, dia, hora_inicio, hora_fin } = data;
     const ESTADO = "pendiente";
@@ -260,7 +262,7 @@ export const RegisterDetailHorario = ({
           id: APP_STATUS.LOADING,
         });
 
-        const updateDetail = updateDetailHorario(route.params.id, {
+        const updateDetail = updateDetailHorario(idhorarioDetalle, {
           dia: dia,
           hora_inicio: hora_inicio,
           hora_fin: hora_fin,
@@ -271,7 +273,6 @@ export const RegisterDetailHorario = ({
             .map(async (clase) => {
               return {
                 salon,
-                // estado: ESTADO,
                 ...clase,
               };
             })

@@ -36,6 +36,8 @@ export const RegisterHorario = ({ navigation, route }) => {
   }));
 
   const [horarioId, setHorarioId] = useState(null);
+  const [idhorarioDetalle, setIdhorarioDetalle] = useState(null);
+  console.log(idhorarioDetalle, "XXXXXXXXXXXX ------- idhorarioDetalle")
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -65,6 +67,7 @@ export const RegisterHorario = ({ navigation, route }) => {
       navigation.setOptions({ headerTitle: "Actualizar horario" });
       (async () => {
         const response = await getHorarioOne(route.params.id);
+        setIdhorarioDetalle(response[0].horarios[0].id_detallehorario)
         const value = response.find((doc) => doc.id === route.params.id);
         if (value) {
           setInitialValues({
@@ -256,6 +259,7 @@ export const RegisterHorario = ({ navigation, route }) => {
       >
         <RegisterDetailHorario
           route={route}
+          idhorarioDetalle={idhorarioDetalle}
           handleCloseModal={SubmithandleCloseModal}
           idhorario={horarioId}
           editing={editing}

@@ -21,6 +21,7 @@ export const CustomTimePicker = ({
   title,
   editing = false,
 }) => {
+  console.log("initialValue", initialValue)
   const [showPicker, setShowPicker] = useState(false);
   const initialEditing = new Date();
   const initalRegistering = initialValue || new Date();
