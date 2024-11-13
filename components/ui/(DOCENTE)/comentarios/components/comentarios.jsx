@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { View, FlatList, SafeAreaView } from "react-native";
 import { ColorItem, styles } from "../../../../styles/StylesGlobal";
 import { DividerLine } from "../../../Components/dividerline/dividerLine";
-import { useComentarioDocenteCedula, useComentarioDocenteSalon, useSalonAll } from "../../../../../src/hooks/customHooks";
+import {
+  useComentarioDocenteCedula,
+  useComentarioDocenteSalon,
+  useSalonAll,
+} from "../../../../../src/hooks/customHooks";
 import { userData } from "../../../../../src/hooks/use/userData";
 import { ChildFilter } from "../../../(SUPERVISOR)/components/chid/chidFilter";
 import { ModalComponente } from "../../../Components/customModal";
@@ -17,7 +21,7 @@ export const IndexComentarioDocente = () => {
   const { CEDULA } = userData();
   const salonAll = useSalonAll();
 
-  const reportdefault = useComentarioDocenteCedula(CEDULA)// lista que se muestra por defecto
+  const reportdefault = useComentarioDocenteCedula(CEDULA); // lista que se muestra por defecto
 
   const [list, setList] = useState([]); // lista de los datos filtrados
   const [selectedOption, setSelectedOption] = useState(null); //
@@ -58,7 +62,10 @@ export const IndexComentarioDocente = () => {
     }
   };
 
-  const comentarioDocenteSalon = useComentarioDocenteSalon(CEDULA,selectedItem ? selectedItem.id : 0);
+  const comentarioDocenteSalon = useComentarioDocenteSalon(
+    CEDULA,
+    selectedItem ? selectedItem.id : 0
+  );
   useEffect(() => {
     if (selectedItem && selectedOption === "salon") {
       setAdditionalData(comentarioDocenteSalon);
@@ -94,12 +101,11 @@ export const IndexComentarioDocente = () => {
           <FlatList
             data={reportdefault}
             style={styles.list}
-            renderItem={({ item }) => <ListComentarioDocenteSalonDefault data={item} />}
-            keyExtractor={(item) =>item.id.toString()
-            }
-            ListEmptyComponent={
-              <NofilterSelected/>
-            }
+            renderItem={({ item }) => (
+              <ListComentarioDocenteSalonDefault data={item} />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            ListEmptyComponent={<NofilterSelected />}
           />
         )}
 
@@ -111,9 +117,10 @@ export const IndexComentarioDocente = () => {
                 <FlatList
                   data={additionalData}
                   style={styles.list}
-                  renderItem={({ item }) => <ListFilterComentario data={item} />}
-                  keyExtractor={(item) =>item.id.toString()
-                  }
+                  renderItem={({ item }) => (
+                    <ListFilterComentario data={item} />
+                  )}
+                  keyExtractor={(item) => item.id.toString()}
                   ListEmptyComponent={<NofilterSelected />}
                 />
               </>

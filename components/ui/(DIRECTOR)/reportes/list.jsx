@@ -16,7 +16,7 @@ import {
   useSalonAll,
 } from "../../../../src/hooks/customHooks";
 import { ModalComponente } from "../../Components/customModal";
-import { ChildFilter } from "../../(SUPERVISOR)/components/chid/chidFilter";
+import { ChildFilter, ChildFilterX } from "../../(SUPERVISOR)/components/chid/chidFilter";
 import { CustomSeachBar } from "../comentario/components/seachBar";
 import {
   NofilterSelected,
@@ -137,7 +137,7 @@ export const ReportView_Filter = () => {
         {selectedItem && (
           <>
             {selectedOption && additionalData && (
-              <ChildFilter
+              <ChildFilterX
                 title={selectedOption}
                 selectedItem={selectedItem}
                 action={handleSearchBarClear}

@@ -86,7 +86,17 @@ export const formatHourHHMMTime = (currentTime) => {
     .toString()
     .padStart(2, "0")} ${hours < 12 ? "AM" : "PM"}`;
 };
-
+export function timeParts(initialValue) {
+  if (typeof initialValue !== "string") {
+    return "";
+  }
+  const tp = initialValue.split(":");
+  if (tp.length === 3) {
+    const timeFormatted = tp.slice(0, 2).join(":");  // Formato "HH:mm"
+    return timeFormatted;
+  }
+  return initialValue;
+}
 export const formatHourHHMM = (currentTime) => {
   const hours = currentTime.getHours();
   const minutes = currentTime.getMinutes();

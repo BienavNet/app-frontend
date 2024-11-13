@@ -20,7 +20,7 @@ import {
   updateClase,
 } from "../../../../../src/services/fetchData/fetchClases";
 import { useEffect, useState } from "react";
-import { generateClassDates } from "../../../../../src/utils/functiones/functions";
+import { generateClassDates, timeParts } from "../../../../../src/utils/functiones/functions";
 import Loading from "../../../../share/loading";
 import { SubmitButton } from "../../../../share/button/submitButton";
 import useToastMessage from "../../../../share/ToasNotification";
@@ -66,34 +66,35 @@ export const RegisterDetailHorario = ({
     id: d,
     label: d,
   }));
-  
+
   useEffect(() => {
     navigation.setOptions({
-      headerBackTitleVisible: true, 
+      headerBackTitleVisible: true,
     });
   }, [navigation]);
-  
 
   const checkSupervisorsAvailable = () => {
     if (supervisors.length === 0) {
       Alert.alert(
-        "No hay supervisores disponibles", 
-        "No puedes registrar el detalle de horario.",[
+        "No hay supervisores disponibles",
+        "No puedes registrar el detalle de horario.",
+        [
           {
-            text: "Terminar", 
-            onPress: () =>  navigation.navigate("ListScreen")
+            text: "Terminar",
+            onPress: () => navigation.navigate("ListScreen"),
           },
           {
-            text: "Ir a Registrar Supervisor", 
-            onPress: () => navigation.navigate('Supervisor', { screen: 'FormScreen' }),
-          }
+            text: "Ir a Registrar Supervisor",
+            onPress: () =>
+              navigation.navigate("Supervisor", { screen: "FormScreen" }),
+          },
         ]
       );
       reset({
         salon: "",
         dia: "",
       });
-      setHoraInicio(new Date()); 
+      setHoraInicio(new Date());
       setHoraFin(new Date());
       return false;
     }
@@ -106,20 +107,19 @@ export const RegisterDetailHorario = ({
     supervisors.forEach((s) => {
       counts[s.supervisor_id] = 0;
     });
-     try {
-      
-    if (classes.length === 0) {
-      return counts;
-    }
-    classes.forEach((classItem) => {
-      if (counts[classItem.supervisor_id] !== undefined) {
-        counts[classItem.supervisor_id] += 1;
+    try {
+      if (classes.length === 0) {
+        return counts;
       }
-    });
-    return counts;
-     } catch (error) {
+      classes.forEach((classItem) => {
+        if (counts[classItem.supervisor_id] !== undefined) {
+          counts[classItem.supervisor_id] += 1;
+        }
+      });
+      return counts;
+    } catch (error) {
       throw new Error("Error fetching classes:", error.message);
-     }
+    }
   };
 
   const getRandomSupervisor = (supervisors) => {
@@ -162,13 +162,12 @@ export const RegisterDetailHorario = ({
           });
           const response = await getDetailHorarioOne(route.params.id);
           const value = response.find((doc) => doc.horario === route.params.id);
-
           if (value) {
             reset({
               salon: value.salon,
               dia: value.dia,
-              hora_inicio: value.hora_inicio,
-              hora_fin: value.hora_fin,
+              hora_inicio:timeParts(value.hora_inicio),
+              hora_fin:timeParts(value.hora_fin),
             });
           } else {
             throw new Error("detalle del horario no encontrado.");
@@ -178,12 +177,11 @@ export const RegisterDetailHorario = ({
     }
   }, [route.params]);
 
-
   useEffect(() => {
     if (supervisors.length > 0) {
       const countClasses = () => {
         try {
-           countClassesForSupervisors();
+          countClassesForSupervisors();
         } catch (error) {
           throw new Error("Error counting classes:", error);
         }
@@ -191,7 +189,7 @@ export const RegisterDetailHorario = ({
       countClasses();
     }
   }, [supervisors]);
-  
+
   const onsubmit = async (data) => {
     const { salon, dia, hora_inicio, hora_fin } = data;
     const ESTADO = "pendiente";
@@ -284,6 +282,7 @@ export const RegisterDetailHorario = ({
         await Promise.all([updateDetail, updateClasses]);
 
         reset();
+        alert("Successfull", "editado exitosamente ✔︎ ✔︎");
         showToast({
           message: STATUS_MESSAGES[APP_STATUS.REDIRECTING],
           type: "warning",
@@ -388,8 +387,8 @@ export const RegisterDetailHorario = ({
               <View className="self-center w-[85%]">
                 <CustomPiker
                   name="dia"
+                  placeholder="Seleccione Dia"
                   errors={errors.dia}
-                  placeholder="seleccione dia"
                   control={control}
                   data={dias}
                 />
@@ -397,8 +396,8 @@ export const RegisterDetailHorario = ({
               <View className="self-center w-[85%] pb-1 pt-5">
                 <CustomFlatList
                   name="salon"
+                  placeholder="Seleccione salon"
                   errors={errors.salon}
-                  placeholder="seleccione salon"
                   control={control}
                   data={salones}
                 />
@@ -417,14 +416,12 @@ export const RegisterDetailHorario = ({
                     name="hora_inicio"
                     editing={editing}
                     control={control}
-                    title="Hora ini..."
                     testID="hora_inicio"
                     mode="time"
                     initialValue={watch("hora_inicio")}
                     display="clock"
                     is24Hour={true}
                     onTimeSelected={(formattedTime) => {
-                      console.log("hora_inicio", formattedTime);
                       setHoraInicio(formattedTime);
                     }}
                   />
@@ -434,7 +431,6 @@ export const RegisterDetailHorario = ({
                     name="hora_fin"
                     editing={editing}
                     control={control}
-                    title="Hora Fin"
                     errors={errors.hora_fin}
                     testID="hora_fin"
                     initialValue={watch("hora_fin")}
@@ -453,9 +449,7 @@ export const RegisterDetailHorario = ({
             <View className={editing ? "w-[40%]" : "w-[85%]"}>
               <SubmitButton
                 onPress={() => {
-                  console.log("Botón presionado");
                   handleSubmit(onsubmit)();
-                  console.log("Botón presionado2");
                 }}
                 editing={editing}
                 isDisabled={isDisabled}

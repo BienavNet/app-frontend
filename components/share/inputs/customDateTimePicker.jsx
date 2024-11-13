@@ -21,9 +21,8 @@ export const CustomTimePicker = ({
   title,
   editing = false,
 }) => {
-  console.log("initialValue", initialValue)
   const [showPicker, setShowPicker] = useState(false);
-  const initialEditing = new Date();
+  const initialEditing = initialValue;
   const initalRegistering = initialValue || new Date();
   const [selectedTime, setSelectedTime] = useState(
     editing ? initialEditing : initalRegistering
@@ -31,8 +30,12 @@ export const CustomTimePicker = ({
   const [titleSelected, setTitleSelected] = useState(title);
 
   useEffect(() => {
-    if (typeof initialValue === "object") return setTitleSelected(title);
+    if (typeof initialValue === "object") {
+      return setTitleSelected(title);  // Si initialValue es un objeto, usa el título predeterminado
+    }
+  
   }, [initialValue]);
+  
 
   const handleChange = (e, newTime, onChange) => {
     if (e.type === "dismissed") {
@@ -53,7 +56,7 @@ export const CustomTimePicker = ({
 
   useEffect(() => {
     if (editing && initialValue) {
-      const timeParts = initialValue.split(":");
+      const timeParts = initialValue.split(":"); 
       if (timeParts.length >= 2) {
         const newTime = new Date();
         newTime.setHours(parseInt(timeParts[0]), parseInt(timeParts[1]));
@@ -65,6 +68,7 @@ export const CustomTimePicker = ({
       }
     }
   }, [editing, initialValue]);
+  
 
   const handlePress = () => {
     setShowPicker(true);

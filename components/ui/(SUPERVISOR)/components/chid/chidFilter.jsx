@@ -29,8 +29,8 @@ export const ChipMultipleFilter = ({ title, selectedItem, action }) => {
   );
 };
 
-// cuando se maneja un solo filtro
-export const ChildFilter = ({ title, selectedItem, action }) => {
+// cuando se maneja un solo filtro con X
+export const ChildFilterX = ({ title, selectedItem, action }) => {
   return (
     <ScrollView
       horizontal={true}
@@ -62,6 +62,44 @@ export const ChildFilter = ({ title, selectedItem, action }) => {
           color={selectedItem ? "primary" : "lightgray"}
           containerStyle={{ marginVertical: 10 }}
           icon={<FontAwesome name="close" size={16} color="white" />}
+        />
+      </View>
+    </ScrollView>
+  );
+};
+
+// cuando se maneja un solo filtro sin X
+export const ChildFilter = ({ title, selectedItem, action }) => {
+  return (
+    <ScrollView
+      horizontal={true}
+      contentContainerStyle={{
+        marginHorizontal: 13,
+      }}
+      style={{
+        width: "100%",
+        backgroundColor: "transparent",
+      }}
+    >
+      <View
+        style={{
+          width: 125,
+          marginHorizontal: 10,
+        }}
+      >
+        <Chip
+          size="md"
+          titleStyle={{
+            paddingRight:10,
+            fontSize: 17,
+            fontWeight: "bold",
+            color: selectedItem ? "white" : ColorItem.TarnishedSilver,
+          }}
+          onPress={action}
+          iconRight
+          title={title}
+          color={selectedItem ? "primary" : "lightgray"}
+          containerStyle={{ marginVertical: 10 }}
         />
       </View>
     </ScrollView>
