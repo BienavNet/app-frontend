@@ -150,7 +150,7 @@ export const ModalRegisterReporte = () => {
                       color: ColorItem.DeepFir,
                     }}
                   >
-                    {capitalizeFirstLetter(truncateText(data.nombre_salon, 15))}
+                    {truncateText(data.nombre_salon, 15)}
                   </Text>
                 </View>
                 <View>
@@ -268,15 +268,17 @@ export const ModalRegisterReporte = () => {
               </Text>
             </TouchableOpacity>
           </View>
-
           <View className="w-[40%] pt-2 self-center">
             <TouchableOpacity
-              onPress={handleSubmit(onSubmitRegisterReport)}
+              onPress={data.comentario && data.comentario?.length > 0 ? null : handleSubmit(onSubmitRegisterReport)}
               style={{
-                backgroundColor: ColorItem.DeepSkyBlue,
+                backgroundColor:data.comentario && data.comentario.length > 0 ? ColorItem.TarnishedSilver : ColorItem.DeepSkyBlue,
+                width: '92%', 
+                alignSelf: 'center',
+                padding: 12,
+                borderRadius: 8,
               }}
-              disabled={data.cometario?.length === 0}
-              className={"w-11/12 self-center p-3 rounded-lg"}
+              disabled={data.comentario && data.cometanrio?.length > 0}
             >
               <Text className="text-white text-center font-bold text-xl">
                 Reportar

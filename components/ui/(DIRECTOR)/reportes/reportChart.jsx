@@ -14,10 +14,6 @@ import { useSafeAreaInset } from "../../../../src/utils/utils";
 import Loading from "../../../share/loading";
 
 // Función para normalizar datos automáticamente en base a un valor máximo estándar
-const normalizeData = (data) => {
-  const max = Math.max(...data);
-  return data.map(value => (value / max) * 100);
-};
 const screenWidth = Dimensions.get("window").width;
 const colors = [
   "rgba(153, 102, 255, 1)", // Verde
@@ -81,7 +77,7 @@ export const EstadisticasReportes = () => {
     labels: uniqueSmenosu.map((salon) => `#${salon}`),
     datasets: [
       {
-        data: normalizeData(smenosu.map((salon) => salon.cantidad_usos)),
+        data:smenosu.map((salon) => salon.cantidad_usos),
       },
     ],
   };
@@ -91,7 +87,7 @@ export const EstadisticasReportes = () => {
     labels: sortedDqmct.map((docente) => `${docente.cedula}`),
     datasets: [
       {
-        data: normalizeData(sortedDqmct.map((docente) => docente.cantidad_comentarios)),
+        data:sortedDqmct.map((docente) => docente.cantidad_comentarios),
       },
     ],
   };
@@ -115,7 +111,7 @@ export const EstadisticasReportes = () => {
     labels: sortedDiasmas.map((day) => day.dia),
     datasets: [
       {
-        data: normalizeData(sortedDiasmas.map((day) => day.cantidad_repeticiones)),
+        data:sortedDiasmas.map((day) => day.cantidad_repeticiones),
       },
     ],
   };

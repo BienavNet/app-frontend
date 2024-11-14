@@ -22,6 +22,7 @@ import {
   getComentarioDocenteDocente,
   getComentarioDocenteSalon,
 } from "../services/fetchData/fetchComentario";
+import { set } from "react-hook-form";
 
 //fetch Docente
 export const useDocenteAll = () => {
@@ -258,12 +259,17 @@ export const useClasesAll = () => {
 
 export const useClaseSupervisor = (cedula) => {
   const [claseSupervisor, setClaseSupervisor] = useState([]);
+  const [reload, setReload] = useState(true);
   const fetchClaseSupervisor = useCallback(async () => {
+    setReload(true);
     try {
       const res = await getClaseSupervisor(cedula);
       setClaseSupervisor(res);
     } catch {
       setClaseSupervisor([]);
+      setReload(true);
+    }finally{
+      setReload(false);
     }
   }, [cedula]);
 
@@ -271,7 +277,7 @@ export const useClaseSupervisor = (cedula) => {
     fetchClaseSupervisor();
   }, [fetchClaseSupervisor]);
 
-  return { claseSupervisor, fetchClaseSupervisor };
+  return { claseSupervisor, fetchClaseSupervisor, reload };
 }; // obtiene todos las clases x supervisor
 
 //fetch Reporte
