@@ -13,7 +13,6 @@ export const ListClassDia = ({ data }) => {
 
   const [expanded, setExpanded] = useState(false);
   return (
-    <>
       <ListItem.Accordion
         content={
           <>
@@ -149,7 +148,6 @@ export const ListClassDia = ({ data }) => {
           <ListItem.Chevron />
         </ListItem>
       </ListItem.Accordion>
-    </>
   );
 };
 const styles = StyleSheet.create({

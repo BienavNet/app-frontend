@@ -213,13 +213,13 @@ export const IndexHorarioDocente = () => {
   }, [searchText, selectedOption]);
   return (
     <View>
-      <View className="flex-row justify-end">
+      {/* <View className="flex-row justify-end"> */}
         <ScrollMultipleFilterClass
           opciones={opciones}
           handleOptionSelect={handleOptionSelect}
           removeFilter={removeFilter}
         />
-      </View>
+      {/* </View> */}
 
       {/* // la lista que se mostrara por default */}
       {!Object.keys(multipleSelectedItem).length && (

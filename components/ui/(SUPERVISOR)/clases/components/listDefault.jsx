@@ -12,12 +12,9 @@ import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
 export const ListClassDefault = ({ data }) => {
   const [expanded, setExpanded] = useState(false);
   return (
-    <>
-    {/* List action whom lists all clases */}
       <ListItem.Accordion
         content={
           <>
-            {/* <Icon name="place" size={30} /> */}
             <ListItem.Content>
               <BoxView>
                 <View
@@ -42,7 +39,7 @@ export const ListClassDefault = ({ data }) => {
                       paddingRight: 15
                     }}
                   >
-                    <Text style={styles.itemP2}>{data.asignatura.substring(0, 10)}{"..."}</Text>
+                    <Text style={styles.itemP2}>{truncateText(data.asignatura,10)}</Text>
                   </View>
                   <View>
                     <Text style={styles.itemP2}>{data.fecha.substring(0, 10)}</Text>
@@ -85,13 +82,13 @@ export const ListClassDefault = ({ data }) => {
               >
                 <View>
                   <ListItem.Title>
-                    {capitalizeFirstLetter(data.nombre_docente)}{" "}
+                    {capitalizeFirstLetter(data.nombre_docente)} {" - "}
                     {capitalizeFirstLetter(data.apellido_docente)}
                   </ListItem.Title>
                 </View>
                 <View>
                   <ListItem.Title>
-                    {capitalizeFirstLetter(data.asignatura, 15)}
+                    {truncateText(data.asignatura, 12)}
                   </ListItem.Title>
                 </View>
               </View>
@@ -151,7 +148,6 @@ export const ListClassDefault = ({ data }) => {
           <ListItem.Chevron />
         </ListItem>
       </ListItem.Accordion>
-    </>
   );
 };
 const styles = StyleSheet.create({

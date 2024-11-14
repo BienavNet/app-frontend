@@ -78,7 +78,7 @@ export const ChildFilter = ({ title, selectedItem, action }) => {
       }}
       style={{
         width: "100%",
-        backgroundColor: "transparent",
+        backgroundColor: "white",
       }}
     >
       <View

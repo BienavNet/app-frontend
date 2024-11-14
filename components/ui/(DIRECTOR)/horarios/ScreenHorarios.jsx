@@ -15,7 +15,6 @@ import {
 
 export const IndexHorario = () => {
   const horarioAll = useHorarioAll();
-  s;
   const dias = useDays();
   const docenteall = useDocenteAll();
   const [searchText, setSearchText] = useState("");

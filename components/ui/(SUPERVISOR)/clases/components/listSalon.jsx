@@ -10,25 +10,11 @@ import { StatusCircle } from "../../../(DIRECTOR)/reportes/components/StatusCirc
 import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
 import { BoxView } from "../../../(DIRECTOR)/components/customBoxView";
 export const ListClassSalon = ({ data, type }) => {
-  // console.log("Data: --------------------------------------------- " + JSON.stringify(data) )
-  // {"id":251,"horario":12,"salon":1,"supervisor":1,"estado":"pendiente","fecha":"2024-11-13T05:00:00.000Z","nombre_docente":"eduardo","apellido_docente":"coronel","numero_salon":112,"nombre_salon":"sala de programacion","asignatura":"CALCULO I","hora_inicio":"08:39:00","hora_fin":"12:30:00"}   
-  const title = type === "salones" ? `${data.numero_salon} - ${data.categoria}` : type === "dia" ? data.dia : `${data.numero_salon} - ${data.categoria}`;
-  const docenteName = `${capitalizeFirstLetter(data.nombre_docente)} ${capitalizeFirstLetter(data.apellido_docente)}`;
   const [expanded, setExpanded] = useState(false);
-  const timeStart = new Date(`${data.fecha.split("T")[0]}T${data.hora_inicio}`).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  const timeEnd = new Date(`${data.fecha.split("T")[0]}T${data.hora_fin}`).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
   return (
     <>
       <ListItem.Accordion
         content={
-          <>
-            {/* <Icon name="place" size={30} /> */}
             <ListItem.Content>
               <BoxView>
                 <View
@@ -73,7 +59,6 @@ export const ListClassSalon = ({ data, type }) => {
                 </View>
               </BoxView>
             </ListItem.Content>
-          </>
         }
         isExpanded={expanded}
         onPress={() => setExpanded(!expanded)}
@@ -162,47 +147,6 @@ export const ListClassSalon = ({ data, type }) => {
           <ListItem.Chevron />
         </ListItem>
       </ListItem.Accordion>
-
-
-      {/* <ListItem.Accordion
-      content={
-        <ListItem.Content>
-          <View style={styles.itemP2}>
-            <ListItem.Title>{title}</ListItem.Title>
-          </View>
-        </ListItem.Content>
-      }
-      isExpanded={expanded}
-      onPress={() => setExpanded(!expanded)}
-    >
-      <ListItem bottomDivider>
-        <ListItem.Content>
-          <View style={{
-              borderLeftColor: ColorItem.GreenSymphony,
-              padding: 4,
-              borderLeftWidth: 6,
-          }}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-              <ListItem.Title>{docenteName}</ListItem.Title>
-              <Text>{data.numero_salon}</Text>
-            </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-              {type === "horarios" && (
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={{ fontSize: 13, marginRight: 10 }}>{timeStart}</Text>
-                  <Text style={{ fontSize: 13 }}>{timeEnd}</Text>
-                </View>
-              )}
-            </View>
-            <View style={{ marginTop: 10, flexDirection: "row", justifyContent: "space-between" }}>
-              <DateChip item={new Date(data.fecha).toLocaleDateString()} />
-              <StatusCircle item={data.estado} />
-            </View>
-          </View>
-        </ListItem.Content>
-        <ListItem.Chevron />
-      </ListItem>
-    </ListItem.Accordion> */}
     </>
   );
 };

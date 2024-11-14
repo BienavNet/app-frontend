@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, FlatList, SafeAreaView } from "react-native";
+import { FlatList, View } from "react-native";
 import { styles } from "../../../styles/StylesGlobal";
 import { getClaseSupervisorSalonHorarioDia } from "../../../../src/services/fetchData/fetchClases";
 import { ListClassDefault } from "./components/listDefault";
@@ -80,14 +80,13 @@ export const ListClassView = () => {
   }, [filters]);
 
   const handleOptionSelect = (option) => {
-    setSearchText("");
     setSelectedOption(option);
-
+    setSearchText("");
     setMultipleSelectedOption((prev) => {
       if (prev.includes(option) && multipleSelectedItem[option]) {
-        return prev; // Si ambas condiciones son verdaderas, no elimina la opción
+        return prev;
       } else {
-        return [...prev, option]; // Si alguna de las condiciones no se cumple, la añade
+        return [...prev, option];
       }
     });
 
@@ -96,7 +95,6 @@ export const ListClassView = () => {
       dia: diall,
       horarios: horarioAll,
     };
-
     setList(optionMapping[option] || []);
     setModalSelect(true);
   };
@@ -168,7 +166,7 @@ export const ListClassView = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
         <ScrollMultipleFilterClass
           opciones={opciones}
           handleOptionSelect={handleOptionSelect}
@@ -233,6 +231,6 @@ export const ListClassView = () => {
           ListEmptyComponent={<NofilterSelected />}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };

@@ -40,9 +40,7 @@ const ListSelectItemFilterClases = ({
       />
       <View style={styles.itemInfo}>
         {selectedOption === "horarios" ? (
-          <Text style={styles.textinfo}>
-            {data.asignatura}
-          </Text>
+          <Text style={styles.textinfo}>{data.asignatura}</Text>
         ) : selectedOption === "salones" ? (
           <Text style={styles.textinfo}>
             {data.numero_salon} {" - "} {data.nombre}
