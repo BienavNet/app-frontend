@@ -40,33 +40,28 @@ export const ListHorario = ({
   const [additionalData, setAdditionalData] = useState([]);
   const fetchAdditionalData = async () => {
     let { docente, horario, dia } = filters;
-
     try {
       let filteredData;
-      if (
-        selectedOption === "docente" &&
-        multipleSelectedItem[selectedOption]
-      ) {
-        filteredData = await getDetailHorarioDocente(docente);
-      }
-      if (
-        selectedOption === "horario" &&
-        multipleSelectedItem[selectedOption]
-      ) {
-        filteredData = await getDetailHorario2(horario);
-      }
-      if (selectedOption === "dia" && multipleSelectedItem[selectedOption]) {
-        filteredData = await getDetailHorarioDia(docente, dia);
-      }
-      setAdditionalData(filteredData || []);
-    } catch (error) {
-      throw new Error("Error: " + error.message);
+    if (selectedOption === "docente" && multipleSelectedItem[selectedOption]) {
+      filteredData = await getDetailHorarioDocente(docente);
+    } else if (selectedOption === "horario" && multipleSelectedItem[selectedOption]) {
+      filteredData = await getDetailHorario2(horario);
+    } else if (selectedOption === "dia" && multipleSelectedItem[selectedOption]) {
+      filteredData = await getDetailHorarioDia(docente, dia);
+    }
+    setAdditionalData(filteredData || []);
+    } catch {
+      setAdditionalData([]);
     }
   };
 
   useEffect(() => {
-    fetchAdditionalData();
-  }, [filters]);
+    if (Object.values(filters).every((value) => value === 0)) {
+      fetchAdditionalData();
+    } else {
+      fetchAdditionalData();
+    }
+  }, [filters, selectedOption, multipleSelectedItem]); 
 
   const handleFilter = () => {
     const hasTemporalSelection = temporalSelectedItem[selectedOption]
@@ -99,6 +94,8 @@ export const ListHorario = ({
   return (
     <>
       <ListItemComponentHorario
+       filters={filters}
+       fetchAdditionalData={fetchAdditionalData}
         multipleSelectedItem={multipleSelectedItem}
         opciones={opciones}
         handleOptionSelect={handleOptionSelect}

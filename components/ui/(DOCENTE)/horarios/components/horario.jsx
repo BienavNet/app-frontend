@@ -200,6 +200,17 @@ export const IndexHorarioDocente = () => {
       alert("Debe seleccionar al menos un filtro antes de aplicar.");
     }
   };
+  useEffect(() => {
+    if (searchText === "" && selectedOption) {
+      handleOptionSelect(selectedOption);
+    } else if (selectedOption === "horarios") {
+      setList(horarioxdocente.filter((i) =>i.asignatura.toLowerCase().indexOf(searchText.toLowerCase()) > -1)
+      );
+    }else if (selectedOption === "dia") {
+      setList(diall.filter((i) =>i.Dia.toLowerCase().indexOf(searchText.toLowerCase()) > -1)
+      );
+    }
+  }, [searchText, selectedOption]);
   return (
     <View>
       <View className="flex-row justify-end">

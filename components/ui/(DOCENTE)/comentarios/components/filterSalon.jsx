@@ -6,7 +6,7 @@ import {
 import { useState } from "react";
 import { ListItem } from "@rneui/themed";
 import { BoxView } from "../../../(DIRECTOR)/components/customBoxView";
-import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 const ListFilterComentario = ({ data }) => {
   const [expanded, setExpanded] = useState(false);
@@ -14,7 +14,6 @@ const ListFilterComentario = ({ data }) => {
       <ListItem.Accordion
           content={
             <>
-              {/* <Icon name="place" size={30} /> */}
               <ListItem.Content>
                 <BoxView>
                   <View
@@ -26,13 +25,22 @@ const ListFilterComentario = ({ data }) => {
                   >
                     <View
                       style={{
-                        paddingRight: 30,
+                        justifyContent:"space-between",
+                        flexDirection:"row",
+                        width:"100%"
                       }}
                     >
                       <ListItem.Title style={styles.itemP2}>
-                        {capitalizeFirstLetter(data.nombre_docente)}{" "}
-                        {capitalizeFirstLetter(data.apellido_docente)}
+                        {capitalizeFirstLetter(data.nombre_salon)}
                       </ListItem.Title>
+                      <ListItem.Subtitle  style={{
+                        fontWeight: "bold",
+                        fontSize: 14,
+                        color: "#111111",
+                        textAlign: "center",
+                    }} >
+                        {data.numero_salon}
+                      </ListItem.Subtitle>
                     </View>
                     <View>
                     </View>
@@ -43,31 +51,6 @@ const ListFilterComentario = ({ data }) => {
                       justifyContent: "space-between",
                     }}
                   ></View>
-                  {/* <View
-                    style={{
-                      marginBottom: 5,
-                    }}
-                  >
-                    <View
-                      style={{
-                        width: "80%",
-                        flexDirection: "row",
-                        marginTop:10
-                      }}
-                    >
-                      <MaterialIcons name="date-range" size={24} color="#444444" />
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          color: "#444444",
-                          textAlign: "center",
-                          marginLeft: 10
-                        }}
-                      >
-                        {data.fecha.substring(0, 10)}
-                      </Text> 
-                    </View>
-                  </View> */}
                 </BoxView>
               </ListItem.Content>
             </>
@@ -84,40 +67,32 @@ const ListFilterComentario = ({ data }) => {
                   borderLeftWidth: 6,
                 }}
               >
-                <View
+               <View
                   style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
+                   padding:5,
+                    flexDirection: "column",
                   }}
                 >
                   <View style={{
-                    paddingLeft: 15,
-                  }}>
-                    <ListItem.Subtitle style={{
-                      color: "#000000",
-                      fontSize: 15
-                    }}>
-                      {capitalizeFirstLetter(data.nombre_salon)}{" "}{data.numero_salon}
-                    </ListItem.Subtitle>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    marginTop: 10,
+                    padding:5,
                     flexDirection: "row"
-                  }}
-                >
-                  <MaterialIcons name="chat" size={24} color="#444444" style={{
-                    marginLeft: 25
-                  }}/>
-                  <View style={{
-                    paddingTop:2,
-                    paddingLeft:5,
-                    color: "#444444"
                   }}>
-                    <Text>{" Comentario:"}{data.comentario}</Text>
+                  <FontAwesome
+                      style={{
+                        marginHorizontal: 5,
+                      }}
+                      name="commenting"
+                      size={20}
+                      color={ColorItem.TarnishedSilver}
+                    />
+                  <Text >{data.comentario}</Text>
                   </View>
 
+                  <Text style={{
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    color: "#999999",
+                  }}>{data.fecha}</Text>
                 </View>
               </BoxView>
             </ListItem.Content>

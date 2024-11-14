@@ -8,17 +8,12 @@ import {
   capitalizeFirstLetter,
   truncateText,
 } from "../../../../../src/utils/functiones/functions";
-import { StatusCircle } from "../../../(DIRECTOR)/reportes/components/StatusCircle";
-import { DateChip } from "../../../(DIRECTOR)/reportes/components/DateChip";
-
 export const ListComentarioDocenteSalonDefault = ({ data }) => {
   const [expanded, setExpanded] = useState(false);
   return (
     <>
       <ListItem.Accordion
         content={
-          <>
-            {/* <Icon name="place" size={30} /> */}
             <ListItem.Content>
               <BoxView>
                 <View
@@ -33,13 +28,22 @@ export const ListComentarioDocenteSalonDefault = ({ data }) => {
                       paddingRight: 30,
                     }}
                   >
-                    <ListItem.Title style={styles.itemP2}>
-                      {capitalizeFirstLetter(data.nombre)}{" "}
-                      {capitalizeFirstLetter(data.apellido)}
+                    <ListItem.Title style={{
+                          fontWeight: "bold",
+                          fontSize: 16,
+                          color: "#000000",
+                          textAlign: "center",
+                    }}>
+                      {capitalizeFirstLetter(data.nombre_salon)}
                     </ListItem.Title>
                   </View>
                   <View>
-                    <Text style={styles.itemP2}>{data.numero_salon}</Text>
+                    <Text style={{
+                        fontWeight: "bold",
+                        fontSize: 14,
+                        color: "#111111",
+                        textAlign: "center",
+                    }}>{data.numero_salon}</Text>
                   </View>
                 </View>
                 <View
@@ -81,7 +85,6 @@ export const ListComentarioDocenteSalonDefault = ({ data }) => {
                 </View>
               </BoxView>
             </ListItem.Content>
-          </>
         }
         isExpanded={expanded}
         onPress={() => setExpanded(!expanded)}
@@ -117,7 +120,12 @@ export const ListComentarioDocenteSalonDefault = ({ data }) => {
               >
                 <View>
                   <ListItem.Subtitle>
-                    {capitalizeFirstLetter(data.nombre_salon)}
+                    <Text style={{
+                          fontWeight: "bold",
+                          fontSize: 16,
+                          color: "#000000",
+                          textAlign: "center",
+                    }}>Categoria: </Text>{capitalizeFirstLetter(data.nombre_salon)}
                   </ListItem.Subtitle>
                 </View>
                 <View
@@ -134,15 +142,20 @@ export const ListComentarioDocenteSalonDefault = ({ data }) => {
                 style={{
                   marginTop: 10,
                   justifyContent: "space-between",
-                  flexDirection: "row",
+                  flexDirection: "column",
                 }}
               >
                 <View>
-                  <DateChip item={new Date(data.fecha).toLocaleDateString()} />
+                 <Text >{data.comentario}</Text>
                 </View>
-
-                <View>
-                  <StatusCircle item={data.estado} />
+                <View style={{
+                  padding:5
+                }}>
+                  <Text style={{
+                          fontWeight: "bold",
+                          fontSize: 14,
+                          color: "#999999",
+                    }}>{data.fecha || "Sin registro de fecha"}</Text>
                 </View>
               </View>
             </BoxView>
@@ -174,7 +187,7 @@ const styles = StyleSheet.create({
   itemP2: {
     fontWeight: "bold",
     fontSize: 18,
-    color: "#999999",
+    color: "black",
     textAlign: "center",
   },
   itemP3: {

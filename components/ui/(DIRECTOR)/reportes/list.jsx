@@ -16,7 +16,7 @@ import {
   useSalonAll,
 } from "../../../../src/hooks/customHooks";
 import { ModalComponente } from "../../Components/customModal";
-import { ChildFilter, ChildFilterX } from "../../(SUPERVISOR)/components/chid/chidFilter";
+import { ChildFilterX } from "../../(SUPERVISOR)/components/chid/chidFilter";
 import { CustomSeachBar } from "../comentario/components/seachBar";
 import {
   NofilterSelected,
@@ -51,7 +51,7 @@ export const ReportView_Filter = () => {
 
   useEffect(() => {
     if (searchText === "" && selectedOption) {
-      handleOptionSelect(selectedOption); // Mostrar todos si no hay búsqueda
+      handleOptionSelect(selectedOption);
     } else if (selectedOption === "salones") {
       setList(
         salonAll.filter(

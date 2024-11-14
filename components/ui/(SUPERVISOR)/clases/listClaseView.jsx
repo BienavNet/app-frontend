@@ -109,7 +109,6 @@ export const ListClassView = () => {
   };
 
   const removeFilter = (Idkey) => {
-    // Actualizamos las opciones (marcamos como no seleccionadas)
     const updatedOpciones = opciones.map((opt) =>
       opt.id === Idkey ? { ...opt, isSelected: false } : opt
     );

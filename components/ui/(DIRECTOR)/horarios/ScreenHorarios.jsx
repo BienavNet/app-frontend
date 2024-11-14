@@ -3,7 +3,7 @@ import { RegisterHorario } from "./register";
 import CustomStack from "../../Components/customStack";
 import Buttonright from "../../../share/button/buttonRightStack";
 import { IconAddCircle } from "../../../../assets/icons/IconsGlobal";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import { PopupMenu } from "../../Components/popupMenu";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -15,7 +15,8 @@ import {
 
 export const IndexHorario = () => {
   const horarioAll = useHorarioAll();
-  const dias =useDays();
+  s;
+  const dias = useDays();
   const docenteall = useDocenteAll();
   const [searchText, setSearchText] = useState("");
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -31,27 +32,99 @@ export const IndexHorario = () => {
 
   const [opciones, setOpciones] = useState([
     {
-      id:"docente",
+      id: "docente",
       isSelected: false,
       title: "Docente",
       icon: <FontAwesome5 name="user-circle" size={24} color="black" />,
       action: "docente",
     },
     {
-      id:"horario",
+      id: "horario",
       isSelected: false,
       title: "Horario",
       icon: <MaterialCommunityIcons name="timetable" size={24} color="black" />,
       action: "horario",
     },
   ]);
+  useEffect(() => {
+    if (searchText === "" && selectedOption) {
+      handleOptionSelect(selectedOption);
+    } else if (selectedOption === "horario") {
+      setList(
+        horarioAll.filter(
+          (i) =>
+            i.asignatura.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+        )
+      );
+    } else if (selectedOption === "dia") {
+      setList(
+        diall.filter(
+          (i) => i.Dia.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+        )
+      );
+    } else if (selectedOption === "docente") {
+      setList(
+        docenteall.filter(
+          (i) =>
+            i.nombre.toLowerCase().indexOf(searchText.toLowerCase()) > -1 ||
+            i.apellido.toString().indexOf(searchText.toLowerCase()) > -1
+        )
+      );
+    }
+  }, [searchText, selectedOption]);
 
   const handleOptionSelect = (option) => {
     setSearchText("");
+    const showAlertAndRemoveFilters = (message, filtersToRemove) => {
+      Alert.alert("Desea borrar el filtro?", message, [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            setMultipleSelectedOption((prev) =>
+              prev.filter((f) => !filtersToRemove.includes(f))
+            );
+            filtersToRemove.forEach((filter) => removeFilter(filter));
+            OptionSelect(option);
+          },
+        },
+      ]);
+    };
+
+    if (option === "docente" && multipleSelectedItem.horario) {
+      return showAlertAndRemoveFilters(
+        "Para filtrar por docente, debes borrar el filtro del HORARIO establecido.",
+        ["horario"]
+      );
+    }
+
+    if (
+      option === "horario" &&
+      multipleSelectedItem.docente &&
+      multipleSelectedItem.dia
+    ) {
+      return showAlertAndRemoveFilters(
+        "Para filtrar por horario, se deben borrar el filtro del DOCENTE Y DIA establecido.",
+        ["docente", "dia"]
+      );
+    }
+    if (option === "horario" && multipleSelectedItem.docente) {
+      return showAlertAndRemoveFilters(
+        "Para filtrar por horario, debes borrar el filtro del DOCENTE establecido.",
+        ["docente"]
+      );
+    }
+    OptionSelect(option);
+  };
+
+  const OptionSelect = (option) => {
     setSelectedOption(option);
     setMultipleSelectedOption((prev) => {
-      if (prev.includes(option) && multipleSelectedItem[option]) {
-        return prev; 
+      if (prev.includes(option)) {
+        return prev;
       } else {
         return [...prev, option];
       }
@@ -85,7 +158,10 @@ export const IndexHorario = () => {
         delete updated[Idkey];
       }
       const updatedFilters = {
-        docente: updated.docente && updated.docente.cedula ? updated.docente.cedula : 0,
+        docente:
+          updated.docente && updated.docente.cedula
+            ? updated.docente.cedula
+            : 0,
         dia: updated.dia && updated.dia.id ? updated.dia.id : 0,
         horario: updated.horario && updated.horario.id ? updated.horario.id : 0,
       };
@@ -95,6 +171,7 @@ export const IndexHorario = () => {
       setModalSelect(false);
       return updated;
     });
+    setMultipleSelectedOption((prev) => prev.filter((opt) => opt !== Idkey));
   };
 
   const applyFilter = () => {
@@ -133,23 +210,30 @@ export const IndexHorario = () => {
   };
 
   useEffect(() => {
-    if (selectedOption && selectedOption.includes("docente")) {
-      setOpciones((prevOpciones) => [
-        ...prevOpciones.filter((opcion) => opcion.title !== "dia"),
-        {
-          isSelected: false,
-          id: "dia",
-          title: "Dia",
-          icon: <FontAwesome5 name="calendar-day" size={24} color="black" />,
-          action: "dia",
-        },
-      ]);
+    if (filters.docente > 0) {
+      setOpciones((prevOpciones) => {
+        if (!prevOpciones.some((opcion) => opcion.id === "dia")) {
+          return [
+            ...prevOpciones,
+            {
+              id: "dia",
+              isSelected: false,
+              title: "Día",
+              icon: (
+                <FontAwesome5 name="calendar-day" size={24} color="black" />
+              ),
+              action: "dia",
+            },
+          ];
+        }
+        return prevOpciones;
+      });
     } else {
       setOpciones((prevOpciones) =>
-        prevOpciones.filter((opcion) => opcion.title !== "dia")
+        prevOpciones.filter((opcion) => opcion.id !== "dia")
       );
     }
-  }, [selectedOption]);
+  }, [filters.docente]);
 
   const ListHorarioScreen = (props) => (
     <ListHorario
