@@ -29,7 +29,7 @@ export default function TabViewTop() {
         <Text
           style={[
             styles.label,
-            { color: focused ? ColorItem.DeepFir : "#61665E" },
+            { color: focused ? ColorItem.DeepFir : "#aeb2ab" },
           ]}
         >
           {route.title}

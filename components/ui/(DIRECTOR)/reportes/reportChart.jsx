@@ -11,7 +11,13 @@ import {
 import { BarChart, LineChart, PieChart } from "react-native-chart-kit";
 import { formatTimeTo12Hour } from "../../../../src/utils/functiones/functions";
 import { useSafeAreaInset } from "../../../../src/utils/utils";
+import Loading from "../../../share/loading";
 
+// Función para normalizar datos automáticamente en base a un valor máximo estándar
+const normalizeData = (data) => {
+  const max = Math.max(...data);
+  return data.map(value => (value / max) * 100);
+};
 const screenWidth = Dimensions.get("window").width;
 const colors = [
   "rgba(153, 102, 255, 1)", // Verde
@@ -20,12 +26,12 @@ const colors = [
 ];
 export const EstadisticasReportes = () => {
   const insets = useSafeAreaInset();
-  const [dqmct, setDqmct] = useState([]); //docent con mas comentario realizado
-  const [sqmct, setSqmct] = useState(null); // salon que mas comentario tiene
-  const [smasu, setSmasU] = useState([]); // salo mas utilizado
-  const [smenosu, setSmenosU] = useState([]); // salo menos utilizado
-  const [diasmas, setDiasmas] = useState([]); // los dias mas asignados  { 'Lunes': 5, 'Martes': 3, 'Miércoles': 2, 'Jueves': 4, 'Viernes': 6, 'Sábado': 1 }
-  const [hoursmas, setHoursmas] = useState([]); // las horas que mas se repiten
+  const [dqmct, setDqmct] = useState([]); // Docente con más comentarios realizados
+  const [sqmct, setSqmct] = useState(null); // Salón que más comentarios tiene
+  const [smasu, setSmasU] = useState([]); // Salón más utilizado
+  const [smenosu, setSmenosU] = useState([]); // Salón menos utilizado
+  const [diasmas, setDiasmas] = useState([]); // Días más asignados
+  const [hoursmas, setHoursmas] = useState([]); // Horas más frecuentes
   const [loading, setLoading] = useState(true);
 
   const fetchDataChart = useCallback(async () => {
@@ -45,12 +51,14 @@ export const EstadisticasReportes = () => {
         getCantidadDiaMasAsignado(),
         getRangeHoursMasFrecuente(),
       ]);
-        setDqmct(dqmctData.status === "fulfilled" ? dqmctData.value : []);
-        setSqmct(sqmctData.status === "fulfilled" ? sqmctData.value[0] : null); 
-        setSmasU(smasuData.status === "fulfilled" ? smasuData.value : []);
-        setSmenosU(smenosuData.status === "fulfilled" ? smenosuData.value : []);
-        setDiasmas(diasmasData.status === "fulfilled" ? diasmasData.value : []);
-        setHoursmas(hoursmasData.status === "fulfilled" ? hoursmasData.value : []);
+      setDqmct(dqmctData.status === "fulfilled" ? dqmctData.value : []);
+      setSqmct(sqmctData.status === "fulfilled" ? sqmctData.value[0] : null);
+      setSmasU(smasuData.status === "fulfilled" ? smasuData.value : []);
+      setSmenosU(smenosuData.status === "fulfilled" ? smenosuData.value : []);
+      setDiasmas(diasmasData.status === "fulfilled" ? diasmasData.value : []);
+      setHoursmas(
+        hoursmasData.status === "fulfilled" ? hoursmasData.value : []
+      );
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -58,68 +66,60 @@ export const EstadisticasReportes = () => {
     }
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchDataChart();
-  },[fetchDataChart]);
+  }, [fetchDataChart]);
 
   if (loading) {
-    return <Text>Cargando datos... </Text>;
+    return <Loading />;
   }
 
-  const uniqueSmasu = smasu.map((salon) => salon.numero_salon).filter((value, index, self) => self.indexOf(value) === index)
-
-  const data = {
-    labels: uniqueSmasu.map((salon) => `#${salon}`),
+  const uniqueSmenosu = smenosu
+    .map((salon) => salon.numero_salon)
+    .filter((value, index, self) => self.indexOf(value) === index);
+  const salonMenosUtilizadoData = {
+    labels: uniqueSmenosu.map((salon) => `#${salon}`),
     datasets: [
       {
-        data:smenosu.map((salon) => salon.cantidad_usos),
+        data: normalizeData(smenosu.map((salon) => salon.cantidad_usos)),
       },
     ],
   };
 
-  // Gráfico de Docente con Más Comentarios Realizados
-  const sortedDqmct = Array.isArray(dqmct) ? dqmct.sort(
-    (a, b) => b.cantidad_comentarios - a.cantidad_comentarios
-  ):[]
-
+  const sortedDqmct = dqmct.sort((a, b) => b.cantidad_comentarios - a.cantidad_comentarios);
   const docenteMasComentariosData = {
     labels: sortedDqmct.map((docente) => `${docente.cedula}`),
     datasets: [
       {
-        data: sortedDqmct.map((docente) => docente.cantidad_comentarios),
+        data: normalizeData(sortedDqmct.map((docente) => docente.cantidad_comentarios)),
       },
     ],
   };
 
-  const pieChartData = Array.isArray(hoursmas)
-    ? hoursmas.map((hour, index) => ({
-        name: `${formatTimeTo12Hour(hour.hora_inicio)} - ${formatTimeTo12Hour(
-          hour.hora_fin
-        )}`,
-        population: hour.cantidad_repeticiones,
-        color: colors[index % colors.length],
-        legendFontColor: "#FFF",
-        legendFontSize: 12,
-      }))
-    : [];
-  const sortedDiasmas = Array.isArray(diasmas)
-    ? diasmas
-        .map((day) => ({
-          dia: day.dia,
-          cantidad_repeticiones: day.cantidad_repeticiones,
-        })) // Asegúrate de mantener tanto el día como la cantidad
-        .sort((a, b) => b.cantidad_repeticiones - a.cantidad_repeticiones) // Ordenar por cantidad_repeticiones
-    : [];
+  const pieChartData = hoursmas.map((hour, index) => ({
+    name: `${formatTimeTo12Hour(hour.hora_inicio)} - ${formatTimeTo12Hour(hour.hora_fin)}`,
+    population: hour.cantidad_repeticiones,
+    color: colors[index % colors.length],
+    legendFontColor: "#FFF",
+    legendFontSize: 12,
+  }));
 
-  // Construir datos para el gráfico de línea
+  const sortedDiasmas = diasmas
+    .map((day) => ({
+      dia: day.dia,
+      cantidad_repeticiones: day.cantidad_repeticiones,
+    }))
+    .sort((a, b) => b.cantidad_repeticiones - a.cantidad_repeticiones);
+
   const lineChartData = {
-    labels: sortedDiasmas.map((day) => day.dia), // Días ordenados
+    labels: sortedDiasmas.map((day) => day.dia),
     datasets: [
       {
-        data: sortedDiasmas.map((day) => day.cantidad_repeticiones), // Cantidades ordenadas
+        data: normalizeData(sortedDiasmas.map((day) => day.cantidad_repeticiones)),
       },
     ],
   };
+
   const chartConfig = {
     backgroundGradientFrom: "#1371C3",
     backgroundGradientTo: "#1371C3",
@@ -134,69 +134,65 @@ export const EstadisticasReportes = () => {
       fontSize: 12,
       fontWeight: "bold",
     },
+    fromZero: true,
   };
 
   return (
-    <ScrollView  
-    >
-       <View
-        style={{
-          paddingBottom: insets.bottom + 85,
-        }}
-      >
-  <Text style={styles.title}> Salon Menos Utilizado</Text>
-      {smasu.length > 0 ? (
-        <BarChart
-          style={styles.chartContainer}
-          data={data}
-          width={screenWidth - 10}
-          height={200}
-          chartConfig={chartConfig}
-        />
-      ) : (
-        <Text style={styles.noDataText}>Sin registro</Text>
-      )}
-      <Text style={styles.title}> Docente con mas Comentarios Realizado</Text>
-      {smasu.length > 0 ? (
-        <BarChart
-          style={styles.chartContainer}
-          data={data}
-          width={screenWidth - 10}
-          height={200}
-          chartConfig={chartConfig}
-        />
-      ) : (
-        <Text style={styles.noDataText}>Sin registro</Text>
-      )}
-      <Text style={styles.title}> Horas del Dia mas Asignada</Text>
-      {pieChartData.length > 0 ? (
-        <PieChart
-          style={styles.chartContainer}
-          data={pieChartData}
-          width={screenWidth - 10}
-          height={200}
-          chartConfig={chartConfig}
-          accessor={"population"}
-          backgroundColor={"#1371C3"}
-          paddingLeft={"-20"}
-          center={[20, 0]}
-        />
-      ) : (
-        <Text style={styles.noDataText}>Sin registro</Text>
-      )}
-      <Text style={styles.title}> Dias de la Semana mas Asignado</Text>
-      {sortedDiasmas.length > 0 ? (
-        <LineChart
-          style={styles.chartContainer}
-          data={lineChartData}
-          width={screenWidth - 10}
-          height={200}
-          chartConfig={chartConfig}
-          bezier
-        />
-      ) : (
-        <Text style={styles.noDataText}>Sin registro</Text>
-      )}
+    <ScrollView>
+      <View style={{ paddingBottom: insets.bottom + 85 }}>
+        <Text style={styles.title}> Salon Menos Utilizado</Text>
+        {smenosu.length > 0 ? (
+          <BarChart
+            style={styles.chartContainer}
+            data={salonMenosUtilizadoData}
+            width={screenWidth - 10}
+            height={200}
+            chartConfig={chartConfig}
+          />
+        ) : (
+          <Text style={styles.noDataText}>Sin registro</Text>
+        )}
+        <Text style={styles.title}> Horas del Dia mas Asignada</Text>
+        {pieChartData.length > 0 ? (
+          <PieChart
+            style={styles.chartContainer}
+            data={pieChartData}
+            width={screenWidth - 10}
+            height={200}
+            chartConfig={chartConfig}
+            accessor={"population"}
+            backgroundColor={"#1371C3"}
+            paddingLeft={"-20"}
+            center={[20, 0]}
+          />
+        ) : (
+          <Text style={styles.noDataText}>Sin registro</Text>
+        )}
+        <Text style={styles.title}> Dias de la Semana mas Asignado</Text>
+        {sortedDiasmas.length > 0 ? (
+          <LineChart
+            style={styles.chartContainer}
+            data={lineChartData}
+            width={screenWidth - 10}
+            height={200}
+            chartConfig={chartConfig}
+            bezier
+          />
+        ) : (
+          <Text style={styles.noDataText}>Sin registro</Text>
+        )}
+        <Text style={styles.title}> Docente con mas Comentarios Realizado</Text>
+        {dqmct.length > 0 ? (
+          <BarChart
+            style={styles.chartContainer}
+            data={docenteMasComentariosData}
+            width={screenWidth - 10}
+            height={200}
+            chartConfig={chartConfig}
+          />
+        ) : (
+          <Text style={styles.noDataText}>Sin registro</Text>
+        )}
       </View>
     </ScrollView>
   );
@@ -209,11 +205,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 8,
   },
-  noDataText:{
-    padding:10,
-    textTransform:"uppercase",
-    fontSize:16,
-    color:"red",
+  noDataText: {
+    padding: 10,
+    textTransform: "uppercase",
+    fontSize: 16,
+    color: "red",
     textAlign: "center",
   },
   chartContainer: {
