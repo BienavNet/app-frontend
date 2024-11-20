@@ -61,12 +61,12 @@ export const RegistrarEntidad = ({
     const { nombre, apellido, correo, cedula, contrasena } = data;
     try {
       if (!editing) {
+        await registerEntidad(nombre, apellido, cedula, correo, contrasena);
         showToast({
           message: STATUS_MESSAGES[APP_STATUS.SUCCESS],
           type: "success",
           id: `success_type${tipoEntidad}`,
         });
-        await registerEntidad(nombre, apellido, cedula, correo, contrasena);
         reset();
       } else {
         showToast({
@@ -85,14 +85,13 @@ export const RegistrarEntidad = ({
           navigation.navigate("ListScreen");
         },
       });
-    
     } catch (error) {
-      reset();
       showToast({
         message: STATUS_MESSAGES[APP_STATUS.ERROR],
         type: "danger",
         id: `danger_type${tipoEntidad}+${error}`,
       });
+      reset();
     }
   };
 
@@ -110,8 +109,7 @@ export const RegistrarEntidad = ({
             <>
               <View>
                 <CustomInput
-               error={errors.cedula}
-                  variant="outlined"
+                  error={errors.cedula}
                   name="cedula"
                   control={control}
                   placeholder="123456789"
@@ -126,7 +124,6 @@ export const RegistrarEntidad = ({
               <View className="flex-row justify-items-stretch">
                 <View className="w-1/2 justify-self-start">
                   <CustomInput
-                    variant="outlined"
                     control={control}
                     error={errors.nombre}
                     placeholder="example"
@@ -145,7 +142,6 @@ export const RegistrarEntidad = ({
                 <View className="w-1/2 justify-self-end">
                   <CustomInput
                   error={errors.apellido}
-                    variant="outlined"
                     name="apellido"
                     control={control}
                     placeholder="example"
@@ -156,7 +152,6 @@ export const RegistrarEntidad = ({
 
               <View>
                 <CustomInput
-                  variant="outlined"
                   name="correo"
                   error={errors.correo}
                   control={control}
@@ -172,11 +167,9 @@ export const RegistrarEntidad = ({
                   }
                 />
               </View>
-
               <View>
                 <CustomInput
-                error={errors.contrasena}
-                  variant="outlined"
+                 error={errors.contrasena}
                   name="contrasena"
                   control={control}
                   label="Contraseña"
@@ -193,7 +186,6 @@ export const RegistrarEntidad = ({
               <View className="flex-row justify-items-stretch">
                 <View className="w-1/2 justify-self-start">
                   <CustomInput
-                    variant="outlined"
                     control={control}
                     label="Nombre"
                     icon={
@@ -209,7 +201,6 @@ export const RegistrarEntidad = ({
 
                 <View className="w-1/2 justify-self-end">
                   <CustomInput
-                    variant="outlined"
                     name="apellido"
                     control={control}
                     label="Apellido"
@@ -219,7 +210,6 @@ export const RegistrarEntidad = ({
 
               <View>
                 <CustomInput
-                  variant="outlined"
                   name="correo"
                   control={control}
                   keyboardType="email-address"
@@ -234,7 +224,9 @@ export const RegistrarEntidad = ({
                 />
               </View>
             </>
-          )}
+          )
+          
+          }
           <SubmitButton onPress={handleSubmit(onsubmit)} editing={editing}  isDisabled={isDisabled} />
         </View>
       </ScrollView>

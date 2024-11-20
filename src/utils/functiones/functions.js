@@ -1,32 +1,34 @@
 import { Audio } from "expo-av";
-import moment from "../../../src/utils/InstanceMoment"
+import moment from "../../../src/utils/InstanceMoment";
 
-export const DatesYYYYMMDD = (fecha)=>{
+export const DatesYYYYMMDD = (fecha) => {
   return moment(fecha).format("YYYY-MM-DD");
-}
+};
 
 // Función para reproducir el sonido de notificación
 export default async function playNotificationSound(setSound) {
   try {
-    const { sound } = await Audio.Sound.createAsync(require('../../../assets/mp3/Sweet.mp3'));
+    const { sound } = await Audio.Sound.createAsync(
+      require("../../../assets/mp3/Sweet.mp3")
+    );
     setSound(sound);
     await sound.playAsync();
   } catch {
     return false;
   }
-};
+}
 
 // Función para obtener la duración entre la horainicio y la horafin 8:00 a 10:00 duration 2h
-export const formatDuration = (horainicio, horafin) =>{
-  const start = moment(horainicio, "HH:mm")
+export const formatDuration = (horainicio, horafin) => {
+  const start = moment(horainicio, "HH:mm");
   const end = moment(horafin, "HH:mm");
   const duration = moment.duration(end.diff(start)).asMinutes();
   const hours = Math.floor(duration / 60);
   const minutes = duration % 60;
-  const hourFormat = `${hours}h ${minutes > 0 ? `${minutes}m`:''}`;
+  const hourFormat = `${hours}h ${minutes > 0 ? `${minutes}m` : ""}`;
   return hourFormat;
-  }
-  
+};
+
 export const formatHourHHMMAMPM = (timeString) => {
   const [hours, minutes] = timeString.split(":");
   const date = new Date();
@@ -37,35 +39,9 @@ export const formatHourHHMMAMPM = (timeString) => {
   return `${formattedHours}:${formattedMinutes} ${period}`;
 };
 
-export const generateClassDates = (dia, startDate, endDate) => {
-  const daysOfWeek = {
-    Lunes: 1,
-    Martes: 2,
-    Miercoles: 3,
-    Jueves: 4,
-    Viernes: 5,
-    Sabado: 6,
-  };
-
-  const targetDay = daysOfWeek[dia];
-  if (targetDay === undefined) {
-    throw new Error("Día no válido");
-  }
-
-  const classesToRegister = [];
-  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-    if (d.getDay() === targetDay) {
-      classesToRegister.push({
-        fecha: new Date(d), // Solo la fecha
-      });
-    }
-  }
-  return classesToRegister;
-};
-
 // devuelve el string pero con la primera letra de un string en mayuscula {"docente" ---> "Docente"}
 export const capitalizeFirstLetter = (name) => {
-  if (name !=undefined ){
+  if (name != undefined) {
     return name.charAt(0).toUpperCase() + name.slice(1);
   }
 };
@@ -82,21 +58,9 @@ export function getFirstLetter(word) {
 export const formatHourHHMMTime = (currentTime) => {
   const hours = currentTime.getHours();
   const minutes = currentTime.getMinutes();
-  return `${hours.toString().padStart(2, "0") % 12 || 12}:${minutes
-    .toString()
-    .padStart(2, "0")} ${hours < 12 ? "AM" : "PM"}`;
+  return `${hours.toString().padStart(2, "0") % 12 || 12}:${minutes.toString().padStart(2, "0")} ${hours < 12 ? "AM" : "PM"}`;
 };
-export function timeParts(initialValue) {
-  if (typeof initialValue !== "string") {
-    return "";
-  }
-  const tp = initialValue.split(":");
-  if (tp.length === 3) {
-    const timeFormatted = tp.slice(0, 2).join(":");  // Formato "HH:mm"
-    return timeFormatted;
-  }
-  return initialValue;
-}
+
 export const formatHourHHMM = (currentTime) => {
   const hours = currentTime.getHours();
   const minutes = currentTime.getMinutes();
@@ -121,10 +85,13 @@ export const formatTimeTo12Hour = (time24) => {
   return `${hour12}:${minute} ${ampm}`;
 };
 
-export const timeHHMM = (fecha, hour) =>{
-  const time =  new Date(`${fecha.split("T")[0]}T${hour}`).toLocaleTimeString([], {
-     hour: "2-digit",
-     minute: "2-digit",
-   });
-   return time;
- }
+export const timeHHMM = (fecha, hour) => {
+  const time = new Date(`${fecha.split("T")[0]}T${hour}`).toLocaleTimeString(
+    [],
+    {
+      hour: "2-digit",
+      minute: "2-digit",
+    }
+  );
+  return time;
+};

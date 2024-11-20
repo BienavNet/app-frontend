@@ -10,10 +10,9 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { AgendaCalendar } from "../../../Components/agenda/agenda";
 import { transformData } from "../../../Components/agenda/data/tranformaData.js";
+import { getmarkedDates } from "../../../Components/agenda/data/markesData.js";
 
-const RenderInfoItem = ({ item, index }) => {
-  const sizeIcon = 18;
-  // {"INTernet": "si", "capacidad": 23, "categoria": "salon", "dia": "Miercoles", "estado": "pendiente", "hora_fin": "12:30:00", "hora_inicio": "08:39:00", "keyunica": "2024-10-02", "numero_salon": 112, "tv": "no"}
+const RenderInfoItem = ({ item }) => {
   const [isPressed, setIsPressed] = useState(false);
   return (
     <TouchableOpacity
@@ -124,34 +123,15 @@ function ScreenViewMore(props) {
   const { selectedDate } = props;
   const ITEMS = transformData(selectedDate);
   const PRIMERDIADELMESSELECCIONADO = Object.keys(ITEMS)[0];
-  const markedDates = Object.keys(ITEMS).reduce((acc, date) => {
-    const hasData = ITEMS[date]?.length > 0;
-    if (!hasData) {
-      // Si no hay datos en la fecha (vacío)
-      acc[date] = {
-        disabled: true,
-        disableTouchEvent: true,
-        dayTextColor: "gray",
-      };
-    } else {
-      // Si hay datos en el día
-      acc[date] = {
-        selected: true,
-        selectedDayBackgroundColor: "#00AAAF",
-        dotColor: "#f2f7f7",
-        marked: true,
-      };
-    }
-    return acc;
-  }, {});
+  const markedDates = getmarkedDates(ITEMS)
 
   return (
     <AgendaCalendar
       selectedDay={PRIMERDIADELMESSELECCIONADO}
       items={ITEMS}
       markedDates={markedDates}
-      render={(item, isFirst) => {
-        return <RenderInfoItem item={item} index={isFirst} />;
+      render={(item) => {
+        return <RenderInfoItem item={item} />;
       }}
     />
   );

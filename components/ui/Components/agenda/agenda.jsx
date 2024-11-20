@@ -2,6 +2,7 @@ import { Agenda, LocaleConfig } from "react-native-calendars";
 import { RenderEmptyDate } from "../unregistered/noRegistration";
 import testIDs from "../../(DIRECTOR)/horarios/component/testIDs";
 import { ColorItem } from "../../../styles/StylesGlobal";
+import { Text } from "react-native";
 LocaleConfig.locales["es"] = {
   monthNames: [
     "Enero",
@@ -50,6 +51,11 @@ export const AgendaCalendar = ({
   selectedDay = undefined,
   render,
 }) => {
+  
+  if (!items || Object.keys(items).length === 0) {
+    return <Text>No classes available</Text>;
+  }
+
   return (
     <Agenda
       markedDates={markedDates}

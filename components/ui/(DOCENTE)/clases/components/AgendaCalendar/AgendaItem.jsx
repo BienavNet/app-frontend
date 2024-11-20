@@ -1,4 +1,3 @@
-import isEmpty from "lodash/isEmpty";
 import { memo, useState } from "react";
 import {
   StyleSheet,
@@ -21,7 +20,6 @@ import { userData } from "../../../../../../src/hooks/use/userData";
 
 const AgendaItem = (props) => {
   const { item } = props;
-  const data = item.data[0];
   const { ID, DIRECTORID } = userData();
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState(false);
@@ -35,12 +33,12 @@ const AgendaItem = (props) => {
     resolver: yupResolver(_registerComentario),
   });
 
-  const onSubmitRegisterComentario = async (event) => {
-    const { comentario } = event;
+  const onSubmitRegisterComentario = async (data) => {
+    const { comentario } = data;
     try {
-      const docente = data.docente;
-      const salon = data.salon;
-      const clase = data.clase;
+      const docente = item.docente;
+      const salon = item.salon;
+      const clase = item.clase;
       const fecha = moment().format("dddd, MMMM Do YYYY, h:mm:ss a");
       await registerComentario(comentario, docente, salon, fecha, clase);
       alert("comentario registrado correctamente");
@@ -66,17 +64,6 @@ const AgendaItem = (props) => {
     setShowModal(false);
     setSelected(false);
   };
-
-  if (isEmpty(item)) {
-    return (
-      <View style={styles.emptyItem}>
-        <Text style={styles.emptyItemText}>
-          No hay evento planeado para este dia.
-        </Text>
-      </View>
-    );
-  }
-
   return (
     <>
       {selected && showModal && (
@@ -84,28 +71,30 @@ const AgendaItem = (props) => {
           modalStyle={{
             height: "70%",
           }}
-          title={`Dejar un comentario sobre la clase:${data.room}`}
+          title={`Dejar un comentario sobre la clase:${item.room}`}
           animationType="slide"
           canCloseModal={false}
           handleCloseModal={handleOnclosed}
           modalVisible={showModal}
         >
-          <View style={{
-            paddingVertical:15,
-            paddingHorizontal:10
-          }}>
-          <MultilineTextInput
-            control={control}
-            name="comentario"
-            variant="outlined"
-            errors={errors.comentario}
-            placeholder="Escribe tu comentario aqui..."
-          />
+          <View
+            style={{
+              paddingVertical: 15,
+              paddingHorizontal: 10,
+            }}
+          >
+            <MultilineTextInput
+              control={control}
+              name="comentario"
+              variant="outlined"
+              errors={errors.comentario}
+              placeholder="Escribe tu comentario aqui..."
+            />
           </View>
 
           <View
             style={{
-              justifyContent:"center",
+              justifyContent: "center",
               flexDirection: "row",
             }}
           >
@@ -129,19 +118,18 @@ const AgendaItem = (props) => {
           </View>
         </ModalComponente>
       )}
+
       <View style={styles.item}>
         <View
           style={{
             width: "45%",
           }}
         >
-          <Text style={styles.itemHourText}>
-            {"Salon: "}
-            {data.room}
-          </Text>
-          <Text style={styles.itemHourText}>{data.hours}</Text>
-          <Text style={styles.itemDurationText}>{data.duration}</Text>
+          <Text style={styles.itemHourText}>Salon:{item.room}</Text>
+          <Text style={styles.itemHourText}>{item.hours}</Text>
+          <Text style={styles.itemDurationText}>{item.duration}</Text>
         </View>
+
         <View
           style={{
             width: "55%",
@@ -155,7 +143,7 @@ const AgendaItem = (props) => {
             }}
           >
             <Text style={styles.itemTitleText}>
-              {truncateText(data.subject, 7)}
+              {truncateText(item.subject, 7)}
             </Text>
           </View>
           <TouchableOpacity
@@ -223,7 +211,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     elevation: 10,
-   marginHorizontal:15
+    marginHorizontal: 15,
   },
   buttonClose: {
     backgroundColor: "#e0310b",
@@ -232,6 +220,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
-    fontSize:18
+    fontSize: 18,
   },
 });

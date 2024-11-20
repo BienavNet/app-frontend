@@ -14,11 +14,6 @@ export const stylesHorariosDirector = StyleSheet.create({
   itemInfo: {
     marginLeft: 20,
   },
-  // item: {
-  //     marginHorizontal: 8,
-  //     marginVertical: 8,
-  //     flex: 1,
-  //   },
   itemP1: {
     fontSize: 20,
     color: ColorItem.TarnishedSilver,

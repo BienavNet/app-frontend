@@ -3,11 +3,6 @@ import * as yup from "yup";
 const SN = ["si", "no"];
 // update a room
 export const updateSalonSchema = yup.object({
-  // categoria_salon: yup
-  //   .number()
-  //   .typeError("La categoria debe ser válida")
-  //   .required("La categoria es obligatoria")
-  //   .integer("La categoria debe ser valida"),
   nombre: yup
     .string()
     .required("Debe seleccionar una opción")

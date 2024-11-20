@@ -2,17 +2,11 @@ import { useState } from "react";
 import { View, Text } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { ListItem } from "@rneui/themed";
-import {
-  capitalizeFirstLetter,
-  truncateText,
-} from "../../../../../src/utils/functiones/functions";
 import { BoxView } from "../../components/customBoxView";
 import { ColorItem } from "../../../../styles/StylesGlobal";
 import { stylesHorariosDirector } from "./styles";
 
 export const ListFilterHorarioDocente = ({ data, onPress }) => {
-  console.log(data, " filter horario docente");
-  // "apellido": "guerrero", "cedula": 1212121212, "correo": "didider123@gmail.com", "docente_id": 1, "nombre": "didider"
   const [expanded, setExpanded] = useState(false);
   return (
     <ListItem.Accordion

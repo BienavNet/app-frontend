@@ -1,12 +1,14 @@
 import * as yup from "yup";
 
 const ROLES =["supervisor", "docente", "director"]
+const REGEX =/^[A-Za-z\s]+$/; // letras y espacios
+
 //iniciar sesion Schema para All
 export const loging = yup.object({
   contrasena: yup.string().required("Password es requerido").min(4).max(16),
   correo: yup
     .string()
-    .email("Invalid email")
+    .email("Por favor, ingresa un correo electrónico válido")
     .required("Correo Electronico es requerido")
     .min(4)
     .max(100),
@@ -32,7 +34,7 @@ export const register = yup.object().shape({
       message: "debe ser mayo a 3 caracteres",
     })
     .max(30)
-    .matches(/^[A-Za-z]+$/, "Nombre no es válido"),
+    .matches(REGEX, "Nombre no es válido"),
   apellido: yup
     .string()
     .lowercase()
@@ -41,7 +43,7 @@ export const register = yup.object().shape({
       message: "debe ser mayo a 3 caracteres",
     })
     .max(30)
-    .matches(/^[A-Za-z]+$/, "Apellido no es válido"),
+    .matches(REGEX, "Apellido no es válido"),
   contrasena: yup
     .string()
     .required("Password es requerido")
@@ -53,7 +55,7 @@ export const register = yup.object().shape({
     ),
   correo: yup
     .string()
-    .email("Formato Email invalido")
+    .email("ingresa un correo electrónico válido")
     .required("Correo Electronico es requerido")
     .min(4)
     .max(100),
@@ -78,15 +80,15 @@ export const update = yup.object().shape({
     .lowercase()
     .required("Nombre es requerido")
     .min(3, "Nombre debe ser mínimo 3 caracteres")
-    .matches(/^[A-Za-z]+$/, "Nombre no es válido"),
+    .matches(REGEX, "Nombre no es válido, solo se permiten letras y espacios"),
   apellido: yup
     .string()
     .required("Apellido es requerido")
     .min(3, "Apellido debe ser mínimo 3 caracteres")
-    .matches(/^[A-Za-z]+$/, "Apellido no es válido"),
+    .matches(REGEX, "Apellido no es válido, solo se permiten letras y espacios"), 
   correo: yup
     .string()
-    .email("Invalid email")
+    .email("ingresa un correo electrónico válido")
     .required("Correo Electronico es requerido")
     .min(4)
     .max(100),

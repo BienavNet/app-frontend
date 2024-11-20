@@ -150,13 +150,9 @@ install y uso del webscoket
 //Expo LinearGradient 
 > npx expo install expo-linear-gradient
 
-> npm i lodash.isempty
-
 > npx expo install react-native-reanimated-carousel
-
 > npx expo install expo-notifications
 > npx expo install expo-device
-
 > npm i react-native-multiple-select
 
 momentjs moment-timezone (valida y manipula fechas y horas en javascript)

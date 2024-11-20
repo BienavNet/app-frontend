@@ -1,9 +1,6 @@
 import { TouchableOpacity, Text, View } from "react-native";
 
 export const SubmitButton = ({ editing = false, onPress, isDisabled }) => {
-  console.log("isDisabled:", isDisabled);
-  console.log("Modo de edición:", editing);
-
   return (
     <View className="w-[94%] pt-3 self-center">
       <TouchableOpacity

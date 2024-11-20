@@ -1,16 +1,10 @@
 import { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { ListItem } from "@rneui/themed";
-import {
-  capitalizeFirstLetter,
-  truncateText,
-} from "../../../../../src/utils/functiones/functions";
 import { BoxView } from "../../components/customBoxView";
 import { ColorItem } from "../../../../styles/StylesGlobal";
 export const ListFilterHorario2 = ({ data, onPress }) => {
-  console.log(data, " filter horario horario");
-  // {"asignatura": "CALCULO I", "dia": "Miercoles", "hora_fin": "12:30:00", "hora_inicio": "10:00:00"}
 
   const [expanded, setExpanded] = useState(false);
   return (

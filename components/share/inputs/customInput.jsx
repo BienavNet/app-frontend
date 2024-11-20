@@ -34,7 +34,7 @@ export const CustomInput = ({
               className={`bg-black/5 rounded-xl w-full ${
                 error ? "#E71717" : "border-slate-400"
               } border`}
-              variant={variant}
+              variant="outlined"
               label={label}
               leading={icon}
               value={value}
