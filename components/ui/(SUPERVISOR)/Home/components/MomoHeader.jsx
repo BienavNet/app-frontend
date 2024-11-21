@@ -20,8 +20,11 @@ export const ScrollViewScreen = () => {
       }}
     >
       <View style={styles.upperHeader}>
+        <View style={{width:"60%"}}>
         <InfoSup />
-        <TouchableOpacity
+        </View>
+       <View style={{width:"40%", flexDirection:"row"}}>
+       <TouchableOpacity
           onPress={() => navigation.navigate("NotificationStack")}
         >
           <Ionicons
@@ -39,6 +42,7 @@ export const ScrollViewScreen = () => {
           )}
         </TouchableOpacity>
         <ButtonLogoutS />
+       </View>
       </View>
       <CarListDocentes />
     </View>

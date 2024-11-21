@@ -11,10 +11,9 @@ export const InfoSup = () => {
       style={{
         flexDirection: "row",
         justifyContent: "center",
-      }}
+      }} 
       key={item.id}
     >
-      <View>
         <Text
           style={{
             color: "white",
@@ -24,7 +23,6 @@ export const InfoSup = () => {
           {capitalizeFirstLetter(item.nombre)}{" "}
           {capitalizeFirstLetter(item.apellido)}
         </Text>
-      </View>
     </View>
   ));
 };

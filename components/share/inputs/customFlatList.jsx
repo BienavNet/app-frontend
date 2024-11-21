@@ -19,7 +19,6 @@ export const CustomFlatList = ({
            name={name}
             error={errors}
             value={value}
-            transparent={true}
             data={data}
             placeholder={placeholder}
             onChange={onChange}

@@ -5,7 +5,7 @@ import {
   getReportSupervisorID,
 } from "../../../../src/services/fetchData/fetchReporte";
 import { useFocusEffect } from "@react-navigation/native";
-import { ColorItem , styles} from "../../../styles/StylesGlobal";
+import { ColorItem, styles } from "../../../styles/StylesGlobal";
 import { getSupervisorCedula } from "../../../../src/services/fetchData/fetchSupervisor";
 import ListFilterReport from "./components/listFilter";
 import { ListReportDefault } from "./components/listDefault";
@@ -139,9 +139,7 @@ export const ViewReportSup = () => {
             keyExtractor={(item) =>
               `${item.reporte_id.toString()}-${item.clase_id.toString()}`
             }
-            ListEmptyComponent={
-              <NofilterSelected/>
-            }
+            ListEmptyComponent={<NofilterSelected />}
           />
         )}
 
@@ -180,29 +178,7 @@ export const ViewReportSup = () => {
             selectedOption={selectedOption}
           />
         }
-      >
-        <DividerLine />
-
-        {/* //lista desplegable segun el filtro seleccionado*/}
-        <View
-          style={{
-            paddingVertical: 10,
-            paddingHorizontal: 15,
-          }}
-        >
-          
-          {selectedOption &&
-            list.map((item) => (
-              <ListFilterReport
-                data={item}
-                temporarySelection={temporarySelection}
-                key={item.id.toString()}
-                selectedOption={selectedOption}
-                onPress={handleItemPress}
-              />
-            ))}
-
-          <DividerLine />
+        bottomStatic={
           <View
             style={{
               paddingVertical: 15,
@@ -239,6 +215,28 @@ export const ViewReportSup = () => {
               />
             </View>
           </View>
+        }
+      >
+        <DividerLine />
+        {/* //lista desplegable segun el filtro seleccionado*/}
+        <View
+          style={{
+            paddingVertical: 10,
+            paddingHorizontal: 15,
+          }}
+        >
+          {selectedOption &&
+            list.map((item) => (
+              <ListFilterReport
+                data={item}
+                temporarySelection={temporarySelection}
+                key={item.id.toString()}
+                selectedOption={selectedOption}
+                onPress={handleItemPress}
+              />
+            ))}
+
+          <DividerLine />
         </View>
       </ModalComponente>
     </>

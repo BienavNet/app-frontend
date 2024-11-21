@@ -12,7 +12,7 @@ import {
   truncateText,
 } from "../../../src/utils/functiones/functions";
 import { ModalComponente } from "../../ui/Components/customModal";
-import {styles } from "../../styles/StylesGlobal";
+import {ColorItem, styles } from "../../styles/StylesGlobal";
 
 export default function DropdownModal({
   name = "",
@@ -20,6 +20,7 @@ export default function DropdownModal({
   data,
   onChange,
   placeholder,
+  error
 }) {
   
   const [expanded, setExpanded] = useState(false);
@@ -51,7 +52,10 @@ export default function DropdownModal({
     <>
       <View ref={buttonRef}>
         <TouchableOpacity
-          style={styless.button}
+          
+          style={[styless.button,{
+            borderColor:error ? "red" :ColorItem.TarnishedSilver
+          }]}
           activeOpacity={0.8}
           onPress={toggleExpanded}
         >
@@ -120,7 +124,6 @@ const styless = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: "black",
   },
 
 });

@@ -10,6 +10,7 @@ import {
   capitalizeFirstLetter,
   truncateText,
 } from "../../../../src/utils/functiones/functions";
+import { EmptyNotification } from "../unregistered/noRegistration";
 
 const handleEditNotification = async (id, fetchNotificationsAll) => {
   const LEIDA = "leida";
@@ -39,6 +40,9 @@ export const ContentNofitications = ({ cedula, estado = "todas" }) => {
     navigation.navigate("NotificationView", { notification: item });
   };
 
+  if (notificationCedulaEstado.length === 0){
+    return <EmptyNotification/>
+  }
   return (
     <ScrollView>
       <>

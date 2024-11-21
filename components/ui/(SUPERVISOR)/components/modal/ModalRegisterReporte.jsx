@@ -3,16 +3,19 @@ import { MultilineTextInput } from "../../../../share/inputs/customMultipleTextI
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { RegisterReportSchema } from "../../../../../src/utils/schemas/reportSchema";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { ColorItem } from "../../../../styles/StylesGlobal";
 import {
   capitalizeFirstLetter,
+  formatTimeTo12Hour,
   truncateText,
 } from "../../../../../src/utils/functiones/functions";
 import { useFocusEffect } from "expo-router";
 import { registerReporte } from "../../../../../src/services/fetchData/fetchReporte";
 import useToastMessage from "../../../../share/ToasNotification";
+import { CustomFlatList } from "../../../../share/inputs/customFlatList";
+import { status } from "./status";
 
 const TabBarStyle = {
   display: "flex",
@@ -25,7 +28,10 @@ const TabBarStyle = {
   backgroundColor: ColorItem.MediumGreen,
 };
 export const ModalRegisterReporte = () => {
-
+  const estado = status.map((item) => ({
+    id: item,
+    label: item,
+  }));
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
 
   const navigation = useNavigation();
@@ -43,7 +49,7 @@ export const ModalRegisterReporte = () => {
 
   const { data } = router.params;
   const CLASE_ID = data.id;
-  
+
   const {
     handleSubmit,
     control,
@@ -54,9 +60,9 @@ export const ModalRegisterReporte = () => {
   });
 
   const onSubmitRegisterReport = async (data) => {
-    const { comentario } = data;
+    const { comentario, estado } = data;
     try {
-      await registerReporte(CLASE_ID, comentario);
+      await registerReporte(CLASE_ID, comentario, estado);
       reset();
       showToast({
         message: STATUS_MESSAGES[APP_STATUS.LOADED_SUCCESSFULLY],
@@ -91,9 +97,7 @@ export const ModalRegisterReporte = () => {
       >
         <View key={data.id}>
           <View className="justify-center items-center">
-            <View
-              style={style.container}
-            >
+            <View style={style.container}>
               <View
                 style={{
                   flexDirection: "row",
@@ -182,9 +186,7 @@ export const ModalRegisterReporte = () => {
                 </Text>
               </View>
             </View>
-            <View
-              style={style.container}
-            >
+            <View style={style.container}>
               <View
                 style={{
                   flexDirection: "row",
@@ -198,12 +200,7 @@ export const ModalRegisterReporte = () => {
                     color: ColorItem.DeepFir,
                   }}
                 >
-                  {new Date(
-                    `${data.fecha.split("T")[0]}T${data.hora_inicio}`
-                  ).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {formatTimeTo12Hour(data.hora_inicio)}
                 </Text>
                 <Text
                   style={{
@@ -212,12 +209,7 @@ export const ModalRegisterReporte = () => {
                     color: ColorItem.DeepFir,
                   }}
                 >
-                  {new Date(
-                    `${data.fecha.split("T")[0]}T${data.hora_fin}`
-                  ).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {formatTimeTo12Hour(data.hora_fin)}
                 </Text>
               </View>
               <View>
@@ -238,6 +230,20 @@ export const ModalRegisterReporte = () => {
             </View>
           </View>
         </View>
+
+        <View style={{
+        paddingHorizontal:10,
+        paddingVertical:8
+        }}>
+          <CustomFlatList
+            name="estado"
+            control={control}
+            data={estado}
+            placeholder={data.estado !== "pendiente" ? capitalizeFirstLetter(data.estado) :`Seleccione estado (por default ${data.estado})`}
+            errors={errors.estado}
+          />
+        </View>
+
         <View
           className="flex-row justify-center items-center"
           style={{
@@ -245,7 +251,7 @@ export const ModalRegisterReporte = () => {
             paddingHorizontal: 10,
           }}
         >
-            <MultilineTextInput
+          <MultilineTextInput
             errors={data.comentario?.length > 0 ? undefined : errors.comentario}
             maxLength={10}
             numberOfLines={12}
@@ -253,9 +259,12 @@ export const ModalRegisterReporte = () => {
             editable={data.comentario?.length > 0 ? false : true}
             variant="outlined"
             control={control}
-            placeholder={data.comentario?.length > 0 ? data.comentario : "Escribir reporte..."}
+            placeholder={
+              data.comentario?.length > 0
+                ? data.comentario
+                : "Escribir reporte..."
+            }
           />
-        
         </View>
         <View className="flex-row justify-center p-3">
           <View className="w-[40%] pt-2 self-center">
@@ -269,12 +278,20 @@ export const ModalRegisterReporte = () => {
             </TouchableOpacity>
           </View>
           <View className="w-[40%] pt-2 self-center">
+
             <TouchableOpacity
-              onPress={data.comentario && data.comentario?.length > 0 ? null : handleSubmit(onSubmitRegisterReport)}
+              onPress={
+                data.comentario && data.comentario?.length > 0
+                  ? null
+                  : handleSubmit(onSubmitRegisterReport)
+              }
               style={{
-                backgroundColor:data.comentario && data.comentario.length > 0 ? ColorItem.TarnishedSilver : ColorItem.DeepSkyBlue,
-                width: '92%', 
-                alignSelf: 'center',
+                backgroundColor:
+                  data.comentario && data.comentario.length > 0
+                    ? ColorItem.TarnishedSilver
+                    : ColorItem.DeepSkyBlue,
+                width: "92%",
+                alignSelf: "center",
                 padding: 12,
                 borderRadius: 8,
               }}
@@ -284,6 +301,7 @@ export const ModalRegisterReporte = () => {
                 Reportar
               </Text>
             </TouchableOpacity>
+
           </View>
         </View>
       </View>
@@ -293,15 +311,15 @@ export const ModalRegisterReporte = () => {
 
 const style = StyleSheet.create({
   container: {
-      width: "95%",
-      backgroundColor: "white",
-      paddingVertical: 10,
-      borderWidth: 1,
-      borderColor: ColorItem.TarnishedSilver,
-      paddingHorizontal: 10,
-      marginTop: 5,
-      borderRadius: 4,
-      justifyContent: "space-between",
-      flexDirection: "row",
+    width: "95%",
+    backgroundColor: "white",
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: ColorItem.TarnishedSilver,
+    paddingHorizontal: 10,
+    marginTop: 5,
+    borderRadius: 4,
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
-})
+});

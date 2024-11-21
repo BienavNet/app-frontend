@@ -1,6 +1,6 @@
 import { ScrollView, Alert } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -40,30 +40,30 @@ export const ListItemComponentHorario = ({
   const [value, setValue] = useState(today);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const fetchItems = async () => {
-      setLoading(true);
-      try {
-        if (additionalData.length > 0) {
-          setItems(additionalData);
-        }
-        else if (
-          (filters.docente > 0 || filters.dia > 0 || filters.horario > 0) &&
-          additionalData.length === 0
-        ) {
-          setItems([]);
-        }
-        else if (Object.values(filters).every((value) => value === 0)) {
-          const res = await getDataAll();
-          setItems(res);
-        }
-      } catch (e) {
-        console.error("Error fetching items:", e);
-      } finally {
-        setLoading(false);
+  const fetchItems = async () => {
+    setLoading(true);
+    try {
+      if (additionalData.length > 0) {
+        setItems(additionalData);
       }
-    };
+      else if (
+        (filters.docente > 0 || filters.dia > 0 || filters.horario > 0) &&
+        additionalData.length === 0
+      ) {
+        setItems([]);
+      }
+      else if (Object.values(filters).every((value) => value === 0)) {
+        const res = await getDataAll();
+        setItems(res);
+      }
+    } catch (e) {
+      console.error("Error fetching items:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchItems();
   }, [getDataAll, additionalData, filters]);
 
@@ -123,15 +123,15 @@ export const ListItemComponentHorario = ({
       ]
     );
   };
-  // const onRefresh = useCallback(async () => {
-  //   try {
-  //     setRefreshing(true);
-  //     await fetchItems();
-  //     setRefreshing(false);
-  //   } catch {
-  //     setRefreshing(false);
-  //   }
-  // }, [fetchItems]);
+  const onRefresh = useCallback(async () => {
+    try {
+      setRefreshing(true);
+      await fetchItems();
+      setRefreshing(false);
+    } catch {
+      setRefreshing(false);
+    }
+  }, [fetchItems]);
 
   const handleDateChange = (date) => {
     setValue(date);
@@ -152,7 +152,7 @@ export const ListItemComponentHorario = ({
 
   return (
     <ScrollView
-    //  refreshControl={refreshControl(refreshing, onRefresh)}
+      refreshControl={refreshControl(refreshing, onRefresh)}
      >
       {Object.keys(multipleSelectedItem).length > 0 && additionalData && (
         <ScrollMultipleFilterClass

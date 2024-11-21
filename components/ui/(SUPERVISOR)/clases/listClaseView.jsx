@@ -110,10 +110,8 @@ export const ListClassView = () => {
     const updatedOpciones = opciones.map((opt) =>
       opt.id === Idkey ? { ...opt, isSelected: false } : opt
     );
-
     setMultipleSelectedItem((prev) => {
       const updated = { ...prev };
-
       if (updated[Idkey]) {
         delete updated[Idkey];
       }
@@ -167,15 +165,16 @@ export const ListClassView = () => {
 
   return (
     <View style={styles.container}>
-        <ScrollMultipleFilterClass
+      <View>
+      <ScrollMultipleFilterClass
           opciones={opciones}
           handleOptionSelect={handleOptionSelect}
         />
+      </View>
       {/* Información mostrada por defecto */}
       {!Object.keys(multipleSelectedItem).length && (
         <FlatList
           data={classbysupervisor}
-          style={styles.list}
           renderItem={({ item }) => <ListClassDefault data={item} />}
           keyExtractor={(item) => item.id.toString()}
           ListEmptyComponent={<NofilterSelected />}

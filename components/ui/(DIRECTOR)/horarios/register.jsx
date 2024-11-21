@@ -37,7 +37,6 @@ export const RegisterHorario = ({ navigation, route }) => {
 
   const [horarioId, setHorarioId] = useState(null);
   const [idhorarioDetalle, setIdhorarioDetalle] = useState(null);
-  console.log(idhorarioDetalle, "XXXXXXXXXXXX ------- idhorarioDetalle")
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);

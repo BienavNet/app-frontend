@@ -1,11 +1,11 @@
 import axiosInstance from "../axios";
 
 // supervisor & director
-export const registerReporte = async (clase, comentario) => {
+export const registerReporte = async (clase, comentario,estado) => {
   try {
-    const response = await axiosInstance.post("/reporte/register", {
+    const response = await axiosInstance.post(`/reporte/register/${estado}`, {
       clase,
-      comentario,
+      comentario
     });
     return response;
   } catch (error) {

@@ -182,7 +182,7 @@ export const styles = StyleSheet.create({
   titleWelcome: {
     width: 200,
     height: 40,
-    fontSize: 38,
+    fontSize: 34,
     fontWeight: "bold",
     textAlign: "center",
   },

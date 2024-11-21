@@ -1,12 +1,14 @@
 import { Text, View } from "react-native";
 
+const COLORED="#ea2a3b";
+
 export const NotRegistration = () => {
   return (
     <Text
       style={{
         textAlign: "center",
         marginTop: 20,
-        color: "#ea2a3b",
+        color:COLORED,
         fontSize: 16,
       }}
     >
@@ -23,7 +25,7 @@ export const NotRegistrationDate = () => {
         fontSize: 18,
         fontWeight: "bold",
         borderRadius: 8,
-        backgroundColor: "#ea2a3b",
+        backgroundColor: COLORED,
         color: "white",
         paddingVertical: 25,
       }}
@@ -43,7 +45,7 @@ export const NofilterSelected = () => {
     >
       <Text
         style={{
-          color: "#ea2a3b",
+          color: COLORED,
           padding: 10,
           fontSize: 16,
           fontWeight: "semibold",
@@ -63,3 +65,21 @@ export const RenderEmptyDate = () => {
     </View>
   );
 };
+
+export function EmptyNotification (){
+  return(
+    <View
+        style={{
+          height: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{
+          fontSize: 20,
+          fontWeight: "bold",
+          color: COLORED,
+        }}>No hay notificaciones para mostrar.</Text>
+      </View>
+  )
+}
