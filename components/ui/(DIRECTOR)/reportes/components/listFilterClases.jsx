@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-
+import { View, Text, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { ListItem } from "@rneui/themed";
 import {
@@ -12,7 +11,6 @@ import { BoxView } from "../../components/customBoxView";
 import { ColorItem } from "../../../../styles/StylesGlobal";
 import { StatusCircle } from "./StatusCircle";
 export const ListFilterClases = ({ data, onPress }) => {
-  console.log(data, "<-------------------xxxxxxxxxxxxxxxxx------listFilterClses data");
   const [expanded, setExpanded] = useState(false); // Estado para manejar si el acordeón está expandido
   return (
     <ListItem.Accordion

@@ -6,7 +6,6 @@ export const CustomSwitch = ({ name, control, label }) => {
       name={name}
       control={control}
       render={({ field: { onChange, value } }) => {
-        console.log('Switch value:', value);
         return(
           <View className="flex-row justify-between items-center w-[80%]">
           <Text className="text-base ">{label}</Text>

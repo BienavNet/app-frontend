@@ -3,7 +3,6 @@ import { capitalizeFirstLetter } from "../../../../src/utils/functiones/function
 import { styles } from "../../../styles/StylesGlobal";
 
 export const InfoDS = ({ selectedItem }) => {
-  console.log(selectedItem, "selected del docente");
   return (
     <View className="bg-white shadow-2xl rounded-lg p-3 w-full">
       <Text style={[styles.Title1]}>Nombre y apellido</Text>

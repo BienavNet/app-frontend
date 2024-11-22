@@ -21,7 +21,6 @@ export const ListItemSalones = ({
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  console.log(selectedItem, "<------setSelectedItem");
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchItems = useCallback(async () => {
@@ -46,13 +45,10 @@ export const ListItemSalones = ({
     try {
       setModalVisible(true);
       const res = await getDataOne(id);
-      console.log(res, "response res de handleInfoPress");
       const itemselected = res.find((value) => value.id === id);
-      console.log(itemselected, "item selected");
       if (itemselected) {
         setSelectedItem(itemselected);
       } else {
-        console.error("Salon no encontrado");
         setSelectedItem(null);
       }
     } catch (error) {

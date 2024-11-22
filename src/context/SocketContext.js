@@ -3,16 +3,19 @@ import playNotificationSound from "../../src/utils/functiones/functions";
 import io from "socket.io-client";
 import useNotificationPermissions from "../utils/PERMISSIONS/push.notification/expo.notification";
 import { userData } from "../hooks/use/userData";
+import { useNotificationCedulaEstado } from "../hooks/customHooks";
 const baseURL = process.env.EXPO_PUBLIC_URLWEBSOCKET;
 export let socket = null;
 
 export const NotificationContext = createContext();
 
 export const NotificationProvider = (props) => {
+  // const {fetchNotificationsAll} = useNotificationCedulaEstado();
   const permissionGranted = useNotificationPermissions();
   const { children } = props;
   const { ROL, ID, INITIALIZE, ISAUTENTICATED } = userData();
   const [totalUnreadNotification, setTotalUnreadNotification] = useState(0);
+  const [isNotification, setIsNotification] = useState(false);
   const [sound, setSound] = useState(null);
   const socketInitialized = useRef(false);
 
@@ -21,11 +24,25 @@ export const NotificationProvider = (props) => {
       playNotificationSound(setSound);
       setTotalUnreadNotification(data);
     } else if (data < totalUnreadNotification) {
+      setIsNotification(false);
       setTotalUnreadNotification(data);
     } else {
-      return false;
+      setIsNotification(false);
+      return;
     }
   };
+
+  const _handleNewNotification = async (data) => {
+    try {
+      if(data.success){
+        setIsNotification(true);
+      }
+    } catch (error) {
+      setIsNotification(false);
+    }finally {
+      setIsNotification(false); 
+    }
+  }; 
 
   const configreSocketEvents = () => {
     // eventos del websocket
@@ -35,6 +52,10 @@ export const NotificationProvider = (props) => {
 
     socket.on("count-notification", (data) => {
       handleNewNotification(data);
+    });
+
+    socket.on("new_notificacion",(data) =>{
+      _handleNewNotification(data);
     });
 
     socket.on("disconnect", () => {
@@ -58,6 +79,7 @@ export const NotificationProvider = (props) => {
     if (socket && socketInitialized.current) {
       socket.emit("disauthenticate", ID);
       socket.off("count-notification");
+      socket.off("new_notification");
       socket.disconnect();
       socketInitialized.current = false;
     }
@@ -74,7 +96,7 @@ export const NotificationProvider = (props) => {
   }, [INITIALIZE, ISAUTENTICATED]);
 
   return (
-    <NotificationContext.Provider value={{ totalUnreadNotification }}>
+    <NotificationContext.Provider value={{ totalUnreadNotification, isNotification }}>
       {children}
     </NotificationContext.Provider>
   );

@@ -1,5 +1,5 @@
 import { View, ScrollView, Alert } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { HeaderTitle } from "../../../share/titulos/headerTitle";
 import { SubmitButton } from "../../../share/button/submitButton";
 import {
@@ -10,7 +10,6 @@ import {
 import useToastMessage from "../../../share/ToasNotification";
 import { updateSalonSchema } from "../../../../src/utils/schemas/SalonSchema";
 import { CustomInput } from "../../../share/inputs/customInput";
-import { useFocusEffect } from "@react-navigation/native";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { capitalizeFirstLetter } from "../../../../src/utils/functiones/functions";
@@ -33,26 +32,6 @@ export const UpdateSalon = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const category = useCategoriaxSalon();
-  // const fetchCategory = useCallback(async () => {
-  //   try {
-  //     const res = await getCategorySalon();
-  //     console.log(res, "Asignatura response");
-  //     setCategory(res);
-  //   } catch (error) {
-  //     showToast({
-  //       message: STATUS_MESSAGES[APP_STATUS.ERROR],
-  //       type: "danger",
-  //       id: APP_STATUS.ERROR,
-  //     });
-  //   }
-  // }, []);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     fetchCategory();
-  //   }, [fetchCategory])
-  // );
-
   useEffect(() => {
     if (route.params && route.params.id) {
       setEditing(true);
@@ -63,9 +42,7 @@ export const UpdateSalon = ({ navigation, route }) => {
           id: APP_STATUS.LOADING,
         });
         const response = await getSalonOne(route.params.id);
-        console.log(response, "Salon response");
         const value = response.find((doc) => doc.id === route.params.id);
-        console.log(value, "Salon value");
         if (value) {
           setInitialValues({
             categoria_salon: value.categoria_salon,

@@ -11,6 +11,8 @@ import {
   truncateText,
 } from "../../../../src/utils/functiones/functions";
 import { EmptyNotification } from "../unregistered/noRegistration";
+import { useEffect } from "react";
+import { useSocket } from "../../../../src/hooks/use/useSocket";
 
 const handleEditNotification = async (id, fetchNotificationsAll) => {
   const LEIDA = "leida";
@@ -23,13 +25,17 @@ const handleEditNotification = async (id, fetchNotificationsAll) => {
 };
 
 export const ContentNofitications = ({ cedula, estado = "todas" }) => {
+  const { isNotification } = useSocket();
   const navigation = useNavigation();
   const { notificationCedulaEstado, fetchNotificationsAll } =
     useNotificationCedulaEstado(cedula, estado);
-
+  useEffect(() => {
+    if (isNotification) {
+      fetchNotificationsAll();
+    }
+  }, [isNotification]);
   const handleUpdateStatus = (item) => {
     const NOLEIDA = "no leida";
-
     if (item.estado === NOLEIDA) {
       handleEditNotification(item.id, fetchNotificationsAll);
     }
@@ -40,8 +46,8 @@ export const ContentNofitications = ({ cedula, estado = "todas" }) => {
     navigation.navigate("NotificationView", { notification: item });
   };
 
-  if (notificationCedulaEstado.length === 0){
-    return <EmptyNotification/>
+  if (notificationCedulaEstado.length === 0) {
+    return <EmptyNotification />;
   }
   return (
     <ScrollView>

@@ -1,7 +1,6 @@
 import { TouchableOpacity, Text, View } from "react-native";
 
 export const Buttonlogin = ({ onPress, title = "Iniciar Sesión", error }) => {
-  console.log("error", error)
   return (
     <View className={`w-full ${error ? 'pt-3' : 'pt-5'}`}>
       <TouchableOpacity

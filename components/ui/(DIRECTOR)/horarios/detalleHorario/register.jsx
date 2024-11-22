@@ -359,7 +359,6 @@ export const RegisterDetailHorario = ({
                     display="clock"
                     is24Hour={true}
                     onTimeSelected={(formattedTime) => {
-                      console.log("hora_inicio", formattedTime);
                       setHoraInicio(formattedTime);
                     }}
                   />

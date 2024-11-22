@@ -1,10 +1,9 @@
 import * as Notifications from "expo-notifications";
 import { Alert, Platform, Linking } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function useNotificationPermissions() {
   const [permissionGranted, setPermissionGranted] = useState(false);
-
   async function requestNotificationPermissions() {
     const { status } = await Notifications.getPermissionsAsync();
 
@@ -46,7 +45,6 @@ export default function useNotificationPermissions() {
 
       if (newStatus === "granted") {
         setPermissionGranted(true);
-        console.log("Permisos de notificaciones concedidos.");
       } else {
         Alert.alert(
           "Permisos de notificaciones requeridos",
@@ -55,12 +53,6 @@ export default function useNotificationPermissions() {
       }
     }
   }
-
-  // useEffect(() => {
-  //   if (!permissionGranted) {
-  //     requestNotificationPermissions();
-  //   }
-  // }, [permissionGranted]);
 
   return { permissionGranted, requestNotificationPermissions };
 }

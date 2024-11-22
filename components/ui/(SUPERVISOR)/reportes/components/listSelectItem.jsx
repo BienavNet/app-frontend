@@ -96,7 +96,6 @@ const ListSelectItem = ({ data }) => {
                       color: "#000000",
                       fontSize: 15
                     }}>
-                      {console.log(data)}
                       {capitalizeFirstLetter(data.nombre_salon)}{" "}{data.numero_salon}{" "}{data.asignatura}
                     </ListItem.Subtitle>
                   </View>
