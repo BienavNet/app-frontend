@@ -20,7 +20,10 @@ import {
   updateClase,
 } from "../../../../../src/services/fetchData/fetchClases";
 import { useEffect, useState } from "react";
-import { generateClassDates, timeParts } from "../../../../../src/utils/functiones/functions";
+import {
+  generateClassDates,
+  timeParts,
+} from "../../../../../src/utils/functiones/functions";
 import Loading from "../../../../share/loading";
 import { SubmitButton } from "../../../../share/button/submitButton";
 import useToastMessage from "../../../../share/ToasNotification";
@@ -166,8 +169,8 @@ export const RegisterDetailHorario = ({
             reset({
               salon: value.salon,
               dia: value.dia,
-              hora_inicio:timeParts(value.hora_inicio),
-              hora_fin:timeParts(value.hora_fin),
+              hora_inicio: timeParts(value.hora_inicio),
+              hora_fin: timeParts(value.hora_fin),
             });
           } else {
             throw new Error("detalle del horario no encontrado.");
@@ -200,21 +203,19 @@ export const RegisterDetailHorario = ({
     if (!checkSupervisorsAvailable()) {
       return;
     }
-
-    showToast({
-      message: STATUS_MESSAGES[APP_STATUS.REGISTERING],
-      type: "success",
-      id: APP_STATUS.REGISTERING,
-    });
-
+    const supervisorID = await assignSupervisors();
+    if (!supervisorID) {
+      alert("No se pudo asignar un supervisor. Vuelva a intentarlo");
+      reset();
+      return false;
+    }
     try {
       if (!editing) {
-        const supervisorID = await assignSupervisors();
-        if (!supervisorID) {
-          alert("No se pudo asignar un supervisor. Vuelva a intentarlo");
-          reset();
-          return false;
-        }
+        showToast({
+          message: STATUS_MESSAGES[APP_STATUS.REGISTERING],
+          type: "success",
+          id: APP_STATUS.REGISTERING,
+        });
         await registerDetailHorario(idhorario, dia, hora_inicio, hora_fin);
         endDate.setMonth(endDate.getMonth() + TOTAL_MESES);
         const classesToRegister = await Promise.all(
@@ -241,6 +242,7 @@ export const RegisterDetailHorario = ({
               )
             )
           );
+          reset();
           alert("Redirigiendo....");
           handleCloseModal();
           navigation.navigate("ListScreen");
@@ -249,7 +251,7 @@ export const RegisterDetailHorario = ({
           showToast({
             message: STATUS_MESSAGES[APP_STATUS.ERROR],
             type: "danger",
-            id: APP_STATUS.ERROR,
+            id: "ERROR_INREDIREG_LISTRSCREEN",
           });
         }
       } else {
@@ -318,7 +320,7 @@ export const RegisterDetailHorario = ({
             <Loading />
           ) : !editing ? (
             <View className="w-full">
-              <View className="self-center w-[85%]">
+              <View className="self-center w-[95%]">
                 <CustomPiker
                   name="dia"
                   control={control}
@@ -327,16 +329,12 @@ export const RegisterDetailHorario = ({
                   data={dias}
                 />
               </View>
-              <View className="self-center w-[85%] pb-1 pt-5">
+              <View className="self-center w-[95%] pb-1 pt-5">
                 <CustomFlatList
                   name="salon"
                   errors={errors.salon}
                   control={control}
-                  placeholder={`${
-                    salones.length === 0
-                      ? "Sin registros de salones..."
-                      : "Seleccione Salon"
-                  }`}
+                  placeholder="Seleccione Salon"
                   data={salones}
                 />
               </View>
@@ -355,8 +353,6 @@ export const RegisterDetailHorario = ({
                     title="Hora ini..."
                     initialValue={horainicio}
                     testID="hora_inicio"
-                    mode="time"
-                    display="clock"
                     is24Hour={true}
                     onTimeSelected={(formattedTime) => {
                       setHoraInicio(formattedTime);
@@ -371,8 +367,6 @@ export const RegisterDetailHorario = ({
                     title="Hora Fin"
                     testID="hora_fin"
                     initialValue={horafin}
-                    mode="time"
-                    display="clock"
                     is24Hour={true}
                     onTimeSelected={(formattedTime) =>
                       setHoraFin(formattedTime)
@@ -416,9 +410,7 @@ export const RegisterDetailHorario = ({
                     editing={editing}
                     control={control}
                     testID="hora_inicio"
-                    mode="time"
                     initialValue={watch("hora_inicio")}
-                    display="clock"
                     is24Hour={true}
                     onTimeSelected={(formattedTime) => {
                       setHoraInicio(formattedTime);
@@ -433,8 +425,6 @@ export const RegisterDetailHorario = ({
                     errors={errors.hora_fin}
                     testID="hora_fin"
                     initialValue={watch("hora_fin")}
-                    mode="time"
-                    display="clock"
                     is24Hour={true}
                     onTimeSelected={(formattedTime) =>
                       setHoraFin(formattedTime)
@@ -447,9 +437,7 @@ export const RegisterDetailHorario = ({
           <View className="flex-row-reverse w-full justify-center">
             <View className={editing ? "w-[40%]" : "w-[85%]"}>
               <SubmitButton
-                onPress={() => {
-                  handleSubmit(onsubmit)();
-                }}
+                onPress={handleSubmit(onsubmit)}
                 editing={editing}
                 isDisabled={isDisabled}
               />

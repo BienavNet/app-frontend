@@ -13,7 +13,7 @@ export const registerDetailHorario = async (
       hora_inicio,
       hora_fin,
     });
-    return response;
+    return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
   }

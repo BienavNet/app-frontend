@@ -18,6 +18,32 @@ export default async function playNotificationSound(setSound) {
   }
 }
 
+export const generateClassDates = (dia, startDate, endDate) => {
+  const daysOfWeek = {
+    "Lunes": 1,
+    "Martes": 2,
+    "Miercoles": 3,
+    "Jueves": 4,
+    "Viernes": 5,
+    "Sabado": 6
+  };
+  
+  const targetDay = daysOfWeek[dia];
+  if (targetDay === undefined) {
+    throw new Error("Día no válido");
+  }
+
+  const classesToRegister = [];
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    if (d.getDay() === targetDay) {
+      classesToRegister.push({
+        fecha: new Date(d) // Solo la fecha
+      });
+    }
+  }
+  return classesToRegister;
+};
+
 // Función para obtener la duración entre la horainicio y la horafin 8:00 a 10:00 duration 2h
 export const formatDuration = (horainicio, horafin) => {
   const start = moment(horainicio, "HH:mm");

@@ -13,8 +13,6 @@ export const CustomTimePicker = ({
   control,
   errors,
   testID,
-  mode,
-  display,
   is24Hour,
   initialValue,
   onTimeSelected,
@@ -81,7 +79,9 @@ export const CustomTimePicker = ({
       render={({ field: { onChange } }) => (
         <>
           <Button
+            
             style={{
+              padding:5,
               borderRadius: 8,
             }}
             tintColor={errors ? "#ffffff" : "black"}
@@ -100,9 +100,9 @@ export const CustomTimePicker = ({
             <DateTimePicker
               testID={testID}
               value={selectedTime || new Date()}
-              mode={mode}
+              mode="time"
               is24Hour={is24Hour}
-              display={display}
+              display="clock"
               onChange={(e, newTime) => {
                 handleChange(e, newTime, onChange);
               }}
