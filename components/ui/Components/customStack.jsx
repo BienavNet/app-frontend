@@ -34,14 +34,21 @@ const CustomStack = ({ initialRouteName, screens }) => {
               headerLeft: notificationScreens.includes(route.name)
                 ? () => (
                     <HeaderLeft
-                      onPress={() => navigation.goBack()} // Navegar hacia atrás
-                      icon={
-                        <FontAwesome6
-                          name="circle-chevron-left"
-                          size={30}
-                          color={ColorItem.KellyGreen}
-                        />
+                    onPress={() => {
+                      const state = navigation.getState();
+                      if (state.routes.length > 1) {
+                        navigation.goBack(); // Si hay más de una pantalla en la pila, regresa
+                      } else {
+                        navigation.navigate("Home"); // Si no, navega a la pantalla principal
                       }
+                    }}
+                    icon={
+                      <FontAwesome6
+                        name="circle-chevron-left"
+                        size={30}
+                        color={ColorItem.KellyGreen}
+                      />
+                    }
                     />
                   )
                 : isSecondaryScreen // maneja si es diferente de las secundarias, es decir son las primeras

@@ -36,8 +36,9 @@ export const generateClassDates = (dia, startDate, endDate) => {
   const classesToRegister = [];
   for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
     if (d.getDay() === targetDay) {
+      const formattedDate = moment(d).format('YYYY-MM-DD');
       classesToRegister.push({
-        fecha: new Date(d) // Solo la fecha
+        fecha: formattedDate // Fecha formateada
       });
     }
   }
