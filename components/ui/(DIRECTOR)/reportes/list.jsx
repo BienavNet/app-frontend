@@ -15,7 +15,6 @@ import {
   useReporteAll,
   useSalonAll,
 } from "../../../../src/hooks/customHooks";
-import { ModalComponente } from "../../Components/customModal";
 import { ChildFilterX } from "../../(SUPERVISOR)/components/chid/chidFilter";
 import { CustomSeachBar } from "../comentario/components/seachBar";
 import {
@@ -23,6 +22,7 @@ import {
   NotRegistration,
 } from "../../Components/unregistered/noRegistration";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ModalComponente } from "../../Components/Modals/customModal";
 
 export const ReportView_Filter = () => {
   const [searchText, setSearchText] = useState("");

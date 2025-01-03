@@ -11,8 +11,8 @@ import {
   capitalizeFirstLetter,
   truncateText,
 } from "../../../src/utils/functiones/functions";
-import { ModalComponente } from "../../ui/Components/customModal";
 import {ColorItem, styles } from "../../styles/StylesGlobal";
+import { ModalComponente } from "../../ui/Components/Modals/customModal";
 
 export default function DropdownModal({
   name = "",

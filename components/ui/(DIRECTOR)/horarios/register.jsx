@@ -12,7 +12,6 @@ import {
   horarioEditSchema,
 } from "../../../../src/utils/schemas/horarioSchema";
 import asignaturajson from "./json/asignaturas.json";
-import { ModalComponente } from "../../Components/customModal";
 import { RegisterDetailHorario } from "./detalleHorario/register";
 import { CustomFlatList } from "../../../share/inputs/customFlatList";
 import Loading from "../../../share/loading";
@@ -20,6 +19,7 @@ import { HeaderTitle } from "../../../share/titulos/headerTitle";
 import { SubmitButton } from "../../../share/button/submitButton";
 import useToastMessage from "../../../share/ToasNotification";
 import { useDocenteAll } from "../../../../src/hooks/customHooks";
+import { ModalComponente } from "../../Components/Modals/customModal";
 
 export const RegisterHorario = ({ navigation, route }) => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
@@ -66,7 +66,7 @@ export const RegisterHorario = ({ navigation, route }) => {
       navigation.setOptions({ headerTitle: "Actualizar horario" });
       (async () => {
         const response = await getHorarioOne(route.params.id);
-        setIdhorarioDetalle(response[0].horarios[0].id_detallehorario)
+        setIdhorarioDetalle(response[0].horarios[0].id_detallehorario);
         const value = response.find((doc) => doc.id === route.params.id);
         if (value) {
           setInitialValues({

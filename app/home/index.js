@@ -13,7 +13,7 @@ export default function Index() {
 
   switch (user.rol) {
     case "director":
-      ComponentToRender = HomeDirector;
+      ComponentToRender =HomeDirector ;
       break;
     case "supervisor":
       ComponentToRender = HomeSupervisor;

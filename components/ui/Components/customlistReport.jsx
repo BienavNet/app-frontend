@@ -1,4 +1,4 @@
-import { Text, ScrollView, View } from "react-native";
+import { Text, View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useEffect, useState } from "react";
@@ -11,7 +11,7 @@ import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Loading from "../../share/loading";
 import { NotRegistration } from "../../share/noRegistration";
-import { refreshControl } from "../../../src/utils/functiones/refresh";
+import LayoutScroolView from "./Layout/UseScroollView";
 
 export const ListItemReport = ({
   getDataAll,
@@ -27,7 +27,6 @@ export const ListItemReport = ({
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const fetchItems = useCallback(async () => {
@@ -72,28 +71,11 @@ export const ListItemReport = ({
     setSelectedItem(null);
   };
 
-  const onRefresh = useCallback(async () => {
-    try {
-      setRefreshing(true);
-      await fetchItems();
-      setRefreshing(false);
-    } catch {
-      setRefreshing(false);
-    }
-  }, [fetchItems]);
-
-  // useEffect(() => {
-  //   if (modalVisible) {
-  //     setLoading(true);
-  //     const timer = setTimeout(() => {
-  //       setLoading(false);
-  //     }, 1000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [modalVisible]);
   return (
-    <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
-      {loading ? (
+    <LayoutScroolView
+    onRefreshExternal={fetchItems}
+    >
+            {loading ? (
         <Loading />
       ) : items.length === 0 ? (
         <NotRegistration />
@@ -259,6 +241,6 @@ export const ListItemReport = ({
           <NotRegistration />
         )}
       </ModalComponente>
-    </ScrollView>
+    </LayoutScroolView>
   );
 };

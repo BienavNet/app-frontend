@@ -1,8 +1,8 @@
 import { ListSupervisor } from "./list";
 import { RegistrarSupervisor } from "./register";
-import CustomStack from "../../Components/customStack";
 import Buttonright from "../../../share/button/buttonRightStack";
 import { IconAddCircle } from "../../../../assets/icons/IconsGlobal";
+import CustomStack from "../../Components/view/customStack";
 
 export const IndexSupervisor = () => {
   const screens = [

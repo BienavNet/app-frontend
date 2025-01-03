@@ -61,32 +61,41 @@ export const PopupMenu = ({ opcions, onSelect, topM =102, rightM = 10, handleOpt
               },
             ]}
           >
-            {opcions.map((op, i) => (
-                <TouchableOpacity
-                style={[
-                  styles.ButtonPopupMenu,
-                  {
-                    borderBottomWidth: i === opcions.length - 1 ? 0 : 1,
-                  },
-                ]}
-                key={i}
-                onPress={() => {
-                  handleOptionSelectId(op.id); 
-                  if (op.action) {
-                    if (typeof op.action === 'function') {
-                      op.action(); 
-                    } else {
-                      handleOptionSelect(op.action);
-                    }
+         {
+          opcions && Array.isArray(opcions) && opcions.length > 0   ? (
+            opcions.map((op, i) => (
+              <TouchableOpacity
+              style={[
+                styles.ButtonPopupMenu,
+                {
+                  borderBottomWidth: i === opcions.length - 1 ? 0 : 1,
+                },
+              ]}
+              key={i}
+              onPress={() => {
+                handleOptionSelectId(op.id); 
+                if (op.action) {
+                  if (typeof op.action === 'function') {
+                    op.action(); 
+                  } else {
+                    handleOptionSelect(op.action);
                   }
-                }}
-              >
-                <Text style={{ marginLeft: 10, color: "black" }}>
-                  {op.title}
-                </Text>
-                <View style={{ marginLeft: 10 }}>{op.icon}</View>
-              </TouchableOpacity>
-              ))}
+                }
+              }}
+            >
+              <Text style={{ marginLeft: 10, color: "black" }}>
+                {op.title}
+              </Text>
+              <View style={{ marginLeft: 10 }}>{op.icon}</View>
+            </TouchableOpacity>
+            ))
+          ):(
+            <Text style={{ marginLeft: 10, color: "black" }}>
+              No hay opciones disponibles
+            </Text>
+  
+          )
+         }
           </Animated.View>
         </SafeAreaView>
       </Modal>

@@ -12,7 +12,7 @@ import {
 } from "../../../../src/services/fetchData/fetchHorarios";
 import { ListItemComponentHorario } from "../../Components/customListHorario";
 import { ListItemSelectHorario } from "./component/listSelect";
-import { ModalComponente } from "../../Components/customModal";
+// import { ModalComponente } from "../../Components/customModal";
 import { CustomSeachBar } from "../comentario/components/seachBar";
 import { View, Alert } from "react-native";
 import { Reset_Filter } from "../../(SUPERVISOR)/components/button/buttonReset&Filter";
@@ -37,69 +37,69 @@ export const ListHorario = ({
   setModalSelect,
   temporalSelectedItem,
 }) => {
-  const [additionalData, setAdditionalData] = useState([]);
-  const fetchAdditionalData = async () => {
-    let { docente, horario, dia } = filters;
-    try {
-      let filteredData;
-    if (selectedOption === "docente" && multipleSelectedItem[selectedOption]) {
-      filteredData = await getDetailHorarioDocente(docente);
-    } else if (selectedOption === "horario" && multipleSelectedItem[selectedOption]) {
-      filteredData = await getDetailHorario2(horario);
-    } else if (selectedOption === "dia" && multipleSelectedItem[selectedOption]) {
-      filteredData = await getDetailHorarioDia(docente, dia);
-    }
-    setAdditionalData(filteredData || []);
-    } catch {
-      setAdditionalData([]);
-    }
-  };
+  // const [additionalData, setAdditionalData] = useState([]);
+  // const fetchAdditionalData = async () => {
+  //   let { docente, horario, dia } = filters;
+  //   try {
+  //     let filteredData;
+  //   if (selectedOption === "docente" && multipleSelectedItem[selectedOption]) {
+  //     filteredData = await getDetailHorarioDocente(docente);
+  //   } else if (selectedOption === "horario" && multipleSelectedItem[selectedOption]) {
+  //     filteredData = await getDetailHorario2(horario);
+  //   } else if (selectedOption === "dia" && multipleSelectedItem[selectedOption]) {
+  //     filteredData = await getDetailHorarioDia(docente, dia);
+  //   }
+  //   setAdditionalData(filteredData || []);
+  //   } catch {
+  //     setAdditionalData([]);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (Object.values(filters).every((value) => value === 0)) {
-      fetchAdditionalData();
-    } else {
-      fetchAdditionalData();
-    }
-  }, [filters, selectedOption, multipleSelectedItem]); 
+  // useEffect(() => {
+  //   if (Object.values(filters).every((value) => value === 0)) {
+  //     fetchAdditionalData();
+  //   } else {
+  //     fetchAdditionalData();
+  //   }
+  // }, [filters, selectedOption, multipleSelectedItem]); 
 
-  const handleFilter = () => {
-    const hasTemporalSelection = temporalSelectedItem[selectedOption]
-      ? Object.keys(temporalSelectedItem[selectedOption]).length > 0
-      : false;
+  // const handleFilter = () => {
+  //   const hasTemporalSelection = temporalSelectedItem[selectedOption]
+  //     ? Object.keys(temporalSelectedItem[selectedOption]).length > 0
+  //     : false;
 
-    const hasExistingSelection = multipleSelectedItem[selectedOption]
-      ? Object.keys(multipleSelectedItem[selectedOption]).length > 0
-      : false;
+  //   const hasExistingSelection = multipleSelectedItem[selectedOption]
+  //     ? Object.keys(multipleSelectedItem[selectedOption]).length > 0
+  //     : false;
 
-    if (!hasTemporalSelection && !hasExistingSelection) {
-      Alert.alert(
-        "Selección requerida",
-        "Para filtrar debe tener un item seleccionado"
-      );
-    } else {
-      applyFilter();
-    }
-  };
+  //   if (!hasTemporalSelection && !hasExistingSelection) {
+  //     Alert.alert(
+  //       "Selección requerida",
+  //       "Para filtrar debe tener un item seleccionado"
+  //     );
+  //   } else {
+  //     applyFilter();
+  //   }
+  // };
 
-  const closemodal = () => {
-    if (!multipleSelectedItem[selectedOption]) {
-      setMultipleSelectedOption((prev) =>
-        prev.filter((option) => option !== selectedOption)
-      );
-    }
-    setModalSelect(false);
-  };
+  // const closemodal = () => {
+  //   if (!multipleSelectedItem[selectedOption]) {
+  //     setMultipleSelectedOption((prev) =>
+  //       prev.filter((option) => option !== selectedOption)
+  //     );
+  //   }
+  //   setModalSelect(false);
+  // };
 
   return (
     <>
       <ListItemComponentHorario
-       filters={filters}
-       fetchAdditionalData={fetchAdditionalData}
-        multipleSelectedItem={multipleSelectedItem}
-        opciones={opciones}
-        handleOptionSelect={handleOptionSelect}
-        additionalData={additionalData}
+      //  filters={filters}
+      //  fetchAdditionalData={fetchAdditionalData}
+      //   multipleSelectedItem={multipleSelectedItem}
+      //   opciones={opciones}
+      //   handleOptionSelect={handleOptionSelect}
+      //   additionalData={additionalData}
         deleteDataAsociated={DeleteDetailHorarioOne}
         getDataAll={getHorarioAll}
         getDataOne={getHorarioOne}
@@ -107,7 +107,7 @@ export const ListHorario = ({
         modalTitle="Horario"
       />
 
-      {showSearchBar && (
+      {/* {showSearchBar && (
         <ModalComponente
           modalStyle={{
             height: "80%",
@@ -200,7 +200,7 @@ export const ListHorario = ({
               />
             ))}
         </ModalComponente>
-      )}
+      )} */}
     </>
   );
 };

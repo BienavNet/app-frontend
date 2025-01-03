@@ -1,15 +1,16 @@
 import { useState, useCallback } from "react";
-import { Keyboard, Platform, StyleSheet } from "react-native";
+import { Keyboard } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useFocusEffect } from "@react-navigation/native";
 import { ColorItem } from "../../styles/StylesGlobal";
-
-export const TabsHome = ({
-  tabsConfig,
-  customTabBarStyle,
-  activeTinColor = "#ffffff",
-  inactiveTinColoe = ColorItem.DeepFir,
-}) => {
+import HeaderRight from "../headerhomeRigth";
+import HeaderLeft from "../headerhomeLeft";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
+import { userData } from "../../../src/hooks/use/userData";
+import { DrawerActions } from "@react-navigation/native";
+export const TabsHome = ({ tabsConfig }) => {
+  const { ROL } = userData();
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const Tab = createBottomTabNavigator();
   useFocusEffect(
@@ -17,37 +18,24 @@ export const TabsHome = ({
       const handleKeyboardShow = () => setKeyboardVisible(true);
       const handleKeyboardHide = () => setKeyboardVisible(false);
       const keyboardDidShowListener = Keyboard.addListener(
-        Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
+        "keyboardDidShow",
         handleKeyboardShow
       );
       const keyboardDidHideListener = Keyboard.addListener(
-        Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide",
+        "keyboardDidHide",
         handleKeyboardHide
       );
+
       return () => {
         keyboardDidHideListener.remove();
         keyboardDidShowListener.remove();
       };
     }, [])
   );
-  const defaultTabBarStyle = {
-    display: "flex",
-    position: "absolute",
-    bottom: 10,
-    left: 15,
-    right: 15,
-    elevation: 0,
-    borderRadius: 12,
-    height: 70,
-    backgroundColor: ColorItem.MediumGreen,
-    ...styles.shadow,
-  };
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="Dashboard"
       screenOptions={({ route, navigation }) => {
-        const routeName =
-          navigation.getState()?.routes[navigation.getState().index]?.name;
         const hiddenOptions = [
           "Comentario",
           "Reportes",
@@ -55,22 +43,48 @@ export const TabsHome = ({
           "RegistrarReporte",
         ];
         return {
-          tabBarStyle:
-            hiddenOptions.includes(routeName) || isKeyboardVisible
-              ? { display: "none" }
-              : {
-                  ...defaultTabBarStyle,
-                  ...customTabBarStyle,
-                },
-          tabBarActiveTintColor: activeTinColor,
-          tabBarInactiveTintColor: inactiveTinColoe,
+          headerLeft: () => {
+            return (
+              <HeaderLeft
+                onPress={() => {
+                  navigation.dispatch(DrawerActions.openDrawer());
+                }}
+                icon={
+                  <FontAwesome6
+                    name="bars-staggered"
+                    size={30}
+                    color="#ffffff"
+                  />
+                }
+              />
+            );
+          },
+          headerRight: () => {
+            return route.name === "Dashboard" ? (
+              <HeaderRight
+                rol={capitalizeFirstLetter(ROL)}
+                navigation={navigation}
+              />
+            ) : null;
+          },
+          headerStyle: { backgroundColor: ColorItem.MediumGreen },
+          headerTitleStyle: { color: "#fff" },
+          tabBarStyle: hiddenOptions.includes(route.name) || isKeyboardVisible
+          ? { display: "none" }
+          : {
+              backgroundColor: ColorItem.MediumGreen,
+              maxHeight: "11%",
+              minHeight: "10%",
+            },
+
+          tabBarActiveTintColor: "#fff",
+          tabBarInactiveTintColor: ColorItem.DeepFir,
+          tabBarIconStyle: {
+            marginTop: 10,
+          },
           tabBarLabelStyle: {
             fontSize: 16,
-            fontWeight: "bold",
-            paddingBottom: 5,
-          },
-          tabBarIconStyle: {
-            marginBottom: -5,
+            fontWeight: 500,
           },
         };
       }}
@@ -86,16 +100,3 @@ export const TabsHome = ({
     </Tab.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  shadow: {
-    shadowColor: "black",
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.5,
-    elevation: 5,
-  },
-});

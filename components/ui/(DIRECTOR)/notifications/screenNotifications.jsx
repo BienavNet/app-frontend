@@ -1,8 +1,10 @@
-import CustomStack from "../../Components/customStack";
+import CustomStack from "../../Components/view/customStack";
 import { ColorItem } from "../../../styles/StylesGlobal";
 import Notification from "../../Components/notifications/contentTabView";
 import { NotificacionView } from "../../Components/notifications/notificationMoreView";
-const NotificationStackScreen = () => {
+
+const NotificationStackScreen = ({navigation}) => {
+
   const screen = [
     {
       name: "NotificationScreen",

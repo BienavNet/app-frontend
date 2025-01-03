@@ -1,8 +1,8 @@
 import { View, Alert } from "react-native";
-import { ModalComponente } from "../../../../Components/customModal";
 import { Reset_Filter } from "../../../components/button/buttonReset&Filter";
 import { ColorItem } from "../../../../../styles/StylesGlobal";
 import { CustomSeachBar } from "../../../../(DIRECTOR)/comentario/components/seachBar";
+import { ModalComponente } from "../../../../Components/Modals/customModal";
 
 export const ClassFilter = ({
   removeFilter,

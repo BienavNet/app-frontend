@@ -78,7 +78,7 @@ export const CustomDrawerContent = (props) => {
         <DrawerContent user={user} />
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
-      {ROL === "director" && <ButtonLogout onPress={handleLogout} />}
+      {ROL !== "docente" && <ButtonLogout onPress={handleLogout} />}
     </View>
   );
 };

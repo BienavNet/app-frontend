@@ -12,7 +12,8 @@ export default function SimpleDatePicker({
 }) {
   const today = Today();
   const [value, setValue] = useState(null);
-  const formattedSelectedDates = useMemo(() => {return selectedDate.map((date) => moment(date))}, [selectedDate]); 
+  const formattedSelectedDates = useMemo(() => {return selectedDate.map((date) => moment(date))
+  }, [selectedDate]); 
 
  //comparamos si today se encuentra en la lista
  const isTodayInSelectedDates = useMemo(() => {
@@ -49,6 +50,60 @@ export default function SimpleDatePicker({
       onDateChange(newDate);
     }
   };
+//   const today = Today();
+//   const [value, setValue] = useState(null);
+//   // const formattedSelectedDates = useMemo(() => {return selectedDate.map((date) => moment(date))}, [selectedDate]); 
+
+//   const formattedSelectedDates = useMemo(() => {
+//     // Asegura que selectedDate sea un array antes de usar .map()
+//     if (!Array.isArray(selectedDate)) return [];
+//     return selectedDate.map((date) => moment(date));
+//   }, [selectedDate]);
+//  //comparamos si today se encuentra en la lista
+//  const isTodayInSelectedDates = useMemo(() => {
+//   return formattedSelectedDates.some((formattedDate) =>
+//     today.isSame(formattedDate, 'day'))
+//  },[formattedSelectedDates, today]);
+ 
+//   useEffect(() => {
+//     if (isTodayInSelectedDates) {
+//       if (!today.isSame(value, 'day')) {
+//         setValue(today);
+//       }
+//     } else {
+//       setValue(today);
+//     }
+//   }, [isTodayInSelectedDates]);
+//   const weeks = useMemo(() => {
+//     if (!formattedSelectedDates || formattedSelectedDates.length === 0) return [];
+//     const sortedDates = [...formattedSelectedDates].sort((a, b) =>
+//       moment.utc(a).diff(moment.utc(b))
+//     );
+//     return sortedDates.map((date) => ({
+//       dia: date.format("ddd"),
+//       fecha: date.toDate(),
+//     }));
+//   }, [formattedSelectedDates]);
+//   // const weeks = useMemo(() => {
+//   //   if (!formattedSelectedDates || formattedSelectedDates.length === 0) return []; // Verificar que haya fechas
+//   //   const sortedDates = [...formattedSelectedDates].sort((a, b) => moment.utc(a).diff(moment.utc(b)));
+//   //   const daysMonth = sortedDates.map(dateStr => {
+//   //     const date = moment.utc(dateStr);  // Convertir cada string a un objeto moment en UTC
+//   //     return {
+//   //       dia: date.format('ddd'),  // Día de la semana en abreviatura
+//   //       fecha: date.toDate(),     // Fecha en formato Date
+//   //     };
+//   //   });
+//   //   return daysMonth;
+//   // }, [formattedSelectedDates]);
+
+//   const handleDateChange = (newDate) => {
+//     console.log('handleDateChange', newDate);
+//     setValue(moment(newDate));
+//     if (onDateChange) {
+//       onDateChange(newDate);
+//     }
+//   };
 
   return (
     <View style={styles.container}>

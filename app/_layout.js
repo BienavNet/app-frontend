@@ -17,7 +17,6 @@ export default LayoutApp = () => {
                 <Loading color={ColorItem.KellyGreen} />
               ) : (
                 <NotificationProvider>
-                  
                   <Slot />
                 </NotificationProvider>
               )

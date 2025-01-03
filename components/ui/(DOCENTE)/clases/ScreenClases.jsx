@@ -1,4 +1,4 @@
-import CustomStack from "../../Components/customStack";
+import CustomStack from "../../Components/view/customStack";
 import { Clasesregistro } from "./components/indexClasesRegistro";
 
 export const RegistroClases = () => {

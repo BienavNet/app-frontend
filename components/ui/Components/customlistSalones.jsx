@@ -1,27 +1,23 @@
-import { ScrollView } from "react-native";
-import { ListItem, Button } from "@rneui/themed";
 import { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { ModalComponente } from "./customModal";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Loading from "../../share/loading";
-import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { InfoSalones } from "../(DIRECTOR)/salones/components/InfoSalones";
 import { ViewSalones } from "../(DIRECTOR)/salones/components/viewSalones";
-import CustomTouchableOpacity from "./customTouchableOpacity";
 import { NotRegistration } from "./unregistered/noRegistration";
+import LayoutScroolView from "./Layout/UseScroollView";
+import { ListSwipeable } from "./view/components/listItems.Swipeable";
+import { IconClassRoom } from "../../../assets/icons/IconsGlobal";
+import CustomTouchableOpacity from "../../share/button/customTouchableOpacity";
+import { ModalComponente } from "./Modals/customModal";
 
 export const ListItemSalones = ({
   getDataAll,
   getDataOne,
   navigateToFormScreen,
-  itemIcon = "account",
-  modalTitle = "Info",
 }) => {
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchItems = useCallback(async () => {
     setLoading(true);
@@ -61,55 +57,34 @@ export const ListItemSalones = ({
     setSelectedItem(null);
   };
 
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await fetchItems();
-    setRefreshing(false);
-  }, [fetchItems]);
-
   return (
-    <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
+    <LayoutScroolView onRefreshExternal={fetchItems}>
       {loading ? (
         <Loading />
       ) : items.length === 0 ? (
         <NotRegistration />
       ) : (
         items.map((item, index) => (
-          <ListItem.Swipeable
-            key={item.id || index}
-            leftContent={(reset) => (
-              <Button
-                title="Info"
-                onPress={async () => {
-                  reset();
-                  await handleInfoPress(item.id);
-                }}
-                icon={{ name: "info", color: "white" }}
-                buttonStyle={{ minHeight: "100%" }}
-              />
-            )}
+          <ListSwipeable
+            index={index}
+            item={item}
+            showrightContent={false}
+            handleInfoPress={handleInfoPress}
+            icono={IconClassRoom}
           >
-            <MaterialCommunityIcons
-              name="google-classroom"
-              size={24}
-              color="black"
-            />
-            <ListItem.Content>
-              <ListItem.Title>
-                <CustomTouchableOpacity
-                  navigateToFormScreen={navigateToFormScreen}
-                  screenName="FormScreen"
-                  paramKey="id"
-                  paramValue={item.id}
-                >
-                  <ViewSalones item={item} />
-                </CustomTouchableOpacity>
-              </ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem.Swipeable>
+            <CustomTouchableOpacity
+              navigateToFormScreen={navigateToFormScreen}
+              screenName="FormScreen"
+              paramKey="id"
+              paramValue={item.id}
+            >
+              <ViewSalones item={item} />
+            </CustomTouchableOpacity>
+          </ListSwipeable>
         ))
       )}
+
+      {/* Modal para mostrar información del salón */}
       <ModalComponente
         modalStyle={{ height: "60%" }}
         transparent={true}
@@ -124,6 +99,6 @@ export const ListItemSalones = ({
           <NotRegistration />
         )}
       </ModalComponente>
-    </ScrollView>
+    </LayoutScroolView>
   );
 };

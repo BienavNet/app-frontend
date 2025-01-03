@@ -20,7 +20,7 @@ export const FormLogin = () => {
   const { showToast, APP_STATUS, STATUS_MESSAGES } = useToastMessage();
   const router = useRouter();
   const { login, isAuthenticated, user } = useAuth();
-  const {requestNotificationPermissions} = useNotificationPermissions();
+  const { requestNotificationPermissions } = useNotificationPermissions();
   const {
     handleSubmit,
     control,
@@ -46,13 +46,13 @@ export const FormLogin = () => {
       showToast({
         message: STATUS_MESSAGES[APP_STATUS.LOADED_SUCCESSFULLY],
         type: "success",
-        id:"INICIO_STATUS_LOADED_SUCCESSFULL",
+        id: "INICIO_STATUS_LOADED_SUCCESSFULL",
       });
       if (user) {
         showToast({
           message: STATUS_MESSAGES[APP_STATUS.SUCCESS],
           type: "success",
-          id: APP_STATUS.SUCCESS,
+          id: "CARGADO-CORRECTAMENTE.",
         });
         requestNotificationPermissions();
         router.push("/home");
@@ -77,7 +77,7 @@ export const FormLogin = () => {
       }
     }
   }, [isAuthenticated, user]);
-  
+
   return (
     <View className="flex items-left mx-4 space-y-2">
       <CustomInput
@@ -117,9 +117,7 @@ export const FormLogin = () => {
         title="Soy un"
         error={errors.rol}
       />
-      <Buttonlogin 
-      error={errors}
-      onPress={handleSubmit(onsubmit)} />
+      <Buttonlogin error={errors} onPress={handleSubmit(onsubmit)} />
     </View>
   );
 };

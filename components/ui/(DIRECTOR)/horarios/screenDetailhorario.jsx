@@ -1,92 +1,127 @@
 import SimpleDatePicker from "../../Components/customSimpleDatePicker";
 import { InfoHorario } from "./component/info/infoHorario";
 import { SearchView } from "./component/searchMore&viewValue";
-import { ModalComponente } from "../../Components/customModal";
-import { useState } from "react";
-import { Modal, View, TouchableOpacity } from "react-native";
-import ScreenViewMore from "./component/ScreenViewMore";
-import { MaterialIcons } from "@expo/vector-icons";
 import useToastMessage from "../../../share/ToasNotification";
 import moment from "../../../../src/utils/InstanceMoment";
 import { NotRegistration } from "../../Components/unregistered/noRegistration";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
-export const ScreenDetailHour = ({
-  selectedItem,
-  value,
-  handleDateSelected,
-  handleDateChange,
-  setSelectedItem, 
-  modalVisible,
-  setModalVisible
-}) => {
-  const [viewmoreModalVisible, setViewMoreModalVisible] = useState(false); // segunda modal
+export const ScreenDetailHour = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
   const { showToast, APP_STATUS } = useToastMessage();
+  const { selectedItem, value } = route.params;
 
+  // console.log("Screen Detail selectedItem, value:", value, JSON.stringify(selectedItem));
+
+  // Función para obtener fechas seleccionadas del mes actual
+  const handleDateSelected = (selectedItem) =>
+    selectedItem?.horarios
+      ?.map((horario) => moment(horario.fecha))
+      .filter((fecha) => fecha.month() === moment().month()) || [];
+
+  const handleDateChange = (newDate) => {
+    console.log("New Date Selected:", newDate);
+    navigation.setParams({
+      onValue: newDate
+    })
+    // navigation.setOptions({
+    //   onValue: (callback) => callback(newDate),
+    // });
+  };
+
+  // Modal de carga con navegación
   const handleOpenSecondModal = () => {
-    return showToast({
-      message: "Cargando datos.... en espera......",
+    showToast({
+      message: "Cargando datos... en espera...",
       type: "warning",
       id: APP_STATUS.LOADING,
-      onClose:() => setViewMoreModalVisible(true)
+      onClose: () =>
+        navigation.navigate("SubInfoHours", {
+          selectedDate: selectedItem,
+        }),
     });
   };
 
-  const handleCloseModal = () => {
-    setModalVisible(false);
-    setSelectedItem(null);
-  };
-
-  const handleCloseSecondModal = () => {
-    setViewMoreModalVisible(false);
-  };
   return (
     <>
-      <>
-        <ModalComponente
-          transparent={true}
-          modalStyle={{ height: "100%" }}
-          animationType={"slider"}
-          modalVisible={modalVisible}
-          handleCloseModal={handleCloseModal}
-        >
-          {selectedItem ?(
-            <>
-              <InfoHorario selectedItem={selectedItem} />
-              <SearchView value={value} handleOpenSecondModal={handleOpenSecondModal}/>
-             
-              <SimpleDatePicker
-                onDateChange={handleDateChange}
-                selectedDate={handleDateSelected(selectedItem)}
-                viewSelectDate={selectedItem?.horarios.find((horario) =>  moment(horario.fecha).isSame(value, 'day'))}
-              />
-            </>
-          ): (
-            <NotRegistration />
-          )
-        }
-        </ModalComponente>
-      </>
-
-      <>
-        <Modal
-          animationType="slide" // fade none slider
-          transparent={false} // true o false
-          visible={viewmoreModalVisible}
-          modalStyle={{ height: "90%" }}
-          modalVisible={viewmoreModalVisible}
-          handleCloseModal={handleCloseSecondModal}
-          onRequestClose={() => {
-              handleCloseModal();
-          }}
-        >
-          <View style={{ flexDirection: "row-reverse", marginBottom: 12 }}>
-            <TouchableOpacity onPress={handleCloseSecondModal}>
-              <MaterialIcons name="cancel" size={30} color="red" />
-            </TouchableOpacity>
-          </View>
-          <ScreenViewMore selectedDate={selectedItem} />
-        </Modal>
-      </>
+      {selectedItem ? (
+        <>
+          <InfoHorario selectedItem={selectedItem} />
+          <SearchView value={value} handleOpenSecondModal={handleOpenSecondModal} />
+          <SimpleDatePicker
+            onDateChange={handleDateChange}
+            selectedDate={handleDateSelected(selectedItem)}
+            viewSelectDate={selectedItem?.horarios.find((horario) =>
+              moment(horario.fecha).isSame(value, "day")
+            )}
+          />
+        </>
+      ) : (
+        <NotRegistration />
+      )}
     </>
   );
 };
+// export const ScreenDetailHour = () => {
+//   const route = useRoute();
+//   const navigation = useNavigation();
+//   const { showToast, APP_STATUS } = useToastMessage();
+//   const { selectedItem, value } = route.params;
+  
+//   console.log("Screen Detail selectedItem, value: " + value   +  JSON.stringify(selectedItem) );
+//   const handleDateSelected = (selectedItem) => {
+//     const allHorariosSelected = selectedItem?.horarios
+//       .map((horarios) => {
+//         const fecha = moment(horarios.fecha);
+//         return fecha;
+//       })
+//       .filter((horarios) => {
+//         const currentMonth = moment().month(); // Se obtiene el mes actual usando moment
+//         return horarios.month() === currentMonth; // Solo comparamos el mes
+//       });
+//     return allHorariosSelected;
+//   };
+//   const handleDateChange = (newDate) => {
+//     console.log(newDate, "date New changes : ")
+//     const parentNavigator = navigation.getParent();
+//     console.log(parentNavigator, "parent navigator : ")
+//     if (parentNavigator?.setOptions) {
+//       parentNavigator.setOptions({
+//         onValue: (callback) => callback(newDate),
+//       });
+//     }
+//   };
+  
+//   const handleOpenSecondModal = () => {
+//     return showToast({
+//       message: "Cargando datos.... en espera......",
+//       type: "warning",
+//       id: APP_STATUS.LOADING,
+//       onClose: () =>
+//         navigation.navigate("SubInfoHours", {
+//           selectedDate: selectedItem,
+//         }),
+//     });
+//   };
+
+//   return (
+//     <>
+//       {selectedItem ? (
+//         <>
+//           <InfoHorario selectedItem={selectedItem} />
+
+//           <SearchView value={value} handleOpenSecondModal={handleOpenSecondModal}/>
+
+//           <SimpleDatePicker 
+//           onDateChange={handleDateChange}
+//             selectedDate={handleDateSelected(selectedItem)}
+//             viewSelectDate={selectedItem?.horarios.find((horario) => moment(horario.fecha).isSame(value, "day"))}
+//           />
+//         </>
+//       ) : (
+//         <NotRegistration />
+//       )}
+//     </>
+//   );
+// };

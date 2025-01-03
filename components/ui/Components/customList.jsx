@@ -1,10 +1,8 @@
-import { ScrollView, Alert, View } from "react-native";
-import { ListItem, Button } from "@rneui/themed";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { Alert, View } from "react-native";
+import { Button } from "@rneui/themed";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { ModalComponente } from "./customModal";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { InfoDS } from "../(DIRECTOR)/components/info";
 import { ViewDS } from "../(DIRECTOR)/components/view";
@@ -13,13 +11,16 @@ import { Snackbar } from "@react-native-material/core";
 import { useSupervisorDefault } from "../../../src/hooks/customHooks";
 import { updateSupervisorDefault } from "../../../src/services/fetchData/fetchSupervisor";
 import { ColorItem } from "../../styles/StylesGlobal";
-import { refreshControl } from "../../../src/utils/functiones/refresh";
+import LayoutScroolView from "./Layout/UseScroollView";
+import { ListSwipeable } from "./view/components/listItems.Swipeable";
+import { IconCustomUser } from "../../../assets/icons/IconsGlobal";
+import { ModalComponente } from "./Modals/customModal";
+
 export const ListItemComponent = ({
   getDataAll,
   getDataOne,
   deleteData,
   navigateToFormScreen,
-  itemIcon = "account",
   modalTitle = "Info",
   isSupervisor = false,
 }) => {
@@ -27,8 +28,6 @@ export const ListItemComponent = ({
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);
-
   const [selectedItemId, setSelectedItemId] = useState(null);
   const supervisordefault = useSupervisorDefault();
 
@@ -105,17 +104,6 @@ export const ListItemComponent = ({
       ]
     );
   };
-
-  const onRefresh = useCallback(async () => {
-    try {
-      setRefreshing(true);
-      await fetchItems();
-      setRefreshing(false);
-    } catch {
-      setRefreshing(false);
-    }
-  }, [fetchItems]);
-
   const handleLongPress = (itemId) => {
     if (selectedItemId === itemId) return;
     setSnackbarVisible(true);
@@ -123,6 +111,10 @@ export const ListItemComponent = ({
   };
 
   const handleSnackbarDismiss = async () => {
+    setSnackbarVisible(false);
+  };
+
+  const handleSelectItem = async () =>{
     if (selectedItemForSnackbar) {
       try {
         await updateSupervisorDefault(selectedItemForSnackbar);
@@ -132,73 +124,50 @@ export const ListItemComponent = ({
         console.error("Error al actualizar el supervisor por defecto:", error);
       }
     }
-  };
+
+  }
   return (
     <>
-      <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
+      <LayoutScroolView onRefreshExternal={fetchItems}>
         {items.length === 0 ? (
           <NotRegistration />
         ) : (
           items.map((item, index) => (
-            <ListItem.Swipeable
-              key={item.id || index}
-              leftContent={(reset) => (
-                <Button
-                  title="Info"
-                  onPress={async () => {
-                    reset();
-                    await handleInfoPress(item.cedula);
-                  }}
-                  icon={{ name: "info", color: "white" }}
-                  buttonStyle={{ minHeight: "100%" }}
-                />
-              )}
-              rightContent={(reset) => (
-                <Button
-                  title="Delete"
-                  onPress={() => {
-                    reset();
-                    handleDeletePress(item.cedula);
-                  }}
-                  icon={{ name: "delete", color: "white" }}
-                  buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
-                />
-              )}
-            >
-              <Icon name={itemIcon} size={25} color="black" />
-              <ListItem.Content>
-                <ListItem.Title>
-                  <TouchableOpacity
-                    onLongPress={() => {
-                      if (isSupervisor) {
-                        handleLongPress(item.id);
-                      }
-                    }}
-                    className="flex-row"
-                    onPress={() =>
-                      navigateToFormScreen
-                        ? navigateToFormScreen(navigation, item.cedula)
-                        : navigation.navigate("FormScreen", {
-                            cedula: item.cedula,
-                          })
-                    }
-                  >
-                    <ViewDS item={item} />
-                  </TouchableOpacity>
-                </ListItem.Title>
-              </ListItem.Content>
-              {isSupervisor && selectedItemId === item.id && (
+            <ListSwipeable
+              index={index}
+              item={item}
+              handleDeletePress={handleDeletePress}
+              handleInfoPress={handleInfoPress}
+              icono={IconCustomUser}
+              isdocente={isSupervisor && selectedItemId === item.id && (
                 <MaterialCommunityIcons
                   name="checkbox-multiple-marked-circle-outline"
                   size={20}
                   color={ColorItem.DeepSkyBlue}
                 />
               )}
-              <ListItem.Chevron />
-            </ListItem.Swipeable>
+            >
+              <TouchableOpacity
+                onLongPress={() => {
+                  if (isSupervisor) {
+                    handleLongPress(item.id);
+                  }
+                }}
+                className="flex-row"
+                onPress={() =>
+                  navigateToFormScreen
+                    ? navigateToFormScreen(navigation, item.cedula)
+                    : navigation.navigate("FormScreen", {
+                        cedula: item.cedula,
+                      })
+                }
+              >
+                <ViewDS item={item} />
+              </TouchableOpacity>
+            </ListSwipeable>
           ))
         )}
-      </ScrollView>
+      </LayoutScroolView>
 
       <ModalComponente
         transparent={true}
@@ -226,13 +195,32 @@ export const ListItemComponent = ({
           <Snackbar
             message="¿Quieres seleccionar este ítem?"
             action={
-              <Button
-                onPress={() => {
-                  handleSnackbarDismiss(); // Ejecutar la función al presionar el botón
-                }}
-                title="Seleccionar"
-                color="primary"
-              />
+              // <Button
+              //   onPress={() => {
+              //     handleSelected();
+              //     // handleSnackbarDismiss(); // Ejecutar la función al presionar el botón
+              //   }}
+              //   title="Seleccionar"
+              //   color="primary"
+              // />
+<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Button
+            onPress={() => {
+              handleSnackbarDismiss(); // Función para manejar el "Cancelar"
+            }}
+            title="Cancelar"
+            color="grey"
+            style={{ marginRight: 10 }} // Espacio entre los botones
+          />
+          <Button
+            onPress={() => {
+              handleSelectItem(); // Función para manejar la "Selección"
+            }}
+            title="Seleccionar"
+            color="primary"
+          />
+        </View>
+              
             }
             style={{
               position: "absolute",

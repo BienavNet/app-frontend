@@ -1,5 +1,5 @@
 import { ListComentario } from "./list";
-import CustomStack from "../../Components/customStack";
+import CustomStack from "../../Components/view/customStack";
 export const IndexComentario = () => {
   const screens = [
     {

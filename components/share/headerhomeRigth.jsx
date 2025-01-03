@@ -6,27 +6,12 @@ export default function HeaderRight({ rol, navigation }) {
   const { totalUnreadNotification } = useSocket();
   return (
     <View
-      style={[styles.headerContainer, rol === "Director" && { width: "50%" }]}
+      style={[
+        styles.headerContainer,
+
+        rol === "Director" || rol === "Supervisor" && { width: "50%" },
+      ]}
     >
-      {rol === "Director" ? (
-        <TouchableOpacity
-          onPress={() => navigation.navigate("NotificationStack")}
-          style={{
-            paddingRight: 5,
-          }}
-        >
-          <View>
-            <Ionicons name="notifications-sharp" size={24} color="#ffffff" />
-            {totalUnreadNotification > 0 && (
-              <Badge
-                status="primary"
-                value={totalUnreadNotification}
-                containerStyle={{ position: "absolute", top: 2, left: 10 }}
-              />
-            )}
-          </View>
-        </TouchableOpacity>
-      ) : null}
       <View style={styles.rightContainer}>
         <Text style={styles.rol}>{rol}</Text>
       </View>
@@ -37,10 +22,9 @@ export default function HeaderRight({ rol, navigation }) {
 const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
-    margin: 2,
+    marginRight: 20,
+    paddingHorizontal: 10,
     alignItems: "center",
-    padding: 2,
-    width: "40%",
   },
 
   rol: {

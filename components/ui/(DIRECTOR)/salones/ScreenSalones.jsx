@@ -1,13 +1,13 @@
 import { ListSalones } from "./list";
 import { UpdateSalon } from "./update";
-import CustomStack from "../../Components/customStack";
+import CustomStack from "../../Components/view/customStack";
 
 export const IndexSalones = () => {
   const screens = [
     {
       name: "ListScreen",
       component: ListSalones,
-      title: "Listado",
+      title: "Salones de Ing. Sistemas.",
     },
     {
       name: "FormScreen",

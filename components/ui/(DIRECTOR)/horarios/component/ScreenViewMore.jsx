@@ -11,6 +11,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { AgendaCalendar } from "../../../Components/agenda/agenda";
 import { transformData } from "../../../Components/agenda/data/tranformaData.js";
 import { getmarkedDates } from "../../../Components/agenda/data/markesData.js";
+import { useRoute } from "@react-navigation/native";
 
 const RenderInfoItem = ({ item }) => {
   const [isPressed, setIsPressed] = useState(false);
@@ -119,8 +120,11 @@ const RenderInfoItem = ({ item }) => {
   );
 };
 
-function ScreenViewMore(props) {
-  const { selectedDate } = props;
+function ScreenViewMore() {
+  const router = useRoute();
+  const { selectedDate } = router.params;
+  
+  // const { selectedDate } = props;
   const ITEMS = transformData(selectedDate);
   const PRIMERDIADELMESSELECCIONADO = Object.keys(ITEMS)[0];
   const markedDates = getmarkedDates(ITEMS)

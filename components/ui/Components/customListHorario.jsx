@@ -1,7 +1,7 @@
 import { ScrollView, Alert } from "react-native";
 import { ListItem, Button } from "@rneui/themed";
 import { useEffect, useState, useCallback } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Loading from "../../share/loading";
@@ -12,11 +12,12 @@ import {
 } from "../../../src/services/fetchData/fetchClases";
 import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { ViewHorario } from "../(DIRECTOR)/horarios/component/viewHorario";
-import { ScreenDetailHour } from "../(DIRECTOR)/horarios/screenDetailhorario";
-import moment, { Today } from "../../../src/utils/InstanceMoment";
+import { Today } from "../../../src/utils/InstanceMoment";
 import { NotRegistration } from "./unregistered/noRegistration";
 import { ColorItem } from "../../styles/StylesGlobal";
 import { ScrollMultipleFilterClass } from "../(SUPERVISOR)/clases/components/carouselFilter/CarouselFilter";
+import LayoutScroolView from "./Layout/UseScroollView";
+
 
 export const ListItemComponentHorario = ({
   additionalData,
@@ -30,34 +31,34 @@ export const ListItemComponentHorario = ({
   deleteDataAsociated,
   navigateToFormScreen,
   modalTitle = "Info",
-  fetchAdditionalData
 }) => {
-  const [modalVisible, setModalVisible] = useState(false); // primer modal
   const navigation = useNavigation();
+  
   const [items, setItems] = useState([]);
-  const [selectedItem, setSelectedItem] = useState(null);
   const today = Today();
   const [value, setValue] = useState(today);
-  const [refreshing, setRefreshing] = useState(false);
+  // const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Obtener elementos iniciales
   const fetchItems = async () => {
     setLoading(true);
     try {
-      if (additionalData.length > 0) {
-        setItems(additionalData);
-      }
-      else if (
-        (filters.docente > 0 || filters.dia > 0 || filters.horario > 0) &&
-        additionalData.length === 0
-      ) {
-        setItems([]);
-      }
-      else if (Object.values(filters).every((value) => value === 0)) {
-        const res = await getDataAll();
+      const res = await getDataAll();
         setItems(res);
-      }
+      // if (additionalData.length > 0) {
+      //   setItems(additionalData);
+      // } else if (
+      //   (filters.docente > 0 || filters.dia > 0 || filters.horario > 0) &&
+      //   additionalData.length === 0
+      // ) {
+      //   setItems([]);
+      // } else if (Object.values(filters).every((value) => value === 0)) {
+      //   const res = await getDataAll();
+      //   setItems(res);
+      // }
     } catch (e) {
-      console.error("Error fetching items:", e);
+      console.error("Error fetching items: ", e);
     } finally {
       setLoading(false);
     }
@@ -65,23 +66,31 @@ export const ListItemComponentHorario = ({
 
   useEffect(() => {
     fetchItems();
-  }, [getDataAll, additionalData, filters]);
+  }, [getDataAll,
+    //  additionalData,
+    //   filters
+    ]);
+
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     onValue: (newValue) => setValue(newValue),
+  //   });
+  // }, [navigation]);
 
   const handleInfoPress = async (id) => {
     try {
-      setModalVisible(true);
       const res = await getDataOne(id);
-      const itemselected = res.find((value) => value.id === id);
-      if (itemselected) {
-        setSelectedItem(itemselected);
+      const itemSelected = res.find((value) => value.id === id);
+      if (itemSelected) {
+        navigation.navigate("InfoHours", {
+          selectedItem: itemSelected,
+          value: value,
+        });
       } else {
-        setSelectedItem(null);
-        setModalVisible(false);
         throw new Error("Horario no encontrado");
       }
     } catch (error) {
-      setModalVisible(false);
-      throw new Error("Error fetching item:", error);
+      console.error("Error fetching item:", error);
     }
   };
 
@@ -99,19 +108,14 @@ export const ListItemComponentHorario = ({
           style: "destructive",
           onPress: async () => {
             try {
-              const detailhorarioD = await getDetailHorarioByHorarioID(itemId);
+              const detailHorarioD = await getDetailHorarioByHorarioID(itemId);
               await Promise.all(
-                detailhorarioD.map(async (detail_horario) => {
-                  await deleteDataAsociated(detail_horario.id);
-                })
+                detailHorarioD.map(async (detailHorario) =>
+                  deleteDataAsociated(detailHorario.id)
+                )
               );
-              Alert.alert("Eliminando......", "ya casi damos por hecho");
               const claseD = await getClassesByHorarioID(itemId);
-              await Promise.all(
-                claseD.map(async (clase) => {
-                  await DeleteClasesOne(clase.id);
-                })
-              );
+              await Promise.all(claseD.map((clase) => DeleteClasesOne(clase.id)));
               await deleteData(itemId);
               setItems(items.filter((item) => item.id !== itemId));
               Alert.alert(`${modalTitle} eliminado con éxito`);
@@ -123,55 +127,18 @@ export const ListItemComponentHorario = ({
       ]
     );
   };
-  const onRefresh = useCallback(async () => {
-    try {
-      setRefreshing(true);
-      await fetchItems();
-      setRefreshing(false);
-    } catch {
-      setRefreshing(false);
-    }
-  }, [fetchItems]);
-
-  const handleDateChange = (date) => {
-    setValue(date);
-  };
-
-  const handleDateSelected = (selectedItem) => {
-    const allHorariosSelected = selectedItem?.horarios
-      .map((horarios) => {
-        const fecha = moment(horarios.fecha);
-        return fecha;
-      })
-      .filter((horarios) => {
-        const currentMonth = moment().month(); // Se obtiene el mes actual usando moment
-        return horarios.month() === currentMonth; // Solo comparamos el mes
-      });
-    return allHorariosSelected;
-  };
 
   return (
-    <ScrollView
-      refreshControl={refreshControl(refreshing, onRefresh)}
-     >
-      {Object.keys(multipleSelectedItem).length > 0 && additionalData && (
-        <ScrollMultipleFilterClass
-          opciones={opciones}
-          handleOptionSelect={handleOptionSelect}
-        />
-      )}
-
-      {loading ? (
-        <Loading />
-      ) : items.length === 0 ? (
-        <NotRegistration />
-      ) : (
-        items.map((item, index) => (
+    <LayoutScroolView
+    onRefreshExternal={fetchItems}
+    >
+       {
+         items.map((item, index) => (
           <ListItem.Swipeable
-            containerStyle={{
-              backgroundColor:
-                additionalData.length > 0 ? ColorItem.OceanCrest : "white",
-            }}
+            // containerStyle={{
+            //   backgroundColor:
+            //     additionalData.length > 0 ? ColorItem.OceanCrest : "white",
+            // }}
             key={`${item.id}-${index}`}
             leftContent={(reset) => (
               <Button
@@ -204,9 +171,7 @@ export const ListItemComponentHorario = ({
                   onPress={() =>
                     navigateToFormScreen
                       ? navigateToFormScreen(navigation, item.id)
-                      : navigation.navigate("FormScreen", {
-                          id: item.id,
-                        })
+                      : navigation.navigate("FormScreen", { id: item.id })
                   }
                 >
                   <ViewHorario item={item} />
@@ -216,17 +181,40 @@ export const ListItemComponentHorario = ({
             <ListItem.Chevron />
           </ListItem.Swipeable>
         ))
-      )}
+      }
+    </LayoutScroolView>
 
-      <ScreenDetailHour
-        handleDateChange={handleDateChange}
-        handleDateSelected={handleDateSelected}
-        value={value}
-        selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
-        setModalVisible={setModalVisible}
-        modalVisible={modalVisible}
-      />
-    </ScrollView>
-  );
-};
+
+
+
+
+
+
+
+
+    // <ScrollView
+    //   contentContainerStyle={{ paddingBottom: 85 }}
+    //   refreshControl={refreshControl(refreshing, onRefresh)}
+    // >
+     
+
+     
+    // </ScrollView>
+  );};
+
+
+
+   {/* {Object.keys(multipleSelectedItem).length > 0 && additionalData && (
+        <ScrollMultipleFilterClass
+          opciones={opciones}
+          handleOptionSelect={handleOptionSelect}
+        />
+      )} */}
+
+      {/* {loading ? (
+        <Loading />
+      ) : items.length === 0 ? (
+        <NotRegistration />
+      ) : (
+       
+      )} */}

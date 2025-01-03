@@ -9,13 +9,13 @@ import {
 } from "../../../../../src/hooks/customHooks";
 import { userData } from "../../../../../src/hooks/use/userData";
 import { ChildFilter } from "../../../(SUPERVISOR)/components/chid/chidFilter";
-import { ModalComponente } from "../../../Components/customModal";
 import { Reset_Filter } from "../../../(SUPERVISOR)/components/button/buttonReset&Filter";
 import { CustomSeachBar } from "../../../(DIRECTOR)/comentario/components/seachBar";
 import { NofilterSelected } from "../../../Components/unregistered/noRegistration";
 import { ListComentarioDocenteSalonDefault } from "./listDefault";
 import ListFilterReport from "../../../(SUPERVISOR)/reportes/components/listFilter";
 import ListFilterComentario from "./filterSalon";
+import { ModalComponente } from "../../../Components/Modals/customModal";
 
 export const IndexComentarioDocente = () => {
   const { CEDULA } = userData();

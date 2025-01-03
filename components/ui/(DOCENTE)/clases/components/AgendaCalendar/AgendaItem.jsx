@@ -7,7 +7,6 @@ import {
   Pressable,
 } from "react-native";
 import { truncateText } from "../../../../../../src/utils/functiones/functions";
-import { ModalComponente } from "../../../../Components/customModal";
 import { MultilineTextInput } from "../../../../../share/inputs/customMultipleTextInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -17,6 +16,7 @@ import { registerComentario } from "../../../../../../src/services/fetchData/fet
 import { ColorItem } from "../../../../../styles/StylesGlobal";
 import { registerNotification } from "../../../../../../src/services/fetchData/fetchNotification";
 import { userData } from "../../../../../../src/hooks/use/userData";
+import { ModalComponente } from "../../../../Components/Modals/customModal";
 
 const AgendaItem = (props) => {
   const { item } = props;

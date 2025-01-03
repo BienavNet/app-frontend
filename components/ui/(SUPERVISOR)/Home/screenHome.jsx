@@ -1,13 +1,13 @@
-import { ScrollViewScreen } from "./components/MomoHeader";
-import CustomStack from "../../Components/customStack";
+// import { ScrollViewScreen } from "./components/MomoHeader";
+import CustomStack from "../../Components/view/customStack";
 import { ModalRegisterReporte } from "../components/modal/ModalRegisterReporte";
+import { CarListDocentes } from "../components/cars/CarsListDocente";
 
 export const IndexListSupervisor = () => {
   const screens = [
     {
       name: "ListSupervisor",
-      component: ScrollViewScreen,
-      title: "",
+      component: CarListDocentes,
       hideHeader: true,
     },
     {

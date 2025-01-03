@@ -1,16 +1,18 @@
-import { Text, ScrollView, View, Alert } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { ListItem, Button } from "@rneui/themed";
-import { useCallback, useEffect, useState } from "react";
+import { Text, View, Alert } from "react-native";
+import { useCallback, useState } from "react";
 import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
 import { useFocusEffect } from "@react-navigation/native";
-import { ModalComponente } from "./customModal";
+
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Loading from "../../share/loading";
 import { NotRegistration } from "./unregistered/noRegistration";
-import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { styles } from "../../styles/StylesGlobal";
 import { DeleteComentarioOne } from "../../../src/services/fetchData/fetchComentario";
+import LayoutScroolView from "./Layout/UseScroollView";
+import { ListSwipeable } from "./view/components/listItems.Swipeable";
+import { Iconcommenting } from "../../../assets/icons/IconsGlobal";
+import { ModalComponente } from "./Modals/customModal";
+
 export const ListItemComentario = ({
   getDataAll,
   getDataOne,
@@ -20,11 +22,10 @@ export const ListItemComentario = ({
   itemIcon = "account",
   modalTitle = "Info",
 }) => {
-  const [viewedComments, setViewedComments] = useState({});
+  // const [viewedComments, setViewedComments] = useState({});
   const [items, setItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const fetchItems = useCallback(async () => {
@@ -53,7 +54,7 @@ export const ListItemComentario = ({
       const itemselected = res.find((value) => value.id === id);
       if (itemselected) {
         setSelectedItem(itemselected);
-        setViewedComments((prev) => ({ ...prev, [id]: true }));
+        // setViewedComments((prev) => ({ ...prev, [id]: true }));
       } else {
         setSelectedItem(null);
         setModalVisible(false);
@@ -95,78 +96,30 @@ export const ListItemComentario = ({
     );
   };
 
-  const onRefresh = useCallback(async () => {
-    try {
-      setRefreshing(true);
-      await fetchItems();
-      setRefreshing(false);
-    } catch {
-      setRefreshing(false);
-    }
-  }, [fetchItems]);
-
-  // useEffect(() => {
-  //   if (modalVisible) {
-  //     setLoading(true);
-  //     const timer = setTimeout(() => {
-  //       setLoading(false);
-  //     }, 1000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [modalVisible]);
-
   return (
-    <ScrollView refreshControl={refreshControl(refreshing, onRefresh)}>
+    <LayoutScroolView onRefreshExternal={fetchItems}>
       {loading ? (
         <Loading />
       ) : items.length === 0 ? (
         <NotRegistration />
       ) : (
         items.map((item, index) => (
-          <ListItem.Swipeable
-            key={`${item.id}-${index}`}
-            leftContent={(reset) => (
-              <Button
-                title="Info"
-                onPress={async () => {
-                  reset();
-                  await handleInfoPress(item.id);
-                }}
-                icon={{ name: "info", color: "white" }}
-                buttonStyle={{ minHeight: "100%" }}
-              />
-            )}
-            rightContent={(reset) => (
-              <Button
-                title="Delete"
-                onPress={() => {
-                  reset();
-                  handleDeletePress(item.id);
-                }}
-                icon={{ name: "delete", color: "white" }}
-                buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
-              />
-            )}
+          <ListSwipeable
+            item={item}
+            index={index}
+            handleDeletePress={handleDeletePress}
+            handleInfoPress={handleInfoPress}
+            icono={Iconcommenting}
           >
-            <FontAwesome
-              name={viewedComments[item.id] ? "commenting-o" : "commenting"}
-              size={25}
-              color="black"
-            />
-            <ListItem.Content>
-              <ListItem.Title>
-                <TouchableOpacity className="flex-row">
-                  <Text className="font-extrabold text-lg">
-                    {capitalizeFirstLetter(item.nombre)}
-                    {" - "}
-                    {item.numero_salon}
-                    {" - "} {item.salon_nombre}
-                  </Text>
-                </TouchableOpacity>
-              </ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem.Swipeable>
+            <TouchableOpacity className="flex-row">
+              <Text className="font-extrabold text-lg">
+                {capitalizeFirstLetter(item.nombre)}
+                {" - "}
+                {item.numero_salon}
+                {" - "} {item.salon_nombre}
+              </Text>
+            </TouchableOpacity>
+          </ListSwipeable>
         ))
       )}
       <ModalComponente
@@ -209,6 +162,51 @@ export const ListItemComentario = ({
           <NotRegistration />
         )}
       </ModalComponente>
-    </ScrollView>
+    </LayoutScroolView>
   );
 };
+
+// <ListItem.Swipeable
+//   key={`${item.id}-${index}`}
+//   leftContent={(reset) => (
+//     <Button
+//       title="Info"
+//       onPress={async () => {
+//         reset();
+//         await handleInfoPress(item.id);
+//       }}
+//       icon={{ name: "info", color: "white" }}
+//       buttonStyle={{ minHeight: "100%" }}
+//     />
+//   )}
+//   rightContent={(reset) => (
+//     <Button
+//       title="Delete"
+//       onPress={() => {
+//         reset();
+//         handleDeletePress(item.id);
+//       }}
+//       icon={{ name: "delete", color: "white" }}
+//       buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
+//     />
+//   )}
+// >
+//   <FontAwesome
+//     name={viewedComments[item.id] ? "commenting-o" : "commenting"}
+//     size={25}
+//     color="black"
+//   />
+//   <ListItem.Content>
+//     <ListItem.Title>
+//       <TouchableOpacity className="flex-row">
+//         <Text className="font-extrabold text-lg">
+//           {capitalizeFirstLetter(item.nombre)}
+//           {" - "}
+//           {item.numero_salon}
+//           {" - "} {item.salon_nombre}
+//         </Text>
+//       </TouchableOpacity>
+//     </ListItem.Title>
+//   </ListItem.Content>
+//   <ListItem.Chevron />
+// </ListItem.Swipeable>

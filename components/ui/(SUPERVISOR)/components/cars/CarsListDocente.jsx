@@ -40,6 +40,7 @@ export const CarListDocentes = () => {
     }
   }, [fetchClaseSupervisor]);
 
+  
   const insert = useSafeAreaInset();
   return (
     <ScrollView
@@ -47,8 +48,9 @@ export const CarListDocentes = () => {
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
-        paddingBottom: insert.bottom + 135,
+        paddingBottom: insert.bottom,
       }}
+    
     >
       {reload ? (
         <Loading />
@@ -105,7 +107,6 @@ export const CarListDocentes = () => {
                       <Text
                         style={{
                           fontSize: 16,
-                          // color: ColorItem.OceanCrest,
                           color: "#000000",
                           fontWeight: "500",
                         }}
@@ -177,13 +178,11 @@ const styles = StyleSheet.create({
   fontZise: {
     fontSize: 16,
     fontWeight: "bold",
-    // color: "white",
     color: "#000000",
   },
   fontZise14: {
     fontSize: 14,
     fontWeight: "bold",
-    // color: "white",
     color: "#000000",
   },
 });

@@ -1,6 +1,6 @@
 import { ListDocente } from "./listDocente";
 import { RegistrarDocente } from "./register";
-import CustomStack from "../../Components/customStack";
+import CustomStack from "../../Components/view/customStack";
 import Buttonright from "../../../share/button/buttonRightStack";
 import { IconAddCircle } from "../../../../assets/icons/IconsGlobal";
 

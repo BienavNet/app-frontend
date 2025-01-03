@@ -1,6 +1,7 @@
 import { Modal, View, TouchableOpacity, ScrollView, Text } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { DividerLine } from "./dividerline/dividerLine";
+import { DividerLine } from "../dividerline/dividerLine";
+
 export const ModalComponente = ({
   modalVisible,
   handleCloseModal,

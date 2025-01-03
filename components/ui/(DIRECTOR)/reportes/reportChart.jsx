@@ -12,6 +12,7 @@ import { BarChart, LineChart, PieChart } from "react-native-chart-kit";
 import { formatTimeTo12Hour } from "../../../../src/utils/functiones/functions";
 import { useSafeAreaInset } from "../../../../src/utils/utils";
 import Loading from "../../../share/loading";
+import LayoutScroolView from "../../Components/Layout/UseScroollView";
 
 // Función para normalizar datos automáticamente en base a un valor máximo estándar
 const screenWidth = Dimensions.get("window").width;
@@ -134,9 +135,10 @@ export const EstadisticasReportes = () => {
   };
 
   return (
-    <ScrollView>
-      <View style={{ paddingBottom: insets.bottom + 85 }}>
-        <Text style={styles.title}> Salon Menos Utilizado</Text>
+
+    <LayoutScroolView>
+
+<Text style={styles.title}> Salon Menos Utilizado</Text>
         {smenosu.length > 0 ? (
           <BarChart
             style={styles.chartContainer}
@@ -189,8 +191,12 @@ export const EstadisticasReportes = () => {
         ) : (
           <Text style={styles.noDataText}>Sin registro</Text>
         )}
-      </View>
-    </ScrollView>
+    </LayoutScroolView>
+    // <ScrollView>
+    //   <View style={{ paddingBottom: insets.bottom}}>
+        
+    //   </View>
+    // </ScrollView>
   );
 };
 

@@ -10,7 +10,6 @@ import { getSupervisorCedula } from "../../../../src/services/fetchData/fetchSup
 import ListFilterReport from "./components/listFilter";
 import { ListReportDefault } from "./components/listDefault";
 import ListSelectItem from "./components/listSelectItem";
-import { ModalComponente } from "../../Components/customModal";
 import { Reset_Filter } from "../components/button/buttonReset&Filter";
 import { useSalonAll } from "../../../../src/hooks/customHooks";
 import { userData } from "../../../../src/hooks/use/userData";
@@ -18,6 +17,7 @@ import { ChildFilter } from "../components/chid/chidFilter";
 import { CustomSeachBar } from "../../(DIRECTOR)/comentario/components/seachBar";
 import { DividerLine } from "../../Components/dividerline/dividerLine";
 import { NofilterSelected } from "../../Components/unregistered/noRegistration";
+import { ModalComponente } from "../../Components/Modals/customModal";
 
 export const ViewReportSup = () => {
   const { CEDULA } = userData();
