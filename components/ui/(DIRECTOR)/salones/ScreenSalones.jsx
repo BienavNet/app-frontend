@@ -7,7 +7,7 @@ export const IndexSalones = () => {
     {
       name: "ListScreen",
       component: ListSalones,
-      title: "Salones de Ing. Sistemas.",
+      title: "Salones de la Facultad de Sistemas",
     },
     {
       name: "FormScreen",

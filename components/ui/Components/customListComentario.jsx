@@ -1,20 +1,17 @@
-import { Text, View, Alert } from "react-native";
-import { useCallback, useState } from "react";
-import { capitalizeFirstLetter } from "../../../src/utils/functiones/functions";
-import { useFocusEffect } from "@react-navigation/native";
-
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Alert } from "react-native";
+import { useState } from "react";
 import Loading from "../../share/loading";
 import { NotRegistration } from "./unregistered/noRegistration";
-import { styles } from "../../styles/StylesGlobal";
 import { DeleteComentarioOne } from "../../../src/services/fetchData/fetchComentario";
 import LayoutScroolView from "./Layout/UseScroollView";
 import { ListSwipeable } from "./view/components/listItems.Swipeable";
 import { Iconcommenting } from "../../../assets/icons/IconsGlobal";
 import { ModalComponente } from "./Modals/customModal";
+import { CComentario } from "../(DIRECTOR)/comentario/components/listComentario";
+import { BtnViewSelect } from "../(DIRECTOR)/comentario/components/btnViewSelect";
+import { useComentarioAll } from "../../../src/hooks/customHooks";
 
 export const ListItemComentario = ({
-  getDataAll,
   getDataOne,
   deleteData,
   deleteDataAsociated,
@@ -22,31 +19,9 @@ export const ListItemComentario = ({
   itemIcon = "account",
   modalTitle = "Info",
 }) => {
-  // const [viewedComments, setViewedComments] = useState({});
-  const [items, setItems] = useState([]);
+  const { comentarioAll, reload, fetchComentarioAll} = useComentarioAll();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchItems = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await getDataAll();
-      setItems(res);
-    } catch (error) {
-      setLoading(false);
-      setItems([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [getDataAll]);
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchItems();
-    }, [fetchItems])
-  );
-
   const handleInfoPress = async (id) => {
     try {
       setModalVisible(true);
@@ -85,7 +60,7 @@ export const ListItemComentario = ({
           onPress: async () => {
             try {
               await DeleteComentarioOne(itemId);
-              setItems(items.filter((item) => item.id !== itemId));
+              setItems(comentarioAll.filter((item) => item.id !== itemId));
               Alert.alert(`${modalTitle} eliminado con éxito`);
             } catch (error) {
               Alert.alert(`Error al eliminar el ${modalTitle.toLowerCase()}`);
@@ -97,67 +72,40 @@ export const ListItemComentario = ({
   };
 
   return (
-    <LayoutScroolView onRefreshExternal={fetchItems}>
-      {loading ? (
+    <LayoutScroolView
+    onRefreshExternal={fetchComentarioAll}
+    >
+      {reload ? (
         <Loading />
-      ) : items.length === 0 ? (
+      ) : comentarioAll.length === 0 ? (
         <NotRegistration />
       ) : (
-        items.map((item, index) => (
-          <ListSwipeable
-            item={item}
-            index={index}
-            handleDeletePress={handleDeletePress}
-            handleInfoPress={handleInfoPress}
-            icono={Iconcommenting}
-          >
-            <TouchableOpacity className="flex-row">
-              <Text className="font-extrabold text-lg">
-                {capitalizeFirstLetter(item.nombre)}
-                {" - "}
-                {item.numero_salon}
-                {" - "} {item.salon_nombre}
-              </Text>
-            </TouchableOpacity>
-          </ListSwipeable>
-        ))
+        comentarioAll.map((item, index) => {
+          const key = `key25${item.id}-${index}`;
+          return (
+            <ListSwipeable
+              item={item}
+              index={index}
+              key={key}
+              handleDeletePress={handleDeletePress}
+              handleInfoPress={handleInfoPress}
+              icono={Iconcommenting}
+            >
+              <BtnViewSelect item={item} />
+            </ListSwipeable>
+          );
+        })
       )}
       <ModalComponente
-        transparent={true}
         modalStyle={{ height: "99%" }}
-        animationType={"slider"}
         modalVisible={modalVisible}
         title="Datos del Comentario"
         handleCloseModal={handleCloseModal}
       >
-        {loading ? (
+        {reload ? (
           <Loading />
         ) : selectedItem ? (
-          <>
-            <View className="bg-white shadow-2xl rounded-lg p-3 w-full">
-              <View>
-                <Text style={[styles.Title1]}>Docente</Text>
-                <Text style={[styles.text]}>
-                  {capitalizeFirstLetter(selectedItem?.nombre)}{" "}
-                  {capitalizeFirstLetter(selectedItem?.apellido)}
-                </Text>
-              </View>
-              <View>
-                <Text style={[styles.Title1]}>Salon</Text>
-                <Text style={[styles.text]}>
-                  {selectedItem?.numero_salon}
-                  {" - "}
-                  {capitalizeFirstLetter(selectedItem?.salon_nombre)}
-                </Text>
-              </View>
-              <View>
-                <Text style={[styles.Title1]}>Comentario</Text>
-                <Text style={[styles.comentario]}>
-                  {capitalizeFirstLetter(selectedItem?.comentario)}
-                </Text>
-              </View>
-            </View>
-          </>
+          <CComentario selectedItem={selectedItem} />
         ) : (
           <NotRegistration />
         )}
@@ -165,48 +113,3 @@ export const ListItemComentario = ({
     </LayoutScroolView>
   );
 };
-
-// <ListItem.Swipeable
-//   key={`${item.id}-${index}`}
-//   leftContent={(reset) => (
-//     <Button
-//       title="Info"
-//       onPress={async () => {
-//         reset();
-//         await handleInfoPress(item.id);
-//       }}
-//       icon={{ name: "info", color: "white" }}
-//       buttonStyle={{ minHeight: "100%" }}
-//     />
-//   )}
-//   rightContent={(reset) => (
-//     <Button
-//       title="Delete"
-//       onPress={() => {
-//         reset();
-//         handleDeletePress(item.id);
-//       }}
-//       icon={{ name: "delete", color: "white" }}
-//       buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
-//     />
-//   )}
-// >
-//   <FontAwesome
-//     name={viewedComments[item.id] ? "commenting-o" : "commenting"}
-//     size={25}
-//     color="black"
-//   />
-//   <ListItem.Content>
-//     <ListItem.Title>
-//       <TouchableOpacity className="flex-row">
-//         <Text className="font-extrabold text-lg">
-//           {capitalizeFirstLetter(item.nombre)}
-//           {" - "}
-//           {item.numero_salon}
-//           {" - "} {item.salon_nombre}
-//         </Text>
-//       </TouchableOpacity>
-//     </ListItem.Title>
-//   </ListItem.Content>
-//   <ListItem.Chevron />
-// </ListItem.Swipeable>

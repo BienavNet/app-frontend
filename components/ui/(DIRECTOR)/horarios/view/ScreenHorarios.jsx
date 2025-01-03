@@ -261,21 +261,10 @@ export const IndexHorario = () => {
 //       handleItemPress={handleItemPress}
 //     />
 //   );
-
-const Pf = () =>{
-  return (
-    <View >
-      <Text>Profile Screen</Text>
-    </View>
-  );
-}
-
-
   const screens = [
     {
       name: "listScreenH",
-      headerShown:true,
-      component: Pf,
+      component: ListHorario,
       title:"Horarios de clases",
         // Object.keys(multipleSelectedItem).length > 0 && selectedOption
         //   ? `Filtro por ${selectedOption}`

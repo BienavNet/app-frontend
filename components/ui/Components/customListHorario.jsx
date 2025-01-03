@@ -1,23 +1,21 @@
-import { ScrollView, Alert } from "react-native";
-import { ListItem, Button } from "@rneui/themed";
-import { useEffect, useState, useCallback } from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {  Alert } from "react-native";;
+import {  useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import Loading from "../../share/loading";
 import { getDetailHorarioByHorarioID } from "../../../src/services/fetchData/fetchDetailHorario";
 import {
   DeleteClasesOne,
   getClassesByHorarioID,
 } from "../../../src/services/fetchData/fetchClases";
-import { refreshControl } from "../../../src/utils/functiones/refresh";
 import { ViewHorario } from "../(DIRECTOR)/horarios/component/viewHorario";
 import { Today } from "../../../src/utils/InstanceMoment";
 import { NotRegistration } from "./unregistered/noRegistration";
-import { ColorItem } from "../../styles/StylesGlobal";
 import { ScrollMultipleFilterClass } from "../(SUPERVISOR)/clases/components/carouselFilter/CarouselFilter";
 import LayoutScroolView from "./Layout/UseScroollView";
-
+import { useHorarioAll } from "../../../src/hooks/customHooks";
+import { ListSwipeable } from "./view/components/listItems.Swipeable";
+import { IconCalendar } from "../../../assets/icons/IconsGlobal";
 
 export const ListItemComponentHorario = ({
   additionalData,
@@ -25,7 +23,6 @@ export const ListItemComponentHorario = ({
   opciones,
   handleOptionSelect,
   multipleSelectedItem,
-  getDataAll,
   getDataOne,
   deleteData,
   deleteDataAsociated,
@@ -33,43 +30,38 @@ export const ListItemComponentHorario = ({
   modalTitle = "Info",
 }) => {
   const navigation = useNavigation();
-  
-  const [items, setItems] = useState([]);
+
+  const { horarios, fetchHorarioAll, reload } = useHorarioAll();
+
+  // const [items, setItems] = useState([]);
   const today = Today();
   const [value, setValue] = useState(today);
   // const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   // Obtener elementos iniciales
-  const fetchItems = async () => {
-    setLoading(true);
-    try {
-      const res = await getDataAll();
-        setItems(res);
-      // if (additionalData.length > 0) {
-      //   setItems(additionalData);
-      // } else if (
-      //   (filters.docente > 0 || filters.dia > 0 || filters.horario > 0) &&
-      //   additionalData.length === 0
-      // ) {
-      //   setItems([]);
-      // } else if (Object.values(filters).every((value) => value === 0)) {
-      //   const res = await getDataAll();
-      //   setItems(res);
-      // }
-    } catch (e) {
-      console.error("Error fetching items: ", e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchItems();
-  }, [getDataAll,
-    //  additionalData,
-    //   filters
-    ]);
+  // const fetchItems = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await getDataAll();
+  //       setItems(res);
+  //     // if (additionalData.length > 0) {
+  //     //   setItems(additionalData);
+  //     // } else if (
+  //     //   (filters.docente > 0 || filters.dia > 0 || filters.horario > 0) &&
+  //     //   additionalData.length === 0
+  //     // ) {
+  //     //   setItems([]);
+  //     // } else if (Object.values(filters).every((value) => value === 0)) {
+  //     //   const res = await getDataAll();
+  //     //   setItems(res);
+  //     // }
+  //   } catch (e) {
+  //     console.error("Error fetching items: ", e);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   // useEffect(() => {
   //   navigation.setOptions({
@@ -115,7 +107,9 @@ export const ListItemComponentHorario = ({
                 )
               );
               const claseD = await getClassesByHorarioID(itemId);
-              await Promise.all(claseD.map((clase) => DeleteClasesOne(clase.id)));
+              await Promise.all(
+                claseD.map((clase) => DeleteClasesOne(clase.id))
+              );
               await deleteData(itemId);
               setItems(items.filter((item) => item.id !== itemId));
               Alert.alert(`${modalTitle} eliminado con éxito`);
@@ -129,92 +123,42 @@ export const ListItemComponentHorario = ({
   };
 
   return (
-    <LayoutScroolView
-    onRefreshExternal={fetchItems}
-    >
-       {
-         items.map((item, index) => (
-          <ListItem.Swipeable
-            // containerStyle={{
-            //   backgroundColor:
-            //     additionalData.length > 0 ? ColorItem.OceanCrest : "white",
-            // }}
-            key={`${item.id}-${index}`}
-            leftContent={(reset) => (
-              <Button
-                title="Info"
-                onPress={async () => {
-                  reset();
-                  await handleInfoPress(item.id);
-                }}
-                icon={{ name: "info", color: "white" }}
-                buttonStyle={{ minHeight: "100%" }}
-              />
-            )}
-            rightContent={(reset) => (
-              <Button
-                title="Delete"
-                onPress={() => {
-                  reset();
-                  handleDeletePress(item.id);
-                }}
-                icon={{ name: "delete", color: "white" }}
-                buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
-              />
-            )}
+    <LayoutScroolView onRefreshExternal={fetchHorarioAll}>
+      {reload ? (
+        <Loading />
+      ) : horarios.length === 0 ? (
+        <NotRegistration />
+      ) : (
+        horarios.map((item, index) => (
+          <ListSwipeable
+            item={item}
+            handleDeletePress={handleDeletePress}
+            handleInfoPress={handleInfoPress}
+            key={`unique${item.id}-${index}`}
+            icono={IconCalendar}
           >
-            <Ionicons name="calendar" size={25} color="black" />
-            <ListItem.Content>
-              <ListItem.Title>
-                <TouchableOpacity
-                  className="flex-row"
-                  onPress={() =>
-                    navigateToFormScreen
-                      ? navigateToFormScreen(navigation, item.id)
-                      : navigation.navigate("FormScreen", { id: item.id })
-                  }
-                >
-                  <ViewHorario item={item} />
-                </TouchableOpacity>
-              </ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem.Swipeable>
+            <TouchableOpacity
+              className="flex-row"
+              onPress={() =>
+                navigateToFormScreen
+                  ? navigateToFormScreen(navigation, item.id)
+                  : navigation.navigate("FormScreen", { id: item.id })
+              }
+            >
+              <ViewHorario item={item} />
+            </TouchableOpacity>
+          </ListSwipeable>
         ))
-      }
+      )}
     </LayoutScroolView>
+  );
+};
 
-
-
-
-
-
-
-
-
-    // <ScrollView
-    //   contentContainerStyle={{ paddingBottom: 85 }}
-    //   refreshControl={refreshControl(refreshing, onRefresh)}
-    // >
-     
-
-     
-    // </ScrollView>
-  );};
-
-
-
-   {/* {Object.keys(multipleSelectedItem).length > 0 && additionalData && (
+{
+  /* {Object.keys(multipleSelectedItem).length > 0 && additionalData && (
         <ScrollMultipleFilterClass
           opciones={opciones}
           handleOptionSelect={handleOptionSelect}
         />
-      )} */}
-
-      {/* {loading ? (
-        <Loading />
-      ) : items.length === 0 ? (
-        <NotRegistration />
-      ) : (
-       
-      )} */}
+      )} */
+}

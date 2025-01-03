@@ -5,8 +5,8 @@ import { DividerLine } from "../dividerline/dividerLine";
 export const ModalComponente = ({
   modalVisible,
   handleCloseModal,
-  transparent,
-  animationType,
+  transparent = true,
+  animationType = "slider",
   children,
   modalStyle = {},
   canCloseModal = true,

@@ -68,6 +68,7 @@ export const ListItemSalones = ({
           <ListSwipeable
             index={index}
             item={item}
+            key={item.id}
             showrightContent={false}
             handleInfoPress={handleInfoPress}
             icono={IconClassRoom}

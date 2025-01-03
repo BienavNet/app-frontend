@@ -4,22 +4,23 @@ import { IconAndroid } from "../../../../../assets/icons/IconsGlobal";
 export const ListSwipeable = ({
   item,
   icono: ComponetIcon = IconAndroid,
-  index,
+  showrightContent = true,
+  isdocente = "",
   children,
   handleDeletePress,
   handleInfoPress,
-  showrightContent = true,
-  isdocente = ""
+  typeid = "id",
 }) => {
+
+  const idPress = typeid === "id" ? item.id:item.cedula
   return (
     <ListItem.Swipeable
-      key={`${item.id}-Key25${index}`}
       leftContent={(reset) => (
         <Button
           title="Info"
           onPress={async () => {
             reset();
-            await handleInfoPress(item.id);
+            await handleInfoPress(idPress);
           }}
           icon={{ name: "info", color: "white" }}
           buttonStyle={{ minHeight: "100%" }}
@@ -45,9 +46,7 @@ export const ListSwipeable = ({
       <ListItem.Content>
         <ListItem.Title>{children}</ListItem.Title>
       </ListItem.Content>
-      {
-        isdocente
-      }
+      {isdocente}
       <ListItem.Chevron />
     </ListItem.Swipeable>
   );

@@ -70,9 +70,7 @@ export default function DropdownModal({
           modalStyle={{
             height: "80%",
           }}
-          transparent={true}
           modalVisible={expanded}
-          animationType="slide"
           handleCloseModal={toggleExpanded}
           canCloseModal={true}
         >

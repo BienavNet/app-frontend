@@ -1,5 +1,4 @@
-import { Alert, View } from "react-native";
-import { Button } from "@rneui/themed";
+import { Alert } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -7,14 +6,14 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { InfoDS } from "../(DIRECTOR)/components/info";
 import { ViewDS } from "../(DIRECTOR)/components/view";
 import { NotRegistration } from "./unregistered/noRegistration";
-import { Snackbar } from "@react-native-material/core";
 import { useSupervisorDefault } from "../../../src/hooks/customHooks";
-import { updateSupervisorDefault } from "../../../src/services/fetchData/fetchSupervisor";
 import { ColorItem } from "../../styles/StylesGlobal";
 import LayoutScroolView from "./Layout/UseScroollView";
 import { ListSwipeable } from "./view/components/listItems.Swipeable";
 import { IconCustomUser } from "../../../assets/icons/IconsGlobal";
 import { ModalComponente } from "./Modals/customModal";
+import CSnackbar from "./Snackbar";
+import { updateSupervisorDefault } from "../../../src/services/fetchData/fetchSupervisor";
 
 export const ListItemComponent = ({
   getDataAll,
@@ -30,6 +29,8 @@ export const ListItemComponent = ({
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedItemId, setSelectedItemId] = useState(null);
   const supervisordefault = useSupervisorDefault();
+  const [snackbarVisible, setSnackbarVisible] = useState(false); // Estado para controlar la visibilidad del Snackbar
+  const [selectedItemForSnackbar, setSelectedItemForSnackbar] = useState(null); // Estado para guardar el item que activó el Snackbar
 
   useEffect(() => {
     if (
@@ -40,9 +41,6 @@ export const ListItemComponent = ({
       setSelectedItemId(supervisordefault.data[0].persona);
     }
   }, [supervisordefault]);
-
-  const [snackbarVisible, setSnackbarVisible] = useState(false); // Estado para controlar la visibilidad del Snackbar
-  const [selectedItemForSnackbar, setSelectedItemForSnackbar] = useState(null); // Estado para guardar el item que activó el Snackbar
 
   const fetchItems = useCallback(async () => {
     const res = await getDataAll();
@@ -56,9 +54,11 @@ export const ListItemComponent = ({
   );
 
   const handleInfoPress = async (cedula) => {
+    console.log(cedula);
     try {
       setModalVisible(true);
       const res = await getDataOne(cedula);
+      console.log(res + "responde info view supervisor")
       const itemselected = res.find((value) => value.cedula === cedula);
       if (itemselected) {
         setSelectedItem(itemselected);
@@ -104,17 +104,11 @@ export const ListItemComponent = ({
       ]
     );
   };
-  const handleLongPress = (itemId) => {
-    if (selectedItemId === itemId) return;
-    setSnackbarVisible(true);
-    setSelectedItemForSnackbar(itemId);
-  };
-
-  const handleSnackbarDismiss = async () => {
+  const handleSnackbarDismiss = () => {
     setSnackbarVisible(false);
   };
 
-  const handleSelectItem = async () =>{
+  const handleSelectItem = async () => {
     if (selectedItemForSnackbar) {
       try {
         await updateSupervisorDefault(selectedItemForSnackbar);
@@ -124,8 +118,14 @@ export const ListItemComponent = ({
         console.error("Error al actualizar el supervisor por defecto:", error);
       }
     }
+  };
 
-  }
+  const handleLongPress = (itemId) => {
+    if (selectedItemId === itemId) return;
+    setSnackbarVisible(true);
+    setSelectedItemForSnackbar(itemId);
+  };
+
   return (
     <>
       <LayoutScroolView onRefreshExternal={fetchItems}>
@@ -134,18 +134,22 @@ export const ListItemComponent = ({
         ) : (
           items.map((item, index) => (
             <ListSwipeable
-              index={index}
+              key={`unique${item.docente_id}-${index}`}
               item={item}
+              typeid="cedula"
               handleDeletePress={handleDeletePress}
               handleInfoPress={handleInfoPress}
               icono={IconCustomUser}
-              isdocente={isSupervisor && selectedItemId === item.id && (
-                <MaterialCommunityIcons
-                  name="checkbox-multiple-marked-circle-outline"
-                  size={20}
-                  color={ColorItem.DeepSkyBlue}
-                />
-              )}
+              isdocente={
+                isSupervisor &&
+                selectedItemId === item.id && (
+                  <MaterialCommunityIcons
+                    name="checkbox-multiple-marked-circle-outline"
+                    size={20}
+                    color={ColorItem.DeepSkyBlue}
+                  />
+                )
+              }
             >
               <TouchableOpacity
                 onLongPress={() => {
@@ -169,6 +173,12 @@ export const ListItemComponent = ({
         )}
       </LayoutScroolView>
 
+      {isSupervisor && snackbarVisible && (
+        <CSnackbar
+          handleSelectItem={handleSelectItem}
+          handleSnackbarDismiss={handleSnackbarDismiss}
+        />
+      )}
       <ModalComponente
         transparent={true}
         modalStyle={{
@@ -186,51 +196,6 @@ export const ListItemComponent = ({
           <NotRegistration />
         )}
       </ModalComponente>
-      {isSupervisor && snackbarVisible && (
-        <View
-          style={{
-            height: 80,
-          }}
-        >
-          <Snackbar
-            message="¿Quieres seleccionar este ítem?"
-            action={
-              // <Button
-              //   onPress={() => {
-              //     handleSelected();
-              //     // handleSnackbarDismiss(); // Ejecutar la función al presionar el botón
-              //   }}
-              //   title="Seleccionar"
-              //   color="primary"
-              // />
-<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Button
-            onPress={() => {
-              handleSnackbarDismiss(); // Función para manejar el "Cancelar"
-            }}
-            title="Cancelar"
-            color="grey"
-            style={{ marginRight: 10 }} // Espacio entre los botones
-          />
-          <Button
-            onPress={() => {
-              handleSelectItem(); // Función para manejar la "Selección"
-            }}
-            title="Seleccionar"
-            color="primary"
-          />
-        </View>
-              
-            }
-            style={{
-              position: "absolute",
-              start: 16,
-              end: 16,
-              bottom: 16,
-            }}
-          />
-        </View>
-      )}
     </>
   );
 };

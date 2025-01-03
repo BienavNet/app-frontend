@@ -168,7 +168,7 @@ export const ListComentario = () => {
 
       {!selectedOption && (
         <ListItemComentario
-          getDataAll={getComentarioAll}
+          // getDataAll={getComentarioAll}
           getDataOne={getComentarioOne}
           deleteData={DeleteComentarioOne}
           modalTitle="Comentarios"

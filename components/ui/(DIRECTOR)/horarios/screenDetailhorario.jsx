@@ -12,8 +12,6 @@ export const ScreenDetailHour = () => {
   const { showToast, APP_STATUS } = useToastMessage();
   const { selectedItem, value } = route.params;
 
-  // console.log("Screen Detail selectedItem, value:", value, JSON.stringify(selectedItem));
-
   // Función para obtener fechas seleccionadas del mes actual
   const handleDateSelected = (selectedItem) =>
     selectedItem?.horarios
@@ -63,6 +61,8 @@ export const ScreenDetailHour = () => {
     </>
   );
 };
+
+
 // export const ScreenDetailHour = () => {
 //   const route = useRoute();
 //   const navigation = useNavigation();

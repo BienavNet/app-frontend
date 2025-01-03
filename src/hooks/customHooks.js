@@ -19,6 +19,7 @@ import {
   getClaseSupervisor,
 } from "../services/fetchData/fetchClases";
 import {
+  getComentarioAll,
   getComentarioDocenteDocente,
   getComentarioDocenteSalon,
 } from "../services/fetchData/fetchComentario";
@@ -122,24 +123,6 @@ export const useSalonAll = () => {
   return salones;
 };
 
-// fetch Horarios
-export const useHorarioAll = () => {
-  const [horarios, setHorarioAll] = useState([]);
-  const fetchHorarioAll = useCallback(async () => {
-    try {
-      const res = await getHorarioAll();
-      setHorarioAll(res);
-    } catch{
-      setHorarioAll([]);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchHorarioAll();
-  }, [fetchHorarioAll]);
-
-  return horarios;
-}; // obtiene todos los Horarios
 
 //fetch Categorias
 //categorias x salon
@@ -200,6 +183,27 @@ export const useHorarioDocenteCedula = (CEDULA) => {
   return horarioDocenteCedula;
 }; // obtiene todas horarios por la cedula del docente
 
+export const useHorarioAll = () => {
+  const [horarios, setHorarioAll] = useState([]);
+  const [reload, setReload] = useState(true);
+  const fetchHorarioAll = useCallback(async () => {
+    try {
+      const res = await getHorarioAll();
+      setReload(false)
+      setHorarioAll(res);
+    } catch{
+      setReload(true)
+      setHorarioAll([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchHorarioAll();
+  }, [fetchHorarioAll]);
+
+  return {horarios, fetchHorarioAll, reload};
+}; // obtiene todos los Horarios
+
 //fetch Comentarios
 // obtiene todos los comentarios por salones del docente
 export const useComentarioDocenteSalon = (cedula, salon) => {
@@ -219,7 +223,6 @@ export const useComentarioDocenteSalon = (cedula, salon) => {
 
   return comentarioDocenteSalon;
 }; 
-
 // obtiene todos los comentarios por la cedula del docente
 export const useComentarioDocenteCedula = (cedula) => {
   const [comentarioDocenteCedula, setComentarioDocenteCedula] = useState([]);
@@ -238,6 +241,44 @@ export const useComentarioDocenteCedula = (cedula) => {
 
   return comentarioDocenteCedula;
 };
+export const useComentarioAll = () => {
+  const [comentarioAll, setComentarioAll] = useState([]);
+  const [reload, setReload] = useState(true)
+  const fetchComentarioAll = useCallback(async () => {
+    try {
+      const res = await getComentarioAll();
+      setReload(false);
+      setComentarioAll(res);
+    } catch {
+      setReload(true);
+      setComentarioAll([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchComentarioAll();
+  }, [fetchComentarioAll]);
+
+  return {comentarioAll, reload, fetchComentarioAll};
+}; // obtiene todos los comentarios 
+
+export const useDocenteComentario = (cedula) => {
+  const [comentarioAll, setComentarioAll] = useState([]);
+  const fetchComentarioAll = useCallback(async () => {
+    try {
+      const res = await getComentarioDocenteDocente(cedula);
+      setComentarioAll(res);
+    } catch {
+      setComentarioAll([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchComentarioAll();
+  }, [fetchComentarioAll]);
+
+  return comentarioAll;
+}; // obtiene todos los comentarios
 
 //fetch Clases
 export const useClasesAll = () => {
@@ -340,21 +381,3 @@ export const useClaseDocentes = (cedula) => {
 
   return clasesAll;
 }; // obtiene todos los Reportes
-
-export const useDocenteComentario = (cedula) => {
-  const [comentarioAll, setComentarioAll] = useState([]);
-  const fetchComentarioAll = useCallback(async () => {
-    try {
-      const res = await getComentarioDocenteDocente(cedula);
-      setComentarioAll(res);
-    } catch {
-      setComentarioAll([]);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchComentarioAll();
-  }, [fetchComentarioAll]);
-
-  return comentarioAll;
-}; // obtiene todos los comentarios

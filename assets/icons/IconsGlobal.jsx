@@ -1,6 +1,6 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { ColorItem } from "../../components/styles/StylesGlobal";
-import { FontAwesome, MaterialCommunityIcons, AntDesign} from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons, AntDesign, Ionicons} from "@expo/vector-icons";
 
 // icono de home
 export const IconHome = ({ color }) => {
@@ -30,3 +30,7 @@ export const IconAndroid = () => {
 export const IconClassRoom = () => {
   return <MaterialCommunityIcons name="google-classroom" size={28} color={ColorItem.MediumGreen} />;
 };
+
+export const IconCalendar = () => {
+  return <Ionicons name="calendar" size={25} color="black" />;
+}
